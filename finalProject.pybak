@@ -52,7 +52,11 @@ class Room:
   #Returns the description of the room object
   def getDescription(self):
     return self.description
-    
+  
+  #Sets the description of room
+  def setDescription(self, description):
+    self.description = description
+  
   #Returns the list of items in the room object
   def getItems(self):
     return self.items
@@ -83,7 +87,7 @@ class Room:
     return adjRooms
   #Prints the room object as a string
   def __str__(self):
-    return ("%s: %s.  This room contains %s\n%s")%(self.name, self.description, self.items,self.getAdjacentRooms())
+    return ("%s: %s.  This room contains %s\n%s\n")%(self.name, self.description, self.items,self.getAdjacentRooms())
     
     
 class Player:
@@ -173,10 +177,15 @@ class Player:
       printNow(self.currentRoom)
     else:
       printNow("There is no room above you!")
-      
+  
+  ###Only used to enter basement so user must have lit lantern equipped to see###    
   def movePlayerDown(self):
     if self.currentRoom.getDown() != None:
       self.currentRoom = self.currentRoom.getDown()
+      if "Lit Lantern" in self.inventory:
+        self.currentRoom.setDescription("Why was this room hidden? In the corner you see an old decryption machine.")
+      else:
+        self.currentRoom.setDescription("It is too dark down here to see anything. Try finding something to help you see.")
       printNow(self.currentRoom)
     else:
       printNow("There is no room below you!")
@@ -221,13 +230,27 @@ class Player:
            printNow("You use the key to lock the door")
       else:
         printNow("You cannot use the key here!")
+  #step 1: Make sure user is holding the matches and lantern
+  #step 2: if user has matches but not the lantern, tell user they don't have anything to use matches on
+  #step 3: Else: user doesn't have matches to use
+  def useMatches(self):
+    if "Matches" in self.inventory and "Lantern" in self.inventory:
+      printNow("You use the matches to light the lantern")
+      self.inventory.remove("Matches")
+      self.inventory.remove("Lantern")
+      self.inventory.append("Lit Lantern")
+      printNow(self.inventory)
+    elif "Matches" in self.inventory and "Lantern" not in self.inventory:
+      printNow("You do not have anything to use the matches on!")
+    else:
+      printNow("You do not have any matches!")
   
   #Returns current room of player
   def getCurrentRoom(self):
     return self.currentRoom
     
   def __str__(self):
-    return ("Name: %s\nCurrent Location: %s\nPlayer Inventory: %s")%(self.name, self.currentRoom, self.inventory)
+    return ("Name: %s\nCurrent Location: %s\nPlayer Inventory: %s\n")%(self.name, self.currentRoom, self.inventory)
     
 
 def mysteryMansion():
@@ -240,11 +263,14 @@ def mysteryMansion():
   graveyard = Room("Graveyard", "A cemetery filled with ancient headstones", [])
   shed = Room("Shed", "An old shed full of cobwebs", ["Shovel"])
   library = Room("Library", "A room filled with old looking books", ["Book", "Map Piece 3"])
-  study = Room("Study", "A room filled with old papers and an ancient looking computer", ["CD", "Tape"])
-  livingRoom = Room("Living Room", "It looks like nobody has lived here for centuries", ["Flashlight", "Map Piece 4"])
+  study = Room("Study", "A room filled with old papers and an ancient looking computer", ["CD", "Matches", "Tape"])
+  livingRoom = Room("Living Room", "It looks like nobody has lived here for centuries", ["Lantern", "Map Piece 4"])
   ###Lock front door of living room###
-  livingRoom.setLocked(true)
-  basement = Room("Hidden Basement", "Why was this room hidden? In the corner you see an old decryption machine.", [])
+  #livingRoom.setLocked(true)
+  #Basement initially set to "It is too dark to see anything
+  #User must first find matches and lantern then use matches to light lantern
+  #With lit lantern equipped, description changes to reveal contents of basement
+  basement = Room("Hidden Basement", "This room is too dark to see anything! Try to find something to help you see.", [])
   
   ###Build the mansion/room relationships###
   porch.setNorth(livingRoom)
@@ -262,7 +288,7 @@ def mysteryMansion():
   kitchen.setWest(library)
   basement.setUp(library)
   
-  #get character name##
+  ##get character name##
   playerName = requestString("Please enter your character's name:")
   #create player object
   player = Player(playerName, porch)
@@ -285,7 +311,9 @@ def mysteryMansion():
     'pickup book': "player.pickupItem('Book')",
     'pickup cd': "player.pickupItem('CD')",
     'pickup tape': "player.pickupItem('Tape')",
-    'pickup flashlight': "player.pickupItem('Flashlight')",
+    'pickup lantern': "player.pickupItem('Lantern')",
+    'pickup matches': "player.pickupItem('Matches')",
+    'pickup lit lantern': "player.pickupItem('Lit Lantern')",
     ###Drop Functions###
     'drop potion': "player.pickupItem('Potion')",
     'drop map piece 1': "player.dropItem('Map Piece 1')",
@@ -297,8 +325,10 @@ def mysteryMansion():
     'drop book': "player.dropItem('Book')",
     'drop cd': "player.dropItem('CD')",
     'drop tape': "player.dropItem('Tape')",
-    'drop flashlight': "player.dropItem('Flashlight')",
+    'drop lantern': "player.dropItem('Lantern')",
+    'drop matches': "player.dropItem('Matches')",
     'drop broken shovel': "player.dropItem('Broken Shovel')",
+    'drop lit lantern': "player.dropItem('Lit Lantern')",
     ###Move Functions###
     'move north': 'player.movePlayerNorth()',
     'move south': 'player.movePlayerSouth()',
@@ -310,6 +340,8 @@ def mysteryMansion():
     'use computer': 'player.useComputer()',
     'use shovel': 'player.useShovel()',
     'use key': 'player.useKey()',
+    'use matches': 'player.useMatches()',
+    'use lantern': 'player.useLantern()',
   }
 
   #Continue requesting next move until game ends, or user types exit/quit
