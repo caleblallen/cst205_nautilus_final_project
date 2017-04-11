@@ -1,3 +1,4 @@
+import os
 class Room:
   #Initializes every room to have no surrounding rooms and to be in an unlocked state
   north = None
@@ -266,7 +267,7 @@ def mysteryMansion():
   study = Room("Study", "A room filled with old papers and an ancient looking computer", ["CD", "Matches", "Tape"])
   livingRoom = Room("Living Room", "It looks like nobody has lived here for centuries", ["Lantern", "Map Piece 4"])
   ###Lock front door of living room###
-  #livingRoom.setLocked(true)
+  livingRoom.setLocked(true)
   #Basement initially set to "It is too dark to see anything
   #User must first find matches and lantern then use matches to light lantern
   #With lit lantern equipped, description changes to reveal contents of basement
