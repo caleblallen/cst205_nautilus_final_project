@@ -245,4 +245,203 @@
 </file_created>
 <menu_button time="Thu Apr 13 10:57:12 MDT 2017">Save Program</menu_button>
 <file_saved time="Thu Apr 13 10:57:12 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+<file_opened time="Thu Apr 13 17:23:24 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_opened>
+<menu_button time="Thu Apr 13 17:23:28 MDT 2017">Load Program</menu_button>
+<menu_button time="Thu Apr 13 17:23:56 MDT 2017">Save Program</menu_button>
+<file_saved time="Thu Apr 13 17:23:56 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Thu Apr 13 17:23:56 MDT 2017">Load Program</menu_button>
+<command_run time="Thu Apr 13 17:23:57 MDT 2017">></command_run>
+<command_run time="Thu Apr 13 17:24:43 MDT 2017">d = date(1993,6,20)></command_run>
+<command_run time="Thu Apr 13 17:24:58 MDT 2017">d = datetime.date(1993,6,20)></command_run>
+<command_run time="Thu Apr 13 17:25:00 MDT 2017">print d></command_run>
+<command_run time="Thu Apr 13 17:25:25 MDT 2017">d2 = datetime.today()></command_run>
+<command_run time="Thu Apr 13 17:25:27 MDT 2017">d2 = datetime.today></command_run>
+<command_run time="Thu Apr 13 17:25:48 MDT 2017">d2 = datetime.date(today())></command_run>
+<command_run time="Thu Apr 13 17:26:02 MDT 2017">d2 = datetime.date(1993,7,2))></command_run>
+<command_run time="Thu Apr 13 17:26:06 MDT 2017">d2 = datetime.date(1993,7,2)></command_run>
+<command_run time="Thu Apr 13 17:26:09 MDT 2017">print d2></command_run>
+<command_run time="Thu Apr 13 17:26:11 MDT 2017">print d1></command_run>
+<command_run time="Thu Apr 13 17:26:14 MDT 2017">print d></command_run>
+<command_run time="Thu Apr 13 17:26:26 MDT 2017">t = d2 - d></command_run>
+<command_run time="Thu Apr 13 17:26:28 MDT 2017">print t></command_run>
+<command_run time="Thu Apr 13 17:26:36 MDT 2017">print t.days></command_run>
+<command_run time="Thu Apr 13 17:29:04 MDT 2017">print datetime.today()></command_run>
+<command_run time="Thu Apr 13 17:29:21 MDT 2017">print datetime.now></command_run>
+<command_run time="Thu Apr 13 17:29:23 MDT 2017">print datetime.now()></command_run>
+<command_run time="Thu Apr 13 17:31:41 MDT 2017">print datetime.datetime.now></command_run>
+<command_run time="Thu Apr 13 17:31:43 MDT 2017">print datetime.datetime.now()></command_run>
+<command_run time="Thu Apr 13 17:33:37 MDT 2017">print datetime.datetime.today()></command_run>
+<command_run time="Thu Apr 13 17:33:49 MDT 2017">print datetime.date.today()></command_run>
+<menu_button time="Thu Apr 13 17:37:06 MDT 2017">Save Program</menu_button>
+<file_saved time="Thu Apr 13 17:37:06 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Thu Apr 13 17:37:07 MDT 2017">Load Program</menu_button>
+<menu_button time="Thu Apr 13 17:37:11 MDT 2017">Save Program</menu_button>
+<file_saved time="Thu Apr 13 17:37:11 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Thu Apr 13 17:37:11 MDT 2017">Load Program</menu_button>
+<command_run time="Thu Apr 13 17:37:21 MDT 2017">daysUntilBirthday()></command_run>
+<menu_button time="Thu Apr 13 17:38:05 MDT 2017">Save Program</menu_button>
+<file_saved time="Thu Apr 13 17:38:05 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Thu Apr 13 17:38:05 MDT 2017">Load Program</menu_button>
+<command_run time="Thu Apr 13 17:38:07 MDT 2017">daysUntilBirthday()></command_run>
+<menu_button time="Thu Apr 13 17:40:22 MDT 2017">Save Program</menu_button>
+<file_saved time="Thu Apr 13 17:40:22 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Thu Apr 13 17:40:22 MDT 2017">Load Program</menu_button>
+<command_run time="Thu Apr 13 17:40:23 MDT 2017">daysUntilBirthday()></command_run>
+<command_run time="Thu Apr 13 17:40:45 MDT 2017">daysUntilBirthday()></command_run>
+<menu_button time="Thu Apr 13 17:44:47 MDT 2017">Save Program</menu_button>
+<file_saved time="Thu Apr 13 17:44:47 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Thu Apr 13 17:44:47 MDT 2017">Load Program</menu_button>
+<command_run time="Thu Apr 13 17:44:49 MDT 2017">daysUntilBirthday()></command_run>
+<command_run time="Thu Apr 13 17:44:58 MDT 2017">></command_run>
+<command_run time="Thu Apr 13 17:52:25 MDT 2017">print datetime.date.today()></command_run>
+<command_run time="Thu Apr 13 17:52:33 MDT 2017">print datetime.date.today().year></command_run>
+<menu_button time="Thu Apr 13 17:53:42 MDT 2017">Save Program</menu_button>
+<file_saved time="Thu Apr 13 17:53:42 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Thu Apr 13 17:53:43 MDT 2017">Save Program</menu_button>
+<file_saved time="Thu Apr 13 17:53:43 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Thu Apr 13 17:53:43 MDT 2017">Save Program</menu_button>
+<file_saved time="Thu Apr 13 17:53:43 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Thu Apr 13 17:53:43 MDT 2017">Load Program</menu_button>
+<command_run time="Thu Apr 13 17:53:44 MDT 2017">print datetime.date.today().year></command_run>
+<command_run time="Thu Apr 13 17:54:04 MDT 2017">daysUntilBirthday()></command_run>
+<menu_button time="Thu Apr 13 17:55:41 MDT 2017">Save Program</menu_button>
+<file_saved time="Thu Apr 13 17:55:41 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Thu Apr 13 17:55:41 MDT 2017">Load Program</menu_button>
+<command_run time="Thu Apr 13 17:55:42 MDT 2017">daysUntilBirthday()></command_run>
+<menu_button time="Thu Apr 13 17:56:21 MDT 2017">Save Program</menu_button>
+<file_saved time="Thu Apr 13 17:56:21 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Thu Apr 13 17:56:22 MDT 2017">Load Program</menu_button>
+<command_run time="Thu Apr 13 17:56:23 MDT 2017">daysUntilBirthday()></command_run>
+<menu_button time="Thu Apr 13 17:56:42 MDT 2017">Save Program</menu_button>
+<file_saved time="Thu Apr 13 17:56:42 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Thu Apr 13 17:56:42 MDT 2017">Load Program</menu_button>
+<menu_button time="Thu Apr 13 17:57:08 MDT 2017">Save Program</menu_button>
+<file_saved time="Thu Apr 13 17:57:08 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+<file_opened time="Fri Apr 14 09:03:22 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_opened>
+<menu_button time="Fri Apr 14 09:07:46 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:07:46 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:07:46 MDT 2017">Load Program</menu_button>
+<command_run time="Fri Apr 14 09:07:50 MDT 2017">ratifiedDOI()></command_run>
+<menu_button time="Fri Apr 14 09:08:02 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:08:02 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:08:02 MDT 2017">Load Program</menu_button>
+<command_run time="Fri Apr 14 09:08:03 MDT 2017">ratifiedDOI()></command_run>
+<menu_button time="Fri Apr 14 09:08:17 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:08:17 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:08:17 MDT 2017">Load Program</menu_button>
+<command_run time="Fri Apr 14 09:08:18 MDT 2017">ratifiedDOI()></command_run>
+<menu_button time="Fri Apr 14 09:09:03 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:09:03 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:09:03 MDT 2017">Load Program</menu_button>
+<command_run time="Fri Apr 14 09:09:04 MDT 2017">ratifiedDOI()></command_run>
+<menu_button time="Fri Apr 14 09:14:52 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:14:52 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:14:52 MDT 2017">Load Program</menu_button>
+<command_run time="Fri Apr 14 09:14:53 MDT 2017">ratifiedDOI()></command_run>
+<menu_button time="Fri Apr 14 09:15:23 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:15:23 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:15:24 MDT 2017">Load Program</menu_button>
+<command_run time="Fri Apr 14 09:15:25 MDT 2017">ratifiedDOI()></command_run>
+<command_run time="Fri Apr 14 09:15:42 MDT 2017">print calendar.day_name></command_run>
+<command_run time="Fri Apr 14 09:15:44 MDT 2017">print calendar.day_name()></command_run>
+<command_run time="Fri Apr 14 09:15:46 MDT 2017">print calendar.day_name(1)></command_run>
+<command_run time="Fri Apr 14 09:15:57 MDT 2017">print calendar.day_name></command_run>
+<command_run time="Fri Apr 14 09:16:16 MDT 2017">print 0.day_name></command_run>
+<command_run time="Fri Apr 14 09:16:51 MDT 2017">print month_name[0[></command_run>
+<command_run time="Fri Apr 14 09:17:07 MDT 2017">print calendar.month_name[0]></command_run>
+<command_run time="Fri Apr 14 09:17:18 MDT 2017">print month_name[0]></command_run>
+<command_run time="Fri Apr 14 09:17:25 MDT 2017">print calendar.month_name[1]></command_run>
+<command_run time="Fri Apr 14 09:17:38 MDT 2017">print calendar.day_name[1]></command_run>
+<menu_button time="Fri Apr 14 09:17:50 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:17:50 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:17:51 MDT 2017">Load Program</menu_button>
+<command_run time="Fri Apr 14 09:17:51 MDT 2017">print calendar.day_name[1]></command_run>
+<command_run time="Fri Apr 14 09:18:00 MDT 2017">ratifiedDOI()></command_run>
+<menu_button time="Fri Apr 14 09:21:03 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:21:03 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:21:03 MDT 2017">Load Program</menu_button>
+<command_run time="Fri Apr 14 09:21:09 MDT 2017">daysUntilBirthday()></command_run>
+<menu_button time="Fri Apr 14 09:23:32 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:23:32 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:23:33 MDT 2017">Load Program</menu_button>
+<command_run time="Fri Apr 14 09:23:34 MDT 2017">daysUntilBirthday()></command_run>
+<menu_button time="Fri Apr 14 09:24:04 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:24:04 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:24:04 MDT 2017">Load Program</menu_button>
+<command_run time="Fri Apr 14 09:24:04 MDT 2017">daysUntilBirthday()></command_run>
+<menu_button time="Fri Apr 14 09:25:04 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:25:04 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:25:04 MDT 2017">Load Program</menu_button>
+<command_run time="Fri Apr 14 09:25:05 MDT 2017">daysUntilBirthday()></command_run>
+<menu_button time="Fri Apr 14 09:26:21 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:26:21 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:26:21 MDT 2017">Load Program</menu_button>
+<command_run time="Fri Apr 14 09:26:22 MDT 2017">daysUntilBirthday()></command_run>
+<command_run time="Fri Apr 14 09:26:31 MDT 2017">daysUntilBirthday()></command_run>
+<command_run time="Fri Apr 14 09:26:39 MDT 2017">daysUntilBirthday()></command_run>
+<command_run time="Fri Apr 14 09:26:46 MDT 2017">daysUntilBirthday()></command_run>
+<menu_button time="Fri Apr 14 09:27:27 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:27:27 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:27:27 MDT 2017">Load Program</menu_button>
+<command_run time="Fri Apr 14 09:27:28 MDT 2017">daysUntilBirthday()></command_run>
+<menu_button time="Fri Apr 14 09:32:54 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:32:54 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:32:54 MDT 2017">Load Program</menu_button>
+<command_run time="Fri Apr 14 09:33:01 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:07 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:13 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:15 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:17 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:19 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:20 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:22 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:24 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:26 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:29 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:31 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:32 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:34 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:35 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:36 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:39 MDT 2017">playCraps()></command_run>
+<command_run time="Fri Apr 14 09:33:49 MDT 2017">printBirthMonth()></command_run>
+<command_run time="Fri Apr 14 09:34:03 MDT 2017">daysUntilBirthday()></command_run>
+<command_run time="Fri Apr 14 09:34:08 MDT 2017">daysUntilBirthday()></command_run>
+<command_run time="Fri Apr 14 09:34:26 MDT 2017">ratifiedDOI()></command_run>
+<menu_button time="Fri Apr 14 09:35:04 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:35:04 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:35:04 MDT 2017">Load Program</menu_button>
+<command_run time="Fri Apr 14 09:35:05 MDT 2017">ratifiedDOI()></command_run>
+<menu_button time="Fri Apr 14 09:35:49 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:35:49 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
+</file_created>
+<menu_button time="Fri Apr 14 09:36:06 MDT 2017">Save Program</menu_button>
+<file_saved time="Fri Apr 14 09:36:07 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\lab15.py</file_saved>
 </file_created>
