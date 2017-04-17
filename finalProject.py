@@ -1,4 +1,8 @@
 import os
+import random
+
+isPathSet = False
+
 class Room:
   #Initializes every room to have no surrounding rooms and to be in an unlocked state
   north = None
@@ -8,12 +12,63 @@ class Room:
   up = None
   down = None
   locked = false
-  def __init__(self, name, description, items):
+  def __init__(self, name, description, items, img_path = None):
     self.name = name
     self.description = description
     self.items = items
-  
-  #Allows rooms to be placed in various locations around current room object  
+    self.huds = []
+    if img_path != None:
+        self.make_huds(img_path)
+
+  def make_huds(self,i_path):
+        #setMediaFolder('C:\\Users\\callen\\Google Drive\\CSUMB\\final_project\\')
+        global isPathSet
+        if not isPathSet:
+            showInformation("Please Select the Root folder of our upload. The one that contains the *.py file.")
+            setMediaFolder()
+            isPathSet = True
+        #font size for text
+        font_size = 25
+        """
+        Hud Breakdown:
+            Title: width (x): 30-842; height (y): 16-77
+            Location Picture: width (x): 26-846; height (y): 100-559 [820x459]
+            Text Area: width (x): 30-842; height (y): 602-863
+            Map Area: width (x): 891-1359; height (y): 16-558 [468x542]
+            Inventory Items:
+                |1|2|3|
+                |4|5|6|
+                1: width (x): 903-1028; height (y): 602-726 [125x124]
+                2: width (x): 1062-1187; height (y): 602-726 [125x124]
+                3: width (x): 1220-1345; height (y): 602-726 [125x124]
+                4: width (x): 903-1028; height (y): 740-864 [125x124]
+                5: width (x): 1062-1187; height (y): 740-864 [125x124]
+                6: width (x): 1220-1345; height (y): 740-864 [125x124]
+        """
+        path = 'assets\\images\\hud.jpg'
+        hud_normal = makePicture(path)
+        hud_red = makePicture(path)
+        title_font_size = 77-16
+        sty = makeStyle(sansSerif,bold,title_font_size)
+        addTextWithStyle(hud_normal,32+title_font_size,70,self.name,sty,black)
+        addTextWithStyle(hud_red,32+title_font_size,70,self.name,sty,black)
+        rm_img = makePicture(i_path)
+        #pyCopyEx(makePicture(self.getImagePath()),hud_normal,26,100)
+        #pyCopyEx(makePicture(self.getImagePath()),hud_red,26,100)
+
+        for x in range (0, getWidth(rm_img)):
+            for y in range (0, getHeight(rm_img)):
+                if x+26 < getWidth(hud_normal) and y+100 < getHeight(hud_normal):
+                    src_color = getColor(getPixel(rm_img, x, y))
+                    setColor(getPixel(hud_normal, x+26, y+100), src_color)
+                    setColor(getPixel(hud_red, x+26, y+100), makeColor(min(int(src_color.getRed()*2),255),src_color.getGreen(),src_color.getBlue()))
+
+
+        self.huds.append(hud_normal)
+        self.huds.append(hud_red)
+
+
+  #Allows rooms to be placed in various locations around current room object
   def setNorth(self, room):
     self.north = room
   def setSouth(self, room):
@@ -45,31 +100,31 @@ class Room:
   #Sets the state of a room to locked or unlocked
   def setLocked(self, locked):
     self.locked = locked
-  
-  #Returns the name of the room object  
+
+  #Returns the name of the room object
   def getName(self):
     return self.name
-    
+
   #Returns the description of the room object
   def getDescription(self):
     return self.description
-  
+
   #Sets the description of room
   def setDescription(self, description):
     self.description = description
-  
+
   #Returns the list of items in the room object
   def getItems(self):
     return self.items
-    
+
   #Adds an item to the list of items in the room
   def addItem(self, item):
     self.items.append(item)
-    
+
   #Removes an item from the room
   def removeItem(self, item):
     self.items.remove(item)
-  
+
   #Creates a string of all the adjacent rooms to the current room
   def getAdjacentRooms(self):
     adjRooms = ""
@@ -86,11 +141,14 @@ class Room:
     if self.up != None:
       adjRooms = adjRooms + "Above you is the %s. "%self.up.getName()
     return adjRooms
+
+  #Returns image path
+  def getImagePath(self):
+    return self.img_path
   #Prints the room object as a string
   def __str__(self):
     return ("%s: %s.  This room contains %s\n%s\n")%(self.name, self.description, self.items,self.getAdjacentRooms())
-    
-    
+
 class Player:
   #The items the player is holding
   inventory = []
@@ -99,10 +157,18 @@ class Player:
   def __init__(self, name, room):
     self.name = name
     self.currentRoom = room
-  #Returns name of current player  
+    self.hud = None
+  #Returns name of current player
   def getName(self):
     return self.name
-  
+
+  #Heads Up Display set and get functions.
+  def setHUD(self,hud_image):
+    self.hud = hud_image
+
+  def getHUD(self):
+      return self.hud
+
   ###Pickup Item Function###
   #step 1: Don't pickup if item is already in inventory
   #step 2: Make sure item is in current room
@@ -121,8 +187,8 @@ class Player:
       #If item is not in current room, print item not found
       else:
         printNow("Item not found")
-        
-  ###Drop Item Function###      
+
+  ###Drop Item Function###
   #step 1: If player is holding item, add the item to current room items and remove from player inventory
   #step 2: If player does not have item, print "you do not have that item"
   def dropItem(self, item):
@@ -133,12 +199,12 @@ class Player:
       printNow("The room now contains: %s"%self.currentRoom.getItems())
     else:
       printNow("You do not have that item!")
-    
-  #Returns the current inventory list of the user  
+
+  #Returns the current inventory list of the user
   def getInventory(self):
     return self.inventory
-  
-  ###Move Player Functions###  
+
+  ###Move Player Functions###
   #step 1: Move the current player North,South,East, or West if there is a valid room in that direction.
   #step 2: If there is no room in that direction, alert the user
   def movePlayerNorth(self):
@@ -150,36 +216,36 @@ class Player:
         printNow(self.currentRoom)
       else:
         printNow("There is no room to the North!")
-    
+
   def movePlayerSouth(self):
     if self.currentRoom.getSouth() != None:
       self.currentRoom = self.currentRoom.getSouth()
       printNow(self.currentRoom)
     else:
       printNow("There is no room to the South!")
-  
+
   def movePlayerEast(self):
     if self.currentRoom.getEast() != None:
       self.currentRoom = self.currentRoom.getEast()
       printNow(self.currentRoom)
     else:
       printNow("There is no room to the East!")
-      
+
   def movePlayerWest(self):
     if self.currentRoom.getWest() != None:
       self.currentRoom = self.currentRoom.getWest()
       printNow(self.currentRoom)
     else:
       printNow("There is no room to the West!")
-      
+
   def movePlayerUp(self):
     if self.currentRoom.getUp() != None:
       self.currentRoom = self.currentRoom.getUp()
       printNow(self.currentRoom)
     else:
       printNow("There is no room above you!")
-  
-  ###Only used to enter basement so user must have lit lantern equipped to see###    
+
+  ###Only used to enter basement so user must have lit lantern equipped to see###
   def movePlayerDown(self):
     if self.currentRoom.getDown() != None:
       self.currentRoom = self.currentRoom.getDown()
@@ -190,14 +256,14 @@ class Player:
       printNow(self.currentRoom)
     else:
       printNow("There is no room below you!")
-      
+
   ###Use Item Functions###
   def useComputer(self):
     if self.currentRoom.getName() == "Study":
       showInformation("This is where you play hangman and madlibs")
     else:
       showInformation("There is no computer in this room. Try visiting the Study")
-  
+
   #step 1: make sure user has shovel
   #step 2: make sure user is in graveyard
   #step 3: if user has shovel and is in graveyard allow them to dig to retrieve key and map piece
@@ -245,19 +311,45 @@ class Player:
       printNow("You do not have anything to use the matches on!")
     else:
       printNow("You do not have any matches!")
-  
+
   #Returns current room of player
   def getCurrentRoom(self):
     return self.currentRoom
-    
+
   def __str__(self):
     return ("Name: %s\nCurrent Location: %s\nPlayer Inventory: %s\n")%(self.name, self.currentRoom, self.inventory)
-    
+
+  def print_hud_item(self,hud,index,item):
+      """
+      Inventory Items:
+          |1|2|3|
+          |4|5|6|
+          1: width (x): 903-1028; height (y): 602-726 [125x124]
+          2: width (x): 1062-1187; height (y): 602-726 [125x124]
+          3: width (x): 1220-1345; height (y): 602-726 [125x124]
+          4: width (x): 903-1028; height (y): 740-864 [125x124]
+          5: width (x): 1062-1187; height (y): 740-864 [125x124]
+          6: width (x): 1220-1345; height (y): 740-864 [125x124]
+      """
+      i_path = {
+          'Key': 'assets\\images\\item_icons\\key.jpg',
+          'Red Potion': 'assets\\images\\item_icons\\potion_red.jpg',
+          'Purple Potion': 'assets\\images\\item_icons\\potion_purple.jpg',
+          'Map': 'assets\\images\\item_icons\\Map.jpg',
+          'Lantern': 'assets\\images\\item_icons\\lantern.jpg',
+          'Broken Shovel': 'assets\\images\\item_icons\\broken_shovel.jpg',
+          }
+      origins = [(903,602),(1062,602),(1220,602),(903,740),(1062,740),(1220,740)]
+      pyCopyEx(makePicture(i_path[item]),hud,origins[index][0],origins[index][1],getColor(getPixel(makePicture(i_path[item]),0,0)))
+
+n_images = {
+    'map': [],
+}
 
 def mysteryMansion():
   #Is game over?
   done = false
-  
+
   #Create all the rooms in the mansion
   kitchen = Room("Kitchen","A Place to cook meals",["Potion","Map Piece 2"])
   porch = Room("Porch", "Front porch", [])
@@ -272,7 +364,7 @@ def mysteryMansion():
   #User must first find matches and lantern then use matches to light lantern
   #With lit lantern equipped, description changes to reveal contents of basement
   basement = Room("Hidden Basement", "This room is too dark to see anything! Try to find something to help you see.", [])
-  
+
   ###Build the mansion/room relationships###
   porch.setNorth(livingRoom)
   porch.setEast(graveyard)
@@ -288,7 +380,7 @@ def mysteryMansion():
   library.setDown(basement)
   kitchen.setWest(library)
   basement.setUp(library)
-  
+
   ##get character name##
   playerName = requestString("Please enter your character's name:")
   #create player object
@@ -363,6 +455,93 @@ def mysteryMansion():
       #Handles error from an invalid action
       except:
         printNow("Not a valid move")
-      
-      
-    
+
+
+#################Working on Images################
+
+def img_scramble(pic,scramble_level):
+  pix = getPixels(pic)
+  scramble_level = int(scramble_level)
+  original = pix[:]
+  indices = range(len(pix))
+  random.shuffle(indices)
+  if scramble_level == 1:
+      return 0
+  for i in range(len(indices)):
+    if scramble_level == 0: #full scramble
+        setColor(pix[indices[i]],getColor(original[i]))
+    elif random.randint(1,scramble_level) != 1:
+      setColor(pix[indices[i]],getColor(original[i]))
+
+def img_preload():
+    #Handles all image scrambling at beginning
+    path = 'C:\\Users\\caleb\\Google Drive\\CSUMB\\final_project\\Map.jpg'
+    ##############Get unaltered image#############
+    pic = makePicture(path)
+    n_images['map'].append(pic)
+
+    for i in range(1,3):
+        pic = makePicture(path)
+        img_scramble(pic,i*4)
+        n_images['map'].append(pic)
+
+    full_scram = makePicture(path)
+    img_scramble(full_scram,0)
+    n_images['map'].append(full_scram)
+
+def pyCopyEx(pic,target, targetX, targetY,exclude = None):
+    for x in range (0, getWidth(pic)):
+        for y in range (0, getHeight(pic)):
+            if x+targetX < getWidth(target) and y+targetY < getHeight(target):
+                src_color = getColor(getPixel(pic, x, y))
+                if exclude == None:
+                    setColor(getPixel(target, x+targetX, y+targetY), src_color)
+                    #1:1 copy. Just need to set mypic's pixel to the color of pic's pixel,
+                    #only with an offset for x of targetX and y of targetY. Excluding
+                    #pixels of a preselected color.
+                elif distance(src_color,exclude) > 90:
+                    setColor(getPixel(target, x+targetX, y+targetY), src_color)
+                    #1:1 copy. Just need to set mypic's pixel to the color of pic's pixel,
+                    #only with an offset for x of targetX and y of targetY. Excluding
+                    #pixels of a preselected color.
+    return target
+
+def find_last_space(txt):
+    try:
+        return txt.rindex(' ')
+    except:
+        return 0
+
+def txt_to_lines(txt,font_size):
+    ret = []
+    isEoF = False
+    index = 0
+    while not isEoF:
+        max_index = index+int(3.75*font_size)
+        if max_index < len(txt):
+            end_index = index + find_last_space(txt[index:max_index])
+            ret.append(txt[index:end_index])
+            index = end_index
+        else:
+            ret.append(txt[index:len(txt)])
+            isEoF = True
+
+    return ret
+def make_screen():
+    path = 'C:\\Users\\caleb\\Google Drive\\CSUMB\\final_project\\assets\\images\\hud.jpg'
+
+    desc = 'It looks like nobody has lived here for centuries'
+    font_size = 25
+    canvas = makeEmptyPicture(1200,900)
+    setAllPixelsToAColor(canvas,black)
+    pyCopyEx(makePicture(path),canvas,30,30)
+    sty = makeStyle(sansSerif,bold,font_size)
+    desc_lines = txt_to_lines(desc,font_size)
+    for ln in range(len(desc_lines)):
+        addTextWithStyle(canvas,30,720+(font_size*(1+ln)),desc_lines[ln],sty,red)
+    show(canvas)
+
+def tester():
+    joe = Player('joe',Room("Living Room", "It looks like nobody has lived here for centuries", ["Lantern", "Map Piece 4"],'assets\\images\\LivingRoom.jpg'))
+    printNow(str(joe))
+    joe.make_hud()
