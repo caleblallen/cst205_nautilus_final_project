@@ -1036,309 +1036,61 @@
 <command_run time="Tue Apr 11 09:48:27 MDT 2017">mysteryMansion()></command_run>
 <menu_button time="Tue Apr 11 09:50:02 MDT 2017">Save Program</menu_button>
 <file_saved time="Tue Apr 11 09:50:02 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\finalProject.py</file_saved>
-<file_opened time="Sun Apr 16 12:04:28 PDT 2017">C:\Users\caleb\Google Drive\CSUMB\final_project\finalProject.py</file_opened>
-<menu_button time="Sun Apr 16 12:04:32 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 12:05:11 PDT 2017">pic = makePicture(pickAFile())></command_run>
-<command_run time="Sun Apr 16 12:05:29 PDT 2017">dir(pic)></command_run>
-<menu_button time="Sun Apr 16 12:06:02 PDT 2017">Explain <click></menu_button>
-<menu_button time="Sun Apr 16 12:06:04 PDT 2017">Program Area + Interactions Area</menu_button>
-<command_run time="Sun Apr 16 12:06:49 PDT 2017">pic2 = pic.copyPicture()></command_run>
-<command_run time="Sun Apr 16 12:07:00 PDT 2017">pic2 = copyPicture(pic)></command_run>
-<command_run time="Sun Apr 16 12:07:14 PDT 2017">pic2 = pic.copyPicture(pic)></command_run>
-<command_run time="Sun Apr 16 12:07:19 PDT 2017">show(pic2)></command_run>
-<command_run time="Sun Apr 16 12:07:40 PDT 2017">pic2 = makePicture()></command_run>
-<command_run time="Sun Apr 16 12:07:53 PDT 2017">dir(pic.copyPicture)></command_run>
-<command_run time="Sun Apr 16 12:07:57 PDT 2017">dir(pic)></command_run>
-<command_run time="Sun Apr 16 12:08:03 PDT 2017">copyPicture(pic)></command_run>
-<command_run time="Sun Apr 16 12:08:16 PDT 2017">pic.copyPicture(pic)></command_run>
-<command_run time="Sun Apr 16 12:08:39 PDT 2017">show(pic)></command_run>
-<command_run time="Sun Apr 16 12:09:54 PDT 2017">img_scramble(pic,3)></command_run>
-<command_run time="Sun Apr 16 12:10:00 PDT 2017">show(pic)></command_run>
-<menu_button time="Sun Apr 16 12:10:34 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 12:10:36 PDT 2017">img_scramble(pic,3)></command_run>
-<menu_button time="Sun Apr 16 12:10:50 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 12:11:08 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 12:11:10 PDT 2017">img_scramble(pic,3)></command_run>
-<command_run time="Sun Apr 16 12:11:16 PDT 2017">show(pic)></command_run>
-<command_run time="Sun Apr 16 12:11:50 PDT 2017">file_path = pickAFile()></command_run>
-<command_run time="Sun Apr 16 12:12:01 PDT 2017">pic = makePicture(file_path)></command_run>
-<command_run time="Sun Apr 16 12:12:07 PDT 2017">img_scramble(pic,2)></command_run>
-<command_run time="Sun Apr 16 12:12:12 PDT 2017">show(pic)></command_run>
-<command_run time="Sun Apr 16 12:12:39 PDT 2017">pic = makePicture(file_path)></command_run>
-<command_run time="Sun Apr 16 12:12:43 PDT 2017">img_scramble(pic,3)></command_run>
-<command_run time="Sun Apr 16 12:12:51 PDT 2017">show(pic)></command_run>
-<command_run time="Sun Apr 16 12:12:58 PDT 2017">pic = makePicture(file_path)></command_run>
-<command_run time="Sun Apr 16 12:13:04 PDT 2017">img_scramble(pic,4)></command_run>
-<command_run time="Sun Apr 16 12:13:09 PDT 2017">show(pic)></command_run>
-<command_run time="Sun Apr 16 12:14:11 PDT 2017">pic = makePicture(file_path)></command_run>
-<command_run time="Sun Apr 16 12:14:14 PDT 2017">img_scramble(pic,7)></command_run>
-<command_run time="Sun Apr 16 12:14:27 PDT 2017">show(pic)></command_run>
-<command_run time="Sun Apr 16 12:14:48 PDT 2017">pic = makePicture(file_path)></command_run>
-<command_run time="Sun Apr 16 12:14:52 PDT 2017">img_scramble(pic,10)></command_run>
-<command_run time="Sun Apr 16 12:15:00 PDT 2017">show(pic)></command_run>
-<command_run time="Sun Apr 16 12:15:36 PDT 2017">pic = makePicture(file_path)></command_run>
-<command_run time="Sun Apr 16 12:15:42 PDT 2017">img_scramble(pic,4)></command_run>
-<command_run time="Sun Apr 16 12:15:49 PDT 2017">show(pic)></command_run>
-<command_run time="Sun Apr 16 12:16:25 PDT 2017">pic = makePicture(file_path)></command_run>
-<command_run time="Sun Apr 16 12:16:30 PDT 2017">img_scramble(pic,6)></command_run>
-<command_run time="Sun Apr 16 12:16:44 PDT 2017">show(pic)></command_run>
-<command_run time="Sun Apr 16 12:17:17 PDT 2017">map_pic = makePicture(pickAFile())></command_run>
-<command_run time="Sun Apr 16 12:17:30 PDT 2017">show(map_pic)></command_run>
-<command_run time="Sun Apr 16 12:17:58 PDT 2017">img_scramble(map_pic,6)></command_run>
-<command_run time="Sun Apr 16 12:18:20 PDT 2017">show(map_pic)></command_run>
-<command_run time="Sun Apr 16 12:19:13 PDT 2017">map_pic = makePicture(pickAFile())></command_run>
-<command_run time="Sun Apr 16 12:19:22 PDT 2017">img_scramble(map_pic,4)></command_run>
-<command_run time="Sun Apr 16 12:19:34 PDT 2017">show(map_pic)></command_run>
-<command_run time="Sun Apr 16 12:19:48 PDT 2017">img_scramble(map_pic,4)></command_run>
-<command_run time="Sun Apr 16 12:20:36 PDT 2017">map_pic = makePicture(pickAFile())></command_run>
-<command_run time="Sun Apr 16 12:20:50 PDT 2017">img_scramble(map_pic,2)></command_run>
-<command_run time="Sun Apr 16 12:21:09 PDT 2017">show(map_pic)></command_run>
-<command_run time="Sun Apr 16 12:25:12 PDT 2017">></command_run>
-<command_run time="Sun Apr 16 12:25:21 PDT 2017">path = pickAFile()></command_run>
-<command_run time="Sun Apr 16 12:25:27 PDT 2017">path></command_run>
-<menu_button time="Sun Apr 16 12:26:57 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 12:27:01 PDT 2017">img_preload()></command_run>
-<command_run time="Sun Apr 16 12:27:23 PDT 2017">show(n_images[1])></command_run>
-<command_run time="Sun Apr 16 12:27:30 PDT 2017">show(n_images['map'][1])></command_run>
-<menu_button time="Sun Apr 16 12:28:26 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 12:28:27 PDT 2017">show(n_images['map'][1])></command_run>
-<command_run time="Sun Apr 16 12:28:30 PDT 2017">img_preload()></command_run>
-<command_run time="Sun Apr 16 12:28:47 PDT 2017">show(n_images['map'][1])></command_run>
-<command_run time="Sun Apr 16 12:28:54 PDT 2017">show(n_images['map'][2])></command_run>
-<menu_button time="Sun Apr 16 12:29:10 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 12:29:13 PDT 2017">img_preload()></command_run>
-<command_run time="Sun Apr 16 12:29:52 PDT 2017">show(n_images['map'][0])></command_run>
-<command_run time="Sun Apr 16 12:29:59 PDT 2017">show(n_images['map'][1])></command_run>
-<command_run time="Sun Apr 16 12:30:06 PDT 2017">show(n_images['map'][3])></command_run>
-<command_run time="Sun Apr 16 12:30:28 PDT 2017">show(n_images['map'][2])></command_run>
-<menu_button time="Sun Apr 16 12:31:54 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 12:31:57 PDT 2017">img_preload()></command_run>
-<command_run time="Sun Apr 16 12:32:24 PDT 2017">show(n_images['map'][2])></command_run>
-<command_run time="Sun Apr 16 12:32:32 PDT 2017">show(n_images['map'][3])></command_run>
-<menu_button time="Sun Apr 16 12:33:48 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 12:33:50 PDT 2017">img_preload()></command_run>
-<command_run time="Sun Apr 16 12:34:14 PDT 2017">show(n_images['map'][3])></command_run>
-<command_run time="Sun Apr 16 12:34:20 PDT 2017">show(n_images['map'][2])></command_run>
-<menu_button time="Sun Apr 16 12:36:59 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 12:37:02 PDT 2017">img_preload()></command_run>
-<command_run time="Sun Apr 16 12:37:41 PDT 2017">show(n_images['map'][0])></command_run>
-<command_run time="Sun Apr 16 12:37:46 PDT 2017">show(n_images['map'][1])></command_run>
-<command_run time="Sun Apr 16 12:37:50 PDT 2017">show(n_images['map'][2])></command_run>
-<command_run time="Sun Apr 16 12:37:56 PDT 2017">show(n_images['map'][3])></command_run>
-<command_run time="Sun Apr 16 12:38:00 PDT 2017">show(n_images['map'][4])></command_run>
-<command_run time="Sun Apr 16 12:38:05 PDT 2017">show(n_images['map'][3])></command_run>
-<menu_button time="Sun Apr 16 12:38:34 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 12:38:38 PDT 2017">img_preload()></command_run>
-<command_run time="Sun Apr 16 12:39:07 PDT 2017">show(n_images['map'][3])></command_run>
-<command_run time="Sun Apr 16 14:36:57 PDT 2017">></command_run>
-<command_run time="Sun Apr 16 14:36:57 PDT 2017">></command_run>
-<command_run time="Sun Apr 16 14:36:57 PDT 2017">dir></command_run>
-<command_run time="Sun Apr 16 14:36:59 PDT 2017">dir()></command_run>
-<command_run time="Sun Apr 16 14:37:36 PDT 2017">file_path></command_run>
-<command_run time="Sun Apr 16 14:38:47 PDT 2017">java ></command_run>
-<command_run time="Sun Apr 16 14:38:51 PDT 2017">java></command_run>
-<menu_button time="Sun Apr 16 19:01:59 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:02:24 PDT 2017">canvas = makeEmptyPicture(getWidth(pic),getHeight(pic)+100)></command_run>
-<command_run time="Sun Apr 16 19:02:31 PDT 2017">show(canvas)></command_run>
-<command_run time="Sun Apr 16 19:02:54 PDT 2017">setAllPixelsToAColor()></command_run>
-<command_run time="Sun Apr 16 19:03:04 PDT 2017">setAllPixelsToAColor(canvas,black)></command_run>
-<command_run time="Sun Apr 16 19:03:08 PDT 2017">show(canvas)></command_run>
-<command_run time="Sun Apr 16 19:20:26 PDT 2017">></command_run>
-<command_run time="Sun Apr 16 19:20:31 PDT 2017">path2 = pickAFiile()></command_run>
-<command_run time="Sun Apr 16 19:20:36 PDT 2017">path2 = pickAFile()></command_run>
-<command_run time="Sun Apr 16 19:20:45 PDT 2017">path2></command_run>
-<menu_button time="Sun Apr 16 19:21:59 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 19:22:11 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:22:12 PDT 2017">path2></command_run>
-<command_run time="Sun Apr 16 19:22:18 PDT 2017">make_screen()></command_run>
-<menu_button time="Sun Apr 16 19:23:22 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:23:24 PDT 2017">make_screen()></command_run>
-<menu_button time="Sun Apr 16 19:25:14 PDT 2017">addTextWithStyle</menu_button>
-<menu_button time="Sun Apr 16 19:26:09 PDT 2017">Program Area + Interactions Area</menu_button>
-<menu_button time="Sun Apr 16 19:26:11 PDT 2017">Explain <click></menu_button>
-<menu_button time="Sun Apr 16 19:26:23 PDT 2017">Program Area + Interactions Area</menu_button>
-<menu_button time="Sun Apr 16 19:26:28 PDT 2017">Explain <click></menu_button>
-<menu_button time="Sun Apr 16 19:28:57 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:28:59 PDT 2017">make_screen()></command_run>
-<menu_button time="Sun Apr 16 19:29:05 PDT 2017">Program Area + Interactions Area</menu_button>
-<menu_button time="Sun Apr 16 19:29:42 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:29:43 PDT 2017">make_screen()></command_run>
-<menu_button time="Sun Apr 16 19:31:32 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:31:34 PDT 2017">make_screen()></command_run>
-<menu_button time="Sun Apr 16 19:33:31 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:33:33 PDT 2017">make_screen()></command_run>
-<command_run time="Sun Apr 16 19:38:49 PDT 2017">></command_run>
-<command_run time="Sun Apr 16 19:38:50 PDT 2017">></command_run>
-<command_run time="Sun Apr 16 19:39:18 PDT 2017">desc = """ Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32. The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham. """></command_run>
-<command_run time="Sun Apr 16 19:39:20 PDT 2017">dexc></command_run>
-<command_run time="Sun Apr 16 19:39:23 PDT 2017">desc></command_run>
-<menu_button time="Sun Apr 16 19:39:58 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:40:08 PDT 2017">txt_to_lines(desc,25)></command_run>
-<menu_button time="Sun Apr 16 19:40:15 PDT 2017">Stop</menu_button>
-<menu_button time="Sun Apr 16 19:40:37 PDT 2017">Stop</menu_button>
-<command_run time="Sun Apr 16 19:40:39 PDT 2017">></command_run>
-<command_run time="Sun Apr 16 19:40:39 PDT 2017">></command_run>
-<menu_button time="Sun Apr 16 19:40:41 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:40:45 PDT 2017">txt_to_lines(desc,25)></command_run>
-<menu_button time="Sun Apr 16 19:41:21 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:41:27 PDT 2017">tst = txt_to_lines(desc,25)></command_run>
-<command_run time="Sun Apr 16 19:41:43 PDT 2017">tst></command_run>
-<menu_button time="Sun Apr 16 19:42:23 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:42:25 PDT 2017">tst = txt_to_lines(desc,25)></command_run>
-<menu_button time="<menu_button time="Sun Apr 16 19:43:39 PDT 2017">Stop</menu_button>
-<menu_button time="Sun Apr 16 19:43:39 PDT 2017">Stop</menu_button>
-<menu_button time="Sun Apr 16 19:43:39 PDT 2017">Stop</menu_button>
-<menu_button time="Sun Apr 16 19:43:39 PDT 2017">Stop</menu_button>
-<menu_button time="Sun Apr 16 19:43:55 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:43:58 PDT 2017">tst = txt_to_lines(desc,25)></command_run>
-<command_run time="Sun Apr 16 19:44:04 PDT 2017">tst></command_run>
-<command_run time="Sun Apr 16 19:44:26 PDT 2017">len(tst)></command_run>
-<menu_button time="Sun Apr 16 19:44:44 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:44:48 PDT 2017">tst = txt_to_lines(desc,25)></command_run>
-<command_run time="Sun Apr 16 19:44:49 PDT 2017">tst></command_run>
-<menu_button time="Sun Apr 16 19:45:31 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 19:45:40 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:45:43 PDT 2017">tst = txt_to_lines(desc,25)></command_run>
-<menu_button time="Sun Apr 16 19:46:02 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:46:03 PDT 2017">tst = txt_to_lines(desc,25)></command_run>
-<menu_button time="Sun Apr 16 19:46:07 PDT 2017">Stop</menu_button>
-<menu_button time="Sun Apr 16 19:46:44 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:46:47 PDT 2017">tst = txt_to_lines(desc,25)></command_run>
-<command_run time="Sun Apr 16 19:46:49 PDT 2017">tst></command_run>
-<command_run time="Sun Apr 16 19:46:57 PDT 2017">len(tst)></command_run>
-<menu_button time="Sun Apr 16 19:49:03 PDT 2017">Load Program</menu_button>
-<command_run time="Sun Apr 16 19:49:06 PDT 2017">make_screen()></command_run>
-<command_run time="Sun Apr 16 19:50:22 PDT 2017">></command_run>
-<command_run time="Sun Apr 16 19:50:23 PDT 2017">desc></command_run>
-<command_run time="Sun Apr 16 19:50:35 PDT 2017">desc[:11*35]></command_run>
-<menu_button time="Sun Apr 16 19:51:01 PDT 2017">Save Program</menu_button>
-<file_saved time="Sun Apr 16 19:51:01 PDT 2017">C:\Users\caleb\Google Drive\CSUMB\final_project\finalProject.py</file_saved>
-<file_opened time="Sun Apr 16 20:02:51 PDT 2017">C:\Users\caleb\Google Drive\CSUMB\final_project\finalProject.py</file_opened>
-<menu_button time="Sun Apr 16 20:03:00 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:03:17 PDT 2017">Save Program</menu_button>
-<file_saved time="Sun Apr 16 20:03:17 PDT 2017">C:\Users\caleb\Google Drive\CSUMB\final_project\finalProject.py</file_saved>
+
+<file_opened time="Mon Apr 17 10:08:26 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\finalProject.py</file_opened>
+<menu_button time="Mon Apr 17 10:14:39 MDT 2017">Save Program</menu_button>
+<file_saved time="Mon Apr 17 10:14:39 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\finalProject.py</file_saved>
 </file_created>
-<menu_button time="Sun Apr 16 20:03:24 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:03:24 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:03:25 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:03:25 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:03:25 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:03:25 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:03:56 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:03:57 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:03:58 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:03:58 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:03:58 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:03:58 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:03:58 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:03:59 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:04:05 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:04:06 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:04:59 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:05:00 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:05:00 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:05:01 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:05:01 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:05:01 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:05:01 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:05:01 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:05:21 PDT 2017">Save Program</menu_button>
-<file_saved time="Sun Apr 16 20:05:21 PDT 2017">C:\Users\caleb\Google Drive\CSUMB\final_project\finalProject.py</file_saved>
-<file_opened time="Sun Apr 16 20:08:29 PDT 2017">C:\Users\caleb\Google Drive\CSUMB\final_project\finalProject.py</file_opened>
-<menu_button time="Sun Apr 16 20:08:30 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:11:02 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:11:02 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:11:02 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:11:02 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:11:03 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:11:03 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:11:03 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:11:03 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:11:03 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:11:03 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:11:04 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:11:04 PDT 2017">Load Program</menu_button>
-<menu_button time="Sun Apr 16 20:11:48 PDT 2017">Save Program</menu_button>
-<file_saved time="Sun Apr 16 20:11:48 PDT 2017">C:\Users\caleb\Google Drive\CSUMB\final_project\finalProject.py</file_saved>
-<file_opened time="Mon Apr 17 10:46:19 PDT 2017">C:\Users\callen\Google Drive\CSUMB\final_project\finalProject.py</file_opened>
-<menu_button time="Mon Apr 17 10:46:20 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 10:46:41 PDT 2017">mysteryMansion()></command_run>
-<menu_button time="Mon Apr 17 10:48:08 PDT 2017">Load Program</menu_button>
-<menu_button time="Mon Apr 17 10:48:16 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 10:48:17 PDT 2017">></command_run>
-<command_run time="Mon Apr 17 10:48:17 PDT 2017">></command_run>
-<command_run time="Mon Apr 17 10:48:19 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 10:48:52 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 10:48:52 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 10:53:11 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 10:53:12 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 11:15:30 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 11:15:31 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 11:15:51 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 11:15:52 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 11:16:35 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 11:16:36 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 11:17:02 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 11:17:02 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 11:17:24 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 11:17:25 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 11:17:33 PDT 2017">Load Program</menu_button>
-<menu_button time="Mon Apr 17 11:17:38 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 11:17:39 PDT 2017">print_hud()></command_run>
-<command_run time="Mon Apr 17 11:19:12 PDT 2017">></command_run>
-<command_run time="Mon Apr 17 11:19:16 PDT 2017">getMediaFolder()></command_run>
-<command_run time="Mon Apr 17 11:57:34 PDT 2017">setMediaFolder()></command_run>
-<command_run time="Mon Apr 17 11:58:13 PDT 2017">></command_run>
-<menu_button time="Mon Apr 17 11:58:16 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 11:58:19 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 12:00:52 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 12:00:53 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 12:01:16 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 12:01:17 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 12:01:47 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 12:01:48 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 12:02:38 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 12:02:39 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 13:17:53 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 13:17:54 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 13:22:43 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 13:22:44 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 13:22:59 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 13:23:00 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 13:25:05 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 13:25:06 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 13:38:15 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 13:38:16 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 13:38:40 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 13:38:41 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 13:39:06 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 13:39:07 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 13:39:41 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 13:39:43 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 13:40:25 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 13:40:25 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 13:41:24 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 13:41:26 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 13:42:08 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 13:42:10 PDT 2017">print_hud()></command_run>
-<menu_button time="Mon Apr 17 13:46:33 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 13:46:41 PDT 2017">dir()></command_run>
-<command_run time="Mon Apr 17 13:46:50 PDT 2017">mysteryMansion()></command_run>
-<menu_button time="Mon Apr 17 13:52:36 PDT 2017">Load Program</menu_button>
-<menu_button time="Mon Apr 17 13:54:09 PDT 2017">Load Program</menu_button>
-<menu_button time="Mon Apr 17 13:54:09 PDT 2017">Load Program</menu_button>
-<menu_button time="Mon Apr 17 13:54:23 PDT 2017">Load Program</menu_button>
-<menu_button time="Mon Apr 17 13:55:05 PDT 2017">Load Program</menu_button>
-<menu_button time="Mon Apr 17 13:55:21 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 13:55:25 PDT 2017">tester()></command_run>
-<menu_button time="Mon Apr 17 13:55:57 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 13:55:59 PDT 2017">tester()></command_run>
-<menu_button time="Mon Apr 17 13:56:18 PDT 2017">Load Program</menu_button>
-<command_run time="Mon Apr 17 13:56:20 PDT 2017">tester()></command_run>
-<command_run time="Mon Apr 17 14:17:09 PDT 2017">></command_run>
-<command_run time="Mon Apr 17 14:17:16 PDT 2017">c = makeColor(255,255,255)></command_run>
-<command_run time="Mon Apr 17 14:17:19 PDT 2017">dir(c)></command_run>
-<command_run time="Mon Apr 17 14:18:20 PDT 2017">></command_run>
-<menu_button time="Mon Apr 17 14:18:41 PDT 2017">Save Program</menu_button>
-<file_saved time="Mon Apr 17 14:18:41 PDT 2017">C:\Users\callen\Google Drive\CSUMB\final_project\finalProject.py</file_saved>
+<menu_button time="Mon Apr 17 10:14:39 MDT 2017">Load Program</menu_button>
+<menu_button time="Mon Apr 17 10:15:11 MDT 2017">Save Program</menu_button>
+<file_saved time="Mon Apr 17 10:15:11 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\finalProject.py</file_saved>
+</file_created>
+<menu_button time="Mon Apr 17 10:15:11 MDT 2017">Load Program</menu_button>
+<command_run time="Mon Apr 17 10:15:18 MDT 2017">mysteryMansin()></command_run>
+<command_run time="Mon Apr 17 10:15:24 MDT 2017">mysteryMansion()></command_run>
+<menu_button time="Mon Apr 17 10:18:28 MDT 2017">Save Program</menu_button>
+<file_saved time="Mon Apr 17 10:18:28 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\finalProject.py</file_saved>
+</file_created>
+<menu_button time="Mon Apr 17 10:18:29 MDT 2017">Load Program</menu_button>
+<command_run time="Mon Apr 17 10:18:29 MDT 2017">mysteryMansion()></command_run>
+<menu_button time="Mon Apr 17 10:20:54 MDT 2017">Save Program</menu_button>
+<file_saved time="Mon Apr 17 10:20:54 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\finalProject.py</file_saved>
+</file_created>
+<menu_button time="Mon Apr 17 10:20:54 MDT 2017">Load Program</menu_button>
+<command_run time="Mon Apr 17 10:20:55 MDT 2017">mysteryMansion()></command_run>
+<menu_button time="Mon Apr 17 10:25:12 MDT 2017">Save Program</menu_button>
+<file_saved time="Mon Apr 17 10:25:12 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\finalProject.py</file_saved>
+</file_created>
+<menu_button time="Mon Apr 17 10:25:21 MDT 2017">Save Program</menu_button>
+<file_saved time="Mon Apr 17 10:25:21 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\finalProject.py</file_saved>
+</file_created>
+<menu_button time="Mon Apr 17 10:25:22 MDT 2017">Load Program</menu_button>
+<command_run time="Mon Apr 17 10:25:23 MDT 2017">mysteryMansion()></command_run>
+<menu_button time="Mon Apr 17 10:32:40 MDT 2017">Save Program</menu_button>
+<file_saved time="Mon Apr 17 10:32:40 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\finalProject.py</file_saved>
+</file_created>
+<menu_button time="Mon Apr 17 10:32:41 MDT 2017">Load Program</menu_button>
+<menu_button time="Mon Apr 17 10:33:16 MDT 2017">Save Program</menu_button>
+<file_saved time="Mon Apr 17 10:33:16 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\finalProject.py</file_saved>
+</file_created>
+<menu_button time="Mon Apr 17 10:33:16 MDT 2017">Load Program</menu_button>
+<command_run time="Mon Apr 17 10:33:17 MDT 2017">mysteryMansion()></command_run>
+<menu_button time="Mon Apr 17 10:34:08 MDT 2017">Save Program</menu_button>
+<file_saved time="Mon Apr 17 10:34:08 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\finalProject.py</file_saved>
+</file_created>
+<menu_button time="Mon Apr 17 10:34:08 MDT 2017">Load Program</menu_button>
+<command_run time="Mon Apr 17 10:34:09 MDT 2017">mysteryMansion()></command_run>
+<menu_button time="Mon Apr 17 10:37:37 MDT 2017">Save Program</menu_button>
+<file_saved time="Mon Apr 17 10:37:37 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\finalProject.py</file_saved>
+</file_created>
+<menu_button time="Mon Apr 17 10:37:37 MDT 2017">Load Program</menu_button>
+<command_run time="Mon Apr 17 10:37:40 MDT 2017">mysteryMansion()></command_run>
+<menu_button time="Mon Apr 17 10:38:07 MDT 2017">Save Program</menu_button>
+<file_saved time="Mon Apr 17 10:38:07 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\finalProject.py</file_saved>
+</file_created>
+<menu_button time="Mon Apr 17 10:38:07 MDT 2017">Load Program</menu_button>
+<command_run time="Mon Apr 17 10:38:08 MDT 2017">mysteryMansion()></command_run>
+<menu_button time="Mon Apr 17 10:39:05 MDT 2017">Save Program</menu_button>
+<file_saved time="Mon Apr 17 10:39:05 MDT 2017">C:\Users\Dustin Whittington\Desktop\CST205Final\finalProject.py</file_saved>
+
 </file_created>
