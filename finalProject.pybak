@@ -246,6 +246,33 @@ class Player:
     else:
       printNow("You do not have any matches!")
   
+  def search(self, item):
+    if item == "cabinets" and self.currentRoom.getName() == "Kitchen":
+      printNow("You search the cabinets and find a red potion. You place the potion in your inventory.")
+      self.inventory.append("Red Potion")
+      printNow(self.inventory)
+    else:
+      printNow("Error")
+      
+  def drinkRedPotion(self):
+    showInformation("This is where we show the room image with moreRed function")
+    
+  def examine(self, item):
+    if item == "bookshelf" and self.currentRoom.getName() == "Library":
+      printNow("You look closely at the bookshelf.  It is filled with many great novels.  You notice several of your favorites.  Doug had good taste in literature.")
+    elif item == "nautilus" and self.currentRoom.getName() == "Library":
+      printNow("""You realize that Doug has several Jules Verne novels.  You reach for ‘20,000 Leagues Under the Sea’ from the shelf.  
+      As you attempt to pull the novel off the shelf the novel suddenly stops halfway out and one of the bookshelves pops open a few inches.  
+      A hidden door.  Brilliant!""")
+      #Basement initially set to "It is too dark to see anything
+      #User must first find matches and lantern then use matches to light lantern
+      #With lit lantern equipped, description changes to reveal contents of basement
+      basement = Room("Hidden Basement", "This room is too dark to see anything! Try to find something to help you see.", [])
+      self.currentRoom.setDown(basement)
+      printNow(self.currentRoom)
+      basement.setUp(self.currentRoom)
+  
+  
   #Returns current room of player
   def getCurrentRoom(self):
     return self.currentRoom
@@ -259,7 +286,7 @@ def mysteryMansion():
   done = false
   
   #Create all the rooms in the mansion
-  kitchen = Room("Kitchen","A Place to cook meals",["Potion","Map Piece 2"])
+  kitchen = Room("Kitchen","A Place to cook meals",["Map Piece 2"])
   porch = Room("Porch", "Front porch", [])
   graveyard = Room("Graveyard", "A cemetery filled with ancient headstones", [])
   shed = Room("Shed", "An old shed full of cobwebs", ["Shovel"])
@@ -267,11 +294,9 @@ def mysteryMansion():
   study = Room("Study", "A room filled with old papers and an ancient looking computer", ["CD", "Matches", "Tape"])
   livingRoom = Room("Living Room", "It looks like nobody has lived here for centuries", ["Lantern", "Map Piece 4"])
   ###Lock front door of living room###
-  livingRoom.setLocked(true)
-  #Basement initially set to "It is too dark to see anything
-  #User must first find matches and lantern then use matches to light lantern
-  #With lit lantern equipped, description changes to reveal contents of basement
-  basement = Room("Hidden Basement", "This room is too dark to see anything! Try to find something to help you see.", [])
+  #livingRoom.setLocked(true)
+
+  
   
   ###Build the mansion/room relationships###
   porch.setNorth(livingRoom)
@@ -285,9 +310,9 @@ def mysteryMansion():
   study.setEast(livingRoom)
   library.setSouth(livingRoom)
   library.setEast(kitchen)
-  library.setDown(basement)
+  #library.setDown(basement)
   kitchen.setWest(library)
-  basement.setUp(library)
+  
   
   ##get character name##
   playerName = requestString("Please enter your character's name:")
@@ -343,6 +368,13 @@ def mysteryMansion():
     'use key': 'player.useKey()',
     'use matches': 'player.useMatches()',
     'use lantern': 'player.useLantern()',
+    ###Search Functions###
+    'search cabinets': "player.search('cabinets')",
+    #Drink Function###
+    'drink red potion': "player.drinkRedPotion()",
+    #Examine Functions###
+    'examine bookshelf': "player.examine('bookshelf')",
+    'examine nautilus': "player.examine('nautilus')",
   }
 
   #Continue requesting next move until game ends, or user types exit/quit
