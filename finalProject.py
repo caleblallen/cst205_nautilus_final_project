@@ -14,12 +14,13 @@ class Room:
   down = None
   locked = false
   isPainted = False
-  def __init__(self, name, description, items):
+  def __init__(self, name, description, items,coords = (0,0)):
     self.name = name
     self.description = description
     self.items = items
     self.huds = {}
     self.make_huds()
+    self.coords = coords
 
   def make_huds(self):
       global isPathSet
@@ -221,15 +222,14 @@ class Player:
       if self.currentRoom.getNorth() != None:
         self.currentRoom = self.currentRoom.getNorth()
         printNow(self.currentRoom)
-        #show(self.create_hud())
       else:
         printNow("There is no room to the North!")
+        showInformation("There is no room to the North!")
 
   def movePlayerSouth(self):
     if self.currentRoom.getSouth() != None:
       self.currentRoom = self.currentRoom.getSouth()
       printNow(self.currentRoom)
-      ##show(self.create_hud())
     else:
       printNow("There is no room to the South!")
       showInformation("There is no room to the South!")
@@ -238,7 +238,6 @@ class Player:
     if self.currentRoom.getEast() != None:
       self.currentRoom = self.currentRoom.getEast()
       printNow(self.currentRoom)
-      #show(self.create_hud())
     else:
       printNow("There is no room to the East!")
       showInformation("There is no room to the East!")
@@ -247,7 +246,6 @@ class Player:
     if self.currentRoom.getWest() != None:
       self.currentRoom = self.currentRoom.getWest()
       printNow(self.currentRoom)
-      #show(self.create_hud())
     else:
       printNow("There is no room to the West!")
       showInformation("There is no room to the West!")
@@ -256,7 +254,6 @@ class Player:
     if self.currentRoom.getUp() != None:
       self.currentRoom = self.currentRoom.getUp()
       printNow(self.currentRoom)
-      #show(self.create_hud())
     else:
       printNow("There is no room above you!")
       showInformation("There is no room above you!")
@@ -273,7 +270,6 @@ class Player:
       else:
         self.currentRoom.setDescription("The basement is completely dark.  You cannot see anything.  It would not be safe to explore here unless you can find some sort of light source.")
       printNow(self.currentRoom)
-      showInformation(self.currentRoom)
     else:
       printNow("There is no room below you!")
       showInformation("There is no room below you!")
@@ -303,12 +299,15 @@ class Player:
       Finally on your third attempt you feel the shovel make contact with something hard.  Unfortunately, the handle cracks in half at
       the same time.  So much for that.  You get down on your knees and dig around with your hands where you felt the shovel strike something hard.
       In the wet dirt you feel something small and metal.  You pull it up into the light and discover it is a key.  You found a key and a piece of the map!""")
+      showInformation("""The old shovel creaks under your weight as you plunge it deep into the cold earth.  You try one spot and then another.
+      Finally on your third attempt you feel the shovel make contact with something hard.  Unfortunately, the handle cracks in half at
+      the same time.  So much for that.  You get down on your knees and dig around with your hands where you felt the shovel strike something hard.
+      In the wet dirt you feel something small and metal.  You pull it up into the light and discover it is a key.  You found a key and a piece of the map!""")
       self.inventory.remove('Shovel')
       self.inventory.append('Broken Shovel')
       self.currentRoom.addItem('Key')
       self.currentRoom.addItem('Map Piece 1')
       printNow(self.currentRoom)
-      showInformation(self.currentRoom)
   #step 1: make sure user has the key in inventory
   #step 2: make sure user is on porch trying to get into mansion
   #unlock the door
@@ -325,6 +324,7 @@ class Player:
         else:
            self.currentRoom.getNorth().setLocked(true)
            printNow("The lock clicks in place as the door is secured.")
+           showInformation("The lock clicks in place as the door is secured.")
       else:
         printNow("You cannot use the key here!")
         showInformation("You cannot use the key here!")
@@ -341,6 +341,7 @@ class Player:
       printNow(self.inventory)
     elif "Matches" in self.inventory and "Lantern" not in self.inventory:
       printNow("You do not have anything to use the matches on!")
+      showInformation("You do not have anything to use the matches on!")
     else:
       printNow("You do not have any matches!")
       showInformation("You do not have any matches!")
@@ -355,8 +356,8 @@ class Player:
 
   def useTelevision(self):
     if self.currentRoom.getName() == "Living Room":
-      printNow("Broken!  Oh well, you didn?t come here to watch TV.")
-      showInformation("Broken!  Oh well, you didn?t come here to watch TV.")
+      printNow("Broken!  Oh well, you didn\'t come here to watch TV.")
+      showInformation("Broken!  Oh well, you didn\'t come here to watch TV.")
     else:
       printNow("There is no television in this room.  Try going to the living room.")
       showInformation("There is no television in this room.  Try going to the living room.")
@@ -373,16 +374,20 @@ class Player:
         showInformation("Nothing!  You must have the wrong code.")
     else:
       printNow("There is no safe in here.")
+      showInformation("There is no safe in here.")
 
   def useChair(self):
     if self.currentRoom.getName() == "Porch":
       printNow("""Not too bad; pretty comfy in fact.  As you slowly rock back and forth you begin to understand a little more of the appeal of a slower lifestyle.
+      Oh, well.  Enough sitting.  Time to get back to it.""")
+      showInformation("""Not too bad; pretty comfy in fact.  As you slowly rock back and forth you begin to understand a little more of the appeal of a slower lifestyle.
       Oh, well.  Enough sitting.  Time to get back to it.""")
     elif self.currentRoom.getName() == "Library":
       printNow("Aahhh.  Now I just need a good book to read.  Which one to pick?")
       showInformation("Aahhh.  Now I just need a good book to read.  Which one to pick?")
     else:
       printNow("There is no chair in here.")
+      showInformation("There is no chair in here.")
 
   def useWalkman(self):
     if "Walkman" in self.inventory:
@@ -393,20 +398,22 @@ class Player:
 
   def drinkRedPotion(self):
     if "Red Potion" in self.inventory:
-      hasDrunkRed = True
-      if hasDrunkGreen:
-          hasDrunkGreen = False
-      showInformation("This is where we show the room image with moreRed function")
+      self.hasDrunkRed = True
+      if self.hasDrunkGreen:
+          self.hasDrunkGreen = False
+      self.inventory.remove('Red Potion')
+      showInformation("You become irrationally enraged!")
     else:
       printNow("You are not carrying this item")
       showInformation("You are not carrying this item")
 
   def drinkGreenPotion(self):
     if "Green Potion" in self.inventory:
-        hasDrunkGreen = True
-        if hasDrunkRed:
+        self.hasDrunkGreen = True
+        if self.hasDrunkRed:
             hasDrunkRed = False
-        showInformation("This is where we show the room image with moreRed function")
+        self.inventory.remove('Green Potion')
+        showInformation("You become envious of everyone and everything!")
     else:
       printNow("You are not carrying this item")
       showInformation("You are not carrying this item")
@@ -419,54 +426,68 @@ class Player:
       printNow("""You realize that Doug has several Jules Verne novels.  You reach for \'?20,000 Leagues Under the Sea\'? from the shelf.
       As you attempt to pull the novel off the shelf the novel suddenly stops halfway out and one of the bookshelves pops open a few inches.
       A hidden door.  Brilliant!""")
+      showInformation("""You realize that Doug has several Jules Verne novels.  You reach for \'?20,000 Leagues Under the Sea\'? from the shelf.
+      As you attempt to pull the novel off the shelf the novel suddenly stops halfway out and one of the bookshelves pops open a few inches.
+      A hidden door.  Brilliant!""")
       #Basement initially set to "It is too dark to see anything
       #User must first find matches and lantern then use matches to light lantern
       #With lit lantern equipped, description changes to reveal contents of basement
-      basement = Room("Hidden Basement", "This room is too dark to see anything! Try to find something to help you see.", [])
+      basement = Room("Hidden Basement", "This room is too dark to see anything! Try to find something to help you see.", [],(958,138))
       self.currentRoom.setDown(basement)
       printNow(self.currentRoom)
       basement.setUp(self.currentRoom)
     elif item == 'tombstone' and self.currentRoom.getName() == "Graveyard" and self.secretRoomFound:
       printNow("""You examine the tombstone again, but this time you lean closer.  You notice that some crabgrass has grown up and blocked the bottom part of the tombstone.
       You pull back the grass and notice several numbers in printed in small font along the base.  It reads, ?100001000101111111101101?.""")
+      showInformation("""You examine the tombstone again, but this time you lean closer.  You notice that some crabgrass has grown up and blocked the bottom part of the tombstone.
+      You pull back the grass and notice several numbers in printed in small font along the base.  It reads, ?100001000101111111101101?.""")
     elif item == 'tombstone' and self.currentRoom.getName() == "Graveyard" and not self.secretRoomFound:
       printNow("""You examine the tombstone and read the name ?Douglas Adams?.  Underneath it says, ?Digital Killed the Analog Star!?""")
+      showInformation("""You examine the tombstone and read the name ?Douglas Adams?.  Underneath it says, ?Digital Killed the Analog Star!?""")
     elif item == 'couch' and self.currentRoom.getName() == "Living Room":
       printNow("""You find some stale Cheez-Its and spare change in the couch cushions.  You take a look underneath and notice a small piece of parchment.
       It appears to be a piece to a map.""")
+      showInformation("""You find some stale Cheez-Its and spare change in the couch cushions.  You take a look underneath and notice a small piece of parchment.
+      It appears to be a piece to a map.""")
       self.inventory.append("Map Piece 4")
       printNow(self.inventory)
-      showInformation(self.inventory)
-      showInformation(self.inventory)
     elif item == 'television' and self.currentRoom.getName() == "Living Room":
       printNow("An old wood grained RCA.  A classic.  You look closer at the betamax tapes.  Hmm.  It looks like the old Adam West Batman series.")
       showInformation("An old wood grained RCA.  A classic.  You look closer at the betamax tapes.  Hmm.  It looks like the old Adam West Batman series.")
     elif item == "cabinets" and self.currentRoom.getName() == "Kitchen":
       printNow("""You root through the cabinets and find a small bottle that reads, Vision en Rouge.
       Sounds fancy.  Wonder how it tastes? You place the potion in your inventory.""")
+      showInformation("""You root through the cabinets and find a small bottle that reads, Vision en Rouge.
+      Sounds fancy.  Wonder how it tastes? You place the potion in your inventory.""")
       self.inventory.append("Red Potion")
       printNow(self.inventory)
-      showInformation(self.inventory)
+
     elif item == "floor mat" and self.currentRoom.getName() == "Kitchen":
       printNow("You look under the floor mat and discover another piece to the map!")
       showInformation("You look under the floor mat and discover another piece to the map!")
       self.inventory.append("Map Piece 2")
       printNow(self.inventory)
-      showInformation(self.inventory)
+
     elif item == 'portrait' and self.currentRoom.getName() == "Dining Room":
-      printNow("""The name underneath reads ?Wilfred Adams?.  You notice a small piece of paper sticking out from behind the back.
+      printNow("""The name underneath reads \"Wilfred Adams\".  You notice a small piece of paper sticking out from behind the back.
+      You tug on it and you find yourself holding another piece of the map.""")
+      showInformation("""The name underneath reads \"Wilfred Adams\".  You notice a small piece of paper sticking out from behind the back.
       You tug on it and you find yourself holding another piece of the map.""")
       self.inventory.append("Map Piece 3")
       printNow(self.inventory)
     elif item == 'mirror' and self.currentRoom.getName() == "Dining Room":
       printNow("This mirror has some odd properties to it.")
       showInformation("This mirror has some odd properties to it.")
-      showInformation("Here we must implement mirrored image functionality")
+      #showInformation("Here we must implement mirrored image functionality")
+      #TODO: Add the mirror functionality if we have time.
     elif item == 'furnace' and self.currentRoom.getName() == "Hidden Basement":
       printNow("This has not been lit in years.  Better not chance it.")
       showInformation("This has not been lit in years.  Better not chance it.")
     elif item == 'poster' and self.currentRoom.getName() == "Hidden Basement":
       printNow("""You look closely at the poster.  It looks genuine.  You notice one corner is not completely held down.
+      You give a gentle tug and notice there is something behind the poster.  You pull a little harder, careful not to damage the poster.
+      You pull the poster completely off the wall to reveal a safe hidden behind it.  You are close.  You can feel it.""")
+      showInformation("""You look closely at the poster.  It looks genuine.  You notice one corner is not completely held down.
       You give a gentle tug and notice there is something behind the poster.  You pull a little harder, careful not to damage the poster.
       You pull the poster completely off the wall to reveal a safe hidden behind it.  You are close.  You can feel it.""")
     elif item == 'safe' and self.currentRoom.getName() == "Hidden Basement" and self.safeLocked:
@@ -475,14 +496,27 @@ class Player:
     elif item == 'safe' and self.currentRoom.getName() == "Hidden Basement" and not self.safeLocked:
       printNow("""You open the safe to reveal its contents.  You pull out a 1978 comic book, ?Batman versus Muhammad Ali?.  It appears the comic book has been autographed.
       You place the comic book in your backpack.""")
+      showInformation("""You open the safe to reveal its contents.  You pull out a 1978 comic book, ?Batman versus Muhammad Ali?.  It appears the comic book has been autographed.
+      You place the comic book in your backpack.""")
       self.inventory.append("Comic Book")
       printNow(self.inventory)
     elif item == 'comic book' and "Comic Book" in self.inventory:
       printNow("""You look closely at the comic book to read the inscription.
-      ?To my dear son, Douglas.  Whether you grow up to be Batman or Bruce, I?ll always be proud of you.  I love you.  Dad.?
+      ?To my dear son, Douglas.  Whether you grow up to be Batman or Bruce, I\'ll always be proud of you.  I love you.  Dad.?
       You notice that the cover art to the comic book was by Neal Adams.
       Neal Adams was Douglas Adams father!  Amazing!
-      But that still doesn?t solve the mystery.
+      But that still doesn\'t solve the mystery.
+      Where is Doug?
+      ********************
+      Batman or Bruce?
+      Batman or Bruce?
+      OMG!  I had the answer right in front of me from the very beginning.
+      I need to get back to town right away.""")
+      showInformation("""You look closely at the comic book to read the inscription.
+      ?To my dear son, Douglas.  Whether you grow up to be Batman or Bruce, I\'ll always be proud of you.  I love you.  Dad.?
+      You notice that the cover art to the comic book was by Neal Adams.
+      Neal Adams was Douglas Adams father!  Amazing!
+      But that still doesn\'t solve the mystery.
       Where is Doug?
       ********************
       Batman or Bruce?
@@ -667,23 +701,42 @@ class Player:
     return ("Name: %s\nCurrent Location: %s\nPlayer Inventory: %s\n")%(self.name, self.currentRoom, self.inventory)
 
   def create_hud(self,mustRemake = False):
+    ########################################
+    """
+        This is where we create the hud.
+
+        JES's image processing and memory
+        management is God-awful inefficient
+        so we prefabricated the HUD images
+        and load them as needed.
+    """
+    ########################################
     if mustRemake:
-      self.currentRoom.make_huds()
-    if len(self.inventory) > 0:
+      self.currentRoom.make_huds() #Reload HUDS from folder
+    if len(self.inventory) > 0:#Print the items in player inventory
         for i in range(len(self.inventory)):
             self.add_hud_item(self.currentRoom.get_hud('normal'),i,self.inventory[i])
-    if self.hasDrunkRed:
+    if self.hasDrunkRed: #Handle red potion
         self.currentRoom.add_hud_description(str(self.currentRoom),'red')
+        if not (self.currentRoom.coords[0] == 0 and self.currentRoom.coords[0] == 0):
+            addOvalFilled(self.currentRoom.get_hud('red'),self.currentRoom.coords[0],self.currentRoom.coords[1],25,25,green)
         return self.currentRoom.get_hud('red')
-    elif self.hasDrunkGreen:
+    elif self.hasDrunkGreen: #Handle green potion
         self.currentRoom.add_hud_description(str(self.currentRoom),'green')
+        if not (self.currentRoom.coords[0] == 0 and self.currentRoom.coords[0] == 0):
+            addOvalFilled(self.currentRoom.get_hud('green'),self.currentRoom.coords[0],self.currentRoom.coords[1],25,25,green)
         return self.currentRoom.get_hud('green')
-    else:
+    else: #Add room description and then put player map pin
         self.currentRoom.add_hud_description(str(self.currentRoom),'normal')
+        if not (self.currentRoom.coords[0] == 0 and self.currentRoom.coords[0] == 0):
+            addOvalFilled(self.currentRoom.get_hud('normal'),self.currentRoom.coords[0],self.currentRoom.coords[1],25,25,green)
         return self.currentRoom.get_hud('normal')
 
   def add_hud_item(self,hud,index,item):
       """
+      This function adds an inventory item to the HUD in one of
+      six inventory slots detailed below.
+
       Inventory Items:
           |1|2|3|
           |4|5|6|
@@ -695,6 +748,7 @@ class Player:
           6: width (x): 1220-1345; height (y): 740-864 [125x124]
       """
       i_path = {
+        'Red Potion': 'assets\\images\\item_icons\\potion_red.jpg',
         'Green Potion': 'assets\\images\\item_icons\\green_potion.jpg',
         'Map Piece 1': 'assets\\images\\item_icons\\map_piece_1.jpg',
         'Map Piece 2': 'assets\\images\\item_icons\\map_piece_2.jpg',
@@ -703,19 +757,17 @@ class Player:
         'Key': 'assets\\images\\item_icons\\key.jpg',
         'Small Key': 'assets\\images\\item_icons\\small_key.jpg',
         'Shovel': 'assets\\images\\item_icons\\shovel.jpg',
+        'Broken Shovel': 'assets\\images\\item_icons\\broken_shovel.jpg',
         'CD': 'assets\\images\\item_icons\\CD.jpg',
         'Tape': 'assets\\images\\item_icons\\tape.jpg',
         'Lantern': 'assets\\images\\item_icons\\lantern.jpg',
         'Matches': 'assets\\images\\item_icons\\matches.jpg',
         'Lit Lantern': 'assets\\images\\item_icons\\lit_lantern.jpg',
         'Walkman': 'assets\\images\\item_icons\\walkman.jpg',
+        'Comic Book': 'assets\\images\\item_icons\\ComicBook.jpg',
           }
       origins = [(903,602),(1062,602),(1220,602),(903,740),(1062,740),(1220,740)]
       pyCopyEx(makePicture(i_path[item]),hud,origins[index][0],origins[index][1],getColor(getPixel(makePicture(i_path[item]),0,0)))
-
-n_images = {
-    'map': [],
-}
 
 def mysteryMansion():
   global isPathSet
@@ -734,7 +786,7 @@ def mysteryMansion():
   kitchenDescription = """The kitchen was surprisingly one of the cleaner rooms in the mansion.  ?Guessing the owner was not much of a cook.?  The interior was vintage 70s.  Wood cabinets with old ivory pull knobs.
   There was an oven, range top stove, and refrigerator...all avocado green.  The sink still has a few glasses in it, but nothing else seemed to be out of place.
   The floor was linoleum and there was an old mat in front of the kitchen sink.  The dirtiest thing in the whole room was an old microwave sitting on the counter.
-  This was obviously the owner?s appliance of choice, lol.  By the far wall under the window was a small table with a single solitary chair.  ?Guess he didn?t entertain too many guests.?
+  This was obviously the owner?s appliance of choice, lol.  By the far wall under the window was a small table with a single solitary chair.  ?Guess he didn\ entertain too many guests.?
   On the table was some sort of bar."""
   #Description of Porch
   porchDescription = """The porch is big and expansive as was the style in the midwest.  The floor boards and rails are showing their age.  The whole thing is in desperate need of being refinished.
@@ -769,19 +821,19 @@ def mysteryMansion():
   churchDescription = """The local church is a small brightly painted red chapel with a large steeple with a bell in it.  It is obvious the locals care about this building as it seems to be the best upkept building in the whole town.
   You look around to see if there is anyone to talk to or anything to do.  You spy a young boy sitting near the steps of the church."""
   #Create all the rooms in the mansion
-  kitchen = Room("Kitchen",kitchenDescription,[])
-  porch = Room("Porch", porchDescription, [])
-  graveyard = Room("Graveyard", graveyardDescription, [])
-  shed = Room("Shed", shedDescription, ["Shovel"])
-  library = Room("Library", libraryDescription, ["Walkman"])
-  study = Room("Study", studyDescription, ["CD", "Matches", "Tape"])
-  livingRoom = Room("Living Room", livingRoomDescription, ["Lantern"])
+  kitchen = Room("Kitchen",kitchenDescription,[],(1143,162))
+  porch = Room("Porch", porchDescription, [],(1130,338))
+  graveyard = Room("Graveyard", graveyardDescription, [],(1324,256))
+  shed = Room("Shed", shedDescription, ["Shovel"],(1321,191))
+  library = Room("Library", libraryDescription, ["Walkman"],(1042,166))
+  study = Room("Study", studyDescription, ["CD", "Matches", "Tape"],(1034,283))
+  livingRoom = Room("Living Room", livingRoomDescription, ["Lantern"],(1132,294))
   ###Lock front door of living room###
   #livingRoom.setLocked(true)
-  diningRoom = Room("Dining Room", diningRoomDescription, [])
-  church = Room("Church", churchDescription, [])
-  gasStation = Room("Gas Station", gasStationDescription, [])
-  diner = Room("Diner", dinerDescription, [])
+  diningRoom = Room("Dining Room", diningRoomDescription, [],(1224,295))
+  church = Room("Church", churchDescription, [],(1041,152))
+  gasStation = Room("Gas Station", gasStationDescription, [],(932,228))
+  diner = Room("Diner", dinerDescription, [],(1157,242))
 
 
   ###Build the mansion/room relationships###
@@ -939,22 +991,6 @@ def img_scramble(pic,scramble_level):
     elif random.randint(1,scramble_level) != 1:
       setColor(pix[indices[i]],getColor(original[i]))
 
-def img_preload():
-    #Handles all image scrambling at beginning
-    path = 'C:\\Users\\caleb\\Google Drive\\CSUMB\\final_project\\Map.jpg'
-    ##############Get unaltered image#############
-    pic = makePicture(path)
-    n_images['map'].append(pic)
-
-    for i in range(1,3):
-        pic = makePicture(path)
-        img_scramble(pic,i*4)
-        n_images['map'].append(pic)
-
-    full_scram = makePicture(path)
-    img_scramble(full_scram,0)
-    n_images['map'].append(full_scram)
-
 def pyCopyEx(pic,target, targetX, targetY,exclude = None):
     for x in range (0, getWidth(pic)):
         for y in range (0, getHeight(pic)):
@@ -979,14 +1015,17 @@ def find_last_space(txt):
         return 0
 
 def txt_to_lines(txt,font_size,isLong = False):
+    """This function takes a blob of txt
+    and tries to format it into lines that
+    will fit on the HUD"""
     ret = []
     isEoF = False
     index = 0
     while not isEoF:
         if isLong:
-            max_index = index+int(6.75*font_size)
+            max_index = index+int(6.75*font_size)#empirically derived constant
         else:
-            max_index = index+int(2.75*font_size)
+            max_index = index+int(2.75*font_size)#empirically derived constant
         if max_index < len(txt):
             end_index = index + find_last_space(txt[index:max_index])
             ret.append(txt[index:end_index])
@@ -997,13 +1036,19 @@ def txt_to_lines(txt,font_size,isLong = False):
 
     return ret
 
-def green_tint(p):
+
+##################Functions left over from development#################
+def green_tint(p):#red tinting map function
     color = getColor(p)
     setColor(p,makeColor(color.getRed(),min(255,int(color.getGreen()*2)),color.getBlue()))
-def red_tint(p):
+def red_tint(p):#green tinting map function
     color = getColor(p)
     setColor(p,makeColor(min(255,int(color.getRed()*2)),color.getGreen(),color.getBlue()))
+
 def make_screens():
+
+    """This is the function I used to make the HUDs with their specific images"""
+
     setMediaFolder('C:\\Users\\callen\\Google Drive\\CSUMB\\final_project\\assets\\images\\')
 
     rooms = {
@@ -1028,9 +1073,6 @@ def make_screens():
     }
 
     for key in rooms:
-        #hud = makePicture('huds\\hud.jpg')
-        #pyCopyEx(makePicture(rooms[key]),hud,26,100)
-        #writePictureTo(hud,'huds\\%s HUD.jpg'%key)
         pic_reg = makePicture(rooms[key])
         pic_grn = makePicture(rooms[key])
         pic_red = makePicture(rooms[key])
@@ -1048,13 +1090,66 @@ def make_screens():
         writePictureTo(hud_red,'huds\\%s Red HUD.jpg'%key)
         writePictureTo(hud_grn,'huds\\%s Green HUD.jpg'%key)
 
+def add_screen_maps():
+    """This is the function I used to add the maps to the
+    HUD images"""
+
+    town_files = ['Church Green HUD.jpg',
+    'Church HUD.jpg',
+    'Church Red HUD.jpg',
+    'Diner Green HUD.jpg',
+    'Diner HUD.jpg',
+    'Diner Red HUD.jpg',
+    'Gas Station Green HUD.jpg',
+    'Gas Station HUD.jpg',
+    'Gas Station Red HUD.jpg',]
+
+    mansion_files = ['Graveyard Green HUD.jpg',
+    'Graveyard HUD.jpg',
+    'Graveyard Red HUD.jpg',
+    'Kitchen Green HUD.jpg',
+    'Kitchen HUD.jpg',
+    'Kitchen Red HUD.jpg',
+    'Library Green HUD.jpg',
+    'Library HUD.jpg',
+    'Library Red HUD.jpg',
+    'Living Room Green HUD.jpg',
+    'Living Room HUD.jpg',
+    'Living Room Red HUD.jpg',
+    'Porch Green HUD.jpg',
+    'Porch HUD.jpg',
+    'Porch Red HUD.jpg',
+    'Shed Green HUD.jpg',
+    'Shed HUD.jpg',
+    'Shed Red HUD.jpg',
+    'Study Green HUD.jpg',
+    'Study HUD.jpg',
+    'Study Red HUD.jpg',
+    'Dining Room Green HUD.jpg',
+    'Dining Room HUD.jpg',
+    'Dining Room Red HUD.jpg',]
+
+    for path in town_files:
+        town_map = makePicture('\\assets\\images\\maps\\Plainsfeild.jpg')
+        pic = makePicture('\\assets\\images\\huds\\%s'%path)
+        pyCopyEx(town_map,pic, 891, 16)
+        writePictureTo(pic,'\\assets\\images\\huds_with_maps\\%s'%path)
+
+    for path in mansion_files:
+        man_map = makePicture('\\assets\\images\\maps\\OverallMap.jpg')
+        pic = makePicture('\\assets\\images\\huds\\%s'%path)
+        pyCopyEx(man_map,pic, 891, 16)
+        writePictureTo(pic,'\\assets\\images\\huds_with_maps\\%s'%path)
+
 def tester():
-    joe = Player('joe',Room("Living Room", "It looks like nobody has lived here for centuries", ['Lantern', 'Key', 'Shovel', 'Walkman', 'Tape', 'Matches']))
+    #function for testing inventory items.
+    joe = Player('joe',Room("Living Room", "It looks like nobody has lived here for centuries", ['Green Potion', 'Key', 'Shovel', 'Walkman', 'Tape', 'Matches']))
     printNow(str(joe))
-    joe.pickupItem('Lantern')
-    joe.pickupItem('Key')
-    joe.pickupItem('Shovel')
-    joe.pickupItem('Walkman')
-    joe.pickupItem('Tape')
-    joe.pickupItem('Matches')
+    joe.pickupItem('Green Potion')
+    joe.drinkGreenPotion()
+    #joe.pickupItem('Key')
+    #joe.pickupItem('Shovel')
+    #joe.pickupItem('Walkman')
+    #joe.pickupItem('Tape')
+    #joe.pickupItem('Matches')
     show(joe.create_hud())
