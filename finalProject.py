@@ -870,19 +870,57 @@ def txt_to_lines(txt,font_size,isLong = False):
             isEoF = True
 
     return ret
-def make_screen():
-    path = 'C:\\Users\\caleb\\Google Drive\\CSUMB\\final_project\\assets\\images\\hud.jpg'
 
-    desc = 'It looks like nobody has lived here for centuries'
-    font_size = 25
-    canvas = makeEmptyPicture(1200,900)
-    setAllPixelsToAColor(canvas,black)
-    pyCopyEx(makePicture(path),canvas,30,30)
-    sty = makeStyle(sansSerif,bold,font_size)
-    desc_lines = txt_to_lines(desc,font_size)
-    for ln in range(len(desc_lines)):
-        addTextWithStyle(canvas,30,720+(font_size*(1+ln)),desc_lines[ln],sty,red)
-    show(canvas)
+def green_tint(p):
+    color = getColor(p)
+    setColor(p,makeColor(color.getRed(),min(255,int(color.getGreen()*2)),color.getBlue()))
+def red_tint(p):
+    color = getColor(p)
+    setColor(p,makeColor(min(255,int(color.getRed()*2)),color.getGreen(),color.getBlue()))
+def make_screens():
+    setMediaFolder('C:\\Users\\callen\\Google Drive\\CSUMB\\final_project\\assets\\images\\')
+
+    rooms = {
+        'Church': 'Church.jpg',
+        'Diner': 'Diner.jpg',
+        'Gas Station': 'GasStation.jpg',
+        'Porch': 'Porch.jpg',
+        'Kitchen': 'Kitchen.jpg',
+        'Porch': 'Porch.jpg',
+        'Shed': 'Shed.jpg',
+        'Study': 'Study.jpg',
+        'Dining Room': 'DiningRoom.jpg',
+        #'Graveyard': 'Graveyard.jpg',
+        #'Graveyard Green': 'greenGraveyard.jpg',
+        #'Graveyard Red': 'redGraveyard.jpg',
+        #'Living Room': 'LivingRoom.jpg',
+        #'Living Room Green': 'greenLivingRoom.jpg',
+        #'Living Room_Red': 'redLivingRoom.jpg',
+        #'Library': 'Library.jpg',
+        #'Library Green': 'greenLibrary.jpg',
+        #'Library Red': 'redLibrary.jpg',
+    }
+
+    for key in rooms:
+        #hud = makePicture('huds\\hud.jpg')
+        #pyCopyEx(makePicture(rooms[key]),hud,26,100)
+        #writePictureTo(hud,'huds\\%s HUD.jpg'%key)
+        pic_reg = makePicture(rooms[key])
+        pic_grn = makePicture(rooms[key])
+        pic_red = makePicture(rooms[key])
+        pix_grn = getPixels(pic_grn)
+        pix_red = getPixels(pic_red)
+        map(green_tint,pix_grn)
+        map(red_tint,pix_red)
+        hud_reg = makePicture('huds\\hud.jpg')
+        hud_grn = makePicture('huds\\hud.jpg')
+        hud_red = makePicture('huds\\hud.jpg')
+        pyCopyEx(pic_reg,hud_reg,26,100)
+        pyCopyEx(pic_grn,hud_grn,26,100)
+        pyCopyEx(pic_red,hud_red,26,100)
+        writePictureTo(hud_reg,'huds\\%s HUD.jpg'%key)
+        writePictureTo(hud_red,'huds\\%s Red HUD.jpg'%key)
+        writePictureTo(hud_grn,'huds\\%s Green HUD.jpg'%key)
 
 def tester():
     joe = Player('joe',Room("Living Room", "It looks like nobody has lived here for centuries", ['Lantern', 'Key', 'Shovel', 'Walkman', 'Tape', 'Matches']))
