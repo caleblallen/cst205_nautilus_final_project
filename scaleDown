@@ -1,0 +1,21 @@
+#does not work on pictures smaller than the requested scale
+def scaleDown(pic, newWidth, newHeight):
+  width = getWidth(pic)
+  widthScale = width / newWidth
+  widthScale = int(round(widthScale - .5))
+  widthOffset = int(round((width - (widthScale * newWidth)) / 2))
+  height = getHeight(pic)
+  heightScale = height / newHeight
+  heightScale = int(round(heightScale - .5))
+  heightOffset = int(round((height - (heightScale * newHeight)) / 2))
+  copy = makeEmptyPicture(newWidth, newHeight)
+  countX = 0
+  for x in range (widthOffset, width - widthOffset, widthScale):
+    countY = 0
+    for y in range (heightOffset, height - heightOffset, heightScale):
+      copyPixel = getPixel(copy, countX, countY)
+      original = getPixel(pic, x, y)
+      setColor(copyPixel, getColor(original))
+      countY += 1
+    countX += 1
+  return copy
