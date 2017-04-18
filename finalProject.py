@@ -152,6 +152,10 @@ class Room:
 class Player:
   #The items the player is holding
   inventory = []
+  #Has secret room been found?
+  secretRoomFound = false
+  #Is the safe locked
+  safeLocked = true
   #Holds the room that the current player is in
   currentRoom = None
   def __init__(self, name, room):
@@ -180,6 +184,10 @@ class Player:
     else:
       #Check if item is in the current room
       if item in self.currentRoom.getItems():
+        if item == "Tape" or item == "Matches" or item == "CD":
+          printNow("This might come in handy later")
+        if item == "Lantern":
+          printNow("This will come in very handy.  Now if only I can find some matches to actually light it with.")
         self.inventory.append(item)
         self.currentRoom.removeItem(item)
         printNow("You are now holding: %s"%self.inventory)
@@ -209,7 +217,7 @@ class Player:
   #step 2: If there is no room in that direction, alert the user
   def movePlayerNorth(self):
     if self.currentRoom.getNorth().getName() == "Living Room" and self.currentRoom.getNorth().isLocked():
-      printNow("This door is locked!")
+      printNow("The door is locked.  You need a key.")
     else:
       if self.currentRoom.getNorth() != None:
         self.currentRoom = self.currentRoom.getNorth()
@@ -250,9 +258,11 @@ class Player:
     if self.currentRoom.getDown() != None:
       self.currentRoom = self.currentRoom.getDown()
       if "Lit Lantern" in self.inventory:
-        self.currentRoom.setDescription("Why was this room hidden? In the corner you see an old decryption machine.")
+        self.secretRoomFound = true
+        self.currentRoom.setDescription("""The basement is littered with old AV equipment.  Broken projectors, cassette recorders, televisions, and more.  In the corner is a furnace.  
+        As your eyes adjust, you notice a poster for E.T. hanging on the wall.  That seems a little odd.""")
       else:
-        self.currentRoom.setDescription("It is too dark down here to see anything. Try finding something to help you see.")
+        self.currentRoom.setDescription("The basement is completely dark.  You cannot see anything.  It would not be safe to explore here unless you can find some sort of light source.")
       printNow(self.currentRoom)
     else:
       printNow("There is no room below you!")
@@ -260,6 +270,8 @@ class Player:
   ###Use Item Functions###
   def useComputer(self):
     if self.currentRoom.getName() == "Study":
+      printNow("""You attempt to turn on the Macintosh computer, but unfortunately it will not turn on.  You look over at the Apple II and chuckle.
+      You walk over and hit the power button.  To your surprise it boots up.""")
       showInformation("This is where you play hangman and madlibs")
     else:
       showInformation("There is no computer in this room. Try visiting the Study")
@@ -274,8 +286,10 @@ class Player:
     elif self.currentRoom.getName() != "Graveyard":
       printNow("You can't use the shovel here. Try using it somewhere outside.")
     elif self.currentRoom.getName() == "Graveyard" and "Shovel" in self.inventory:
-      printNow("You dig a hole in front of a large headstone.\nYou found a key and a piece of the map!")
-      printNow("The old shovel breaks from digging and is no longer usable")
+      printNow("""The old shovel creaks under your weight as you plunge it deep into the cold earth.  You try one spot and then another.
+      Finally on your third attempt you feel the shovel make contact with something hard.  Unfortunately, the handle cracks in half at 
+      the same time.  So much for that.  You get down on your knees and dig around with your hands where you felt the shovel strike something hard.
+      In the wet dirt you feel something small and metal.  You pull it up into the light and discover it is a key.  You found a key and a piece of the map!""")
       self.inventory.remove('Shovel')
       self.inventory.append('Broken Shovel')
       self.currentRoom.addItem('Key')
@@ -291,10 +305,10 @@ class Player:
       if self.currentRoom.getName() == "Porch":
         if self.currentRoom.getNorth().isLocked():
           self.currentRoom.getNorth().setLocked(false)
-          printNow("You use the key to unlock the door")
+          printNow("You hear the sweet sound of the front door unlocking.")
         else:
            self.currentRoom.getNorth().setLocked(true)
-           printNow("You use the key to lock the door")
+           printNow("The lock clicks in place as the door is secured.")
       else:
         printNow("You cannot use the key here!")
   #step 1: Make sure user is holding the matches and lantern
@@ -311,24 +325,56 @@ class Player:
       printNow("You do not have anything to use the matches on!")
     else:
       printNow("You do not have any matches!")
-
-  
-  def search(self, item):
-    if item == "cabinets" and self.currentRoom.getName() == "Kitchen":
-      printNow("You search the cabinets and find a red potion. You place the potion in your inventory.")
-      self.inventory.append("Red Potion")
-      printNow(self.inventory)
-    else:
-      printNow("Error")
       
+  def useCouch(self):
+    if self.currentRoom.getName() == "Living Room":
+      printNow("Aaahhhh.  A well deserved break.  Well, time to get back to what you came here for.")
+    else:
+      printNow("There is no couch in this room.  Try going to the living room.")
+      
+  def useTelevision(self):
+    if self.currentRoom.getName() == "Living Room":
+      printNow("Broken!  Oh well, you didn’t come here to watch TV.")
+    else:
+      printNow("There is no television in this room.  Try going to the living room.")      
+      
+  def useSafe(self):
+    if self.currentRoom.getName() == "Hidden Basement":
+      code = requestString("Please enter the 7 digit code:")
+      if code == "8675309":
+        printNow("Success!  As you enter the last digit, you hear a click as the safe door pops open.")
+        self.safeLocked = false
+      else:
+        printNow("Nothing!  You must have the wrong code.")
+    else:
+      printNow("There is no safe in here.")
+        
+  def useChair(self):
+    if self.currentRoom.getName() == "Porch":
+      printNow("""Not too bad; pretty comfy in fact.  As you slowly rock back and forth you begin to understand a little more of the appeal of a slower lifestyle.
+      Oh, well.  Enough sitting.  Time to get back to it.""")
+    elif self.currentRoom.getName() == "Library":
+      printNow("Aahhh.  Now I just need a good book to read.  Which one to pick?")
+    else:
+      printNow("There is no chair in here.")
+      
+  def useWalkman(self):
+    if "Walkman" in self.inventory:
+      showInformation("This is where we play reading rainbow")
+    else:
+      printNow("You do not have a walkman in your inventory!")
+
   def drinkRedPotion(self):
-    showInformation("This is where we show the room image with moreRed function")
+    if "Red Potion" in self.inventory:
+      showInformation("This is where we show the room image with moreRed function")
+    else:
+      printNow("You are not carrying this item")
     
   def examine(self, item):
     if item == "bookshelf" and self.currentRoom.getName() == "Library":
       printNow("You look closely at the bookshelf.  It is filled with many great novels.  You notice several of your favorites.  Doug had good taste in literature.")
     elif item == "nautilus" and self.currentRoom.getName() == "Library":
-      printNow("""You realize that Doug has several Jules Verne novels.  You reach for Â‘20,000 Leagues Under the SeaÂ’ from the shelf.  
+      printNow("""You realize that Doug has several Jules Verne novels.  You reach for Â?20,000 Leagues Under the SeaÂ? from the shelf.  
       As you attempt to pull the novel off the shelf the novel suddenly stops halfway out and one of the bookshelves pops open a few inches.  
       A hidden door.  Brilliant!""")
       #Basement initially set to "It is too dark to see anything
@@ -338,7 +384,62 @@ class Player:
       self.currentRoom.setDown(basement)
       printNow(self.currentRoom)
       basement.setUp(self.currentRoom)
-  
+    elif item == 'tombstone' and self.currentRoom.getName() == "Graveyard" and self.secretRoomFound:
+      printNow("""You examine the tombstone again, but this time you lean closer.  You notice that some crabgrass has grown up and blocked the bottom part of the tombstone.
+      You pull back the grass and notice several numbers in printed in small font along the base.  It reads, ‘100001000101111111101101’.""")
+    elif item == 'tombstone' and self.currentRoom.getName() == "Graveyard" and not self.secretRoomFound:
+      printNow("""You examine the tombstone and read the name ‘Douglas Adams’.  Underneath it says, ‘Digital Killed the Analog Star!’""")
+    elif item == 'couch' and self.currentRoom.getName() == "Living Room":
+      printNow("""You find some stale Cheez-Its and spare change in the couch cushions.  You take a look underneath and notice a small piece of parchment.
+      It appears to be a piece to a map.""")
+      self.inventory.append("Map Piece 4")
+      printNow(self.inventory)
+    elif item == 'television' and self.currentRoom.getName() == "Living Room":
+      printNow("An old wood grained RCA.  A classic.  You look closer at the betamax tapes.  Hmm.  It looks like the old Adam West Batman series.")
+    elif item == "cabinets" and self.currentRoom.getName() == "Kitchen":
+      printNow("""You root through the cabinets and find a small bottle that reads, Vision en Rouge.
+      Sounds fancy.  Wonder how it tastes? You place the potion in your inventory.""")
+      self.inventory.append("Red Potion")
+      printNow(self.inventory)
+    elif item == "floor mat" and self.currentRoom.getName() == "Kitchen":
+      printNow("You look under the floor mat and discover another piece to the map!")
+      self.inventory.append("Map Piece 2")
+      printNow(self.inventory)
+    elif item == 'portrait' and self.currentRoom.getName() == "Dining Room":
+      printNow("""The name underneath reads ‘Wilfred Adams’.  You notice a small piece of paper sticking out from behind the back.
+      You tug on it and you find yourself holding another piece of the map.""")
+      self.inventory.append("Map Piece 3")
+      printNow(self.inventory)
+    elif item == 'mirror' and self.currentRoom.getName() == "Dining Room":
+      printNow("This mirror has some odd properties to it.")
+      showInformation("Here we must implement mirrored image functionality")
+    elif item == 'furnace' and self.currentRoom.getName() == "Hidden Basement":
+      printNow("This has not been lit in years.  Better not chance it.")
+    elif item == 'poster' and self.currentRoom.getName() == "Hidden Basement":
+      printNow("""You look closely at the poster.  It looks genuine.  You notice one corner is not completely held down.
+      You give a gentle tug and notice there is something behind the poster.  You pull a little harder, careful not to damage the poster.
+      You pull the poster completely off the wall to reveal a safe hidden behind it.  You are close.  You can feel it.""")
+    elif item == 'safe' and self.currentRoom.getName() == "Hidden Basement" and self.safeLocked:
+      printNow("The safe is locked.")
+    elif item == 'safe' and self.currentRoom.getName() == "Hidden Basement" and not self.safeLocked:
+      printNow("""You open the safe to reveal its contents.  You pull out a 1978 comic book, ‘Batman versus Muhammad Ali’.  It appears the comic book has been autographed.
+      You place the comic book in your backpack.""")
+      self.inventory.append("Comic Book")
+      printNow(self.inventory)
+    elif item == 'comic book' and "Comic Book" in self.inventory:
+      printNow("""You look closely at the comic book to read the inscription.
+      “To my dear son, Douglas.  Whether you grow up to be Batman or Bruce, I’ll always be proud of you.  I love you.  Dad.”
+      You notice that the cover art to the comic book was by Neal Adams.
+      Neal Adams was Douglas Adams father!  Amazing!
+      But that still doesn’t solve the mystery.
+      Where is Doug?
+      ********************
+      Batman or Bruce?
+      Batman or Bruce?
+      OMG!  I had the answer right in front of me from the very beginning.
+      I need to get back to town right away.""")
+    elif item == 'walkman' and 'Walkman' in self.inventory:
+      printNow("Wow! Talk about old school.  It looks like it has a mix tape in it.  Wonder if it works?")
   
 
   #Returns current room of player
@@ -378,19 +479,48 @@ n_images = {
 def mysteryMansion():
   #Is game over?
   done = false
-
+  #Description of living room
+  livingRoomDescription = """The living room is one of the largest rooms in the old mansion.  It interior is dark as most of the curtains and shades are drawn.
+  In the middle is a couch with two end tables on each side.  One end table has a lamp on it, while the other has a lantern.  To the left is a large overstuffed arm chair.
+  There is a coffee table in front of the couch and an old wood grained RCA television sitting on the floor in front of the coffee table.  On top of the television was a betamax player
+  and several betamax tapes.  Framed pictures decorate the walls on every side."""
+  #Description of kitchen
+  kitchenDescription = """The kitchen was surprisingly one of the cleaner rooms in the mansion.  ‘Guessing the owner was not much of a cook.’  The interior was vintage 70s.  Wood cabinets with old ivory pull knobs.
+  There was an oven, range top stove, and refrigerator...all avocado green.  The sink still has a few glasses in it, but nothing else seemed to be out of place.
+  The floor was linoleum and there was an old mat in front of the kitchen sink.  The dirtiest thing in the whole room was an old microwave sitting on the counter.
+  This was obviously the owner’s appliance of choice, lol.  By the far wall under the window was a small table with a single solitary chair.  ‘Guess he didn’t entertain too many guests.’
+  On the table was some sort of bar."""
+  #Description of Porch
+  porchDescription = """The porch is big and expansive as was the style in the midwest.  The floor boards and rails are showing their age.  The whole thing is in desperate need of being refinished.
+  On the left side of the porch is an old rocking chair with a small table next to it.  On the table is an ashtray and a coaster.  To the right of the rocking chair is the front door to the mansion painted a bright red color.
+  Beneath the door is a mat that says ‘Welcome’."""
+  #Description of Graveyard
+  graveyardDescription = """The graveyard is small and sits on a hill adjacent to the mansion.  The headstones are laid out in a haphazard manner.  It appears to be a family cemetery for the Adams’ family.
+  Some of the dates go back to the 1700s.   The cemetery suffers from obvious years of neglect as many of the headstones are in disrepair and the weeds and ivy are overgrown.
+  In the middle of the graveyard is an old oak tree that stretches far above the entire cemetery."""
+  #Description of Shed
+  shedDescription = """The shed is an old dilapidated shed halfway between the graveyard and the mansion.  It appears it was probably used to store tools and such, although it could contain anything.
+  The shed has a small padlock on the outside."""
+  #Description of Library
+  libraryDescription = """You are immediately confronted with the smell of musty books.  The library is filled with bookshelves along every wall.  Each shelf is stuffed with books of every shape and size.
+  In the middle of the library is an old leather arm chair and an end table.  On the end table appears to be a walkman."""
+  #Description of Study
+  studyDescription = """The study was the messiest of all the rooms.  There was a desk in the middle with an old Macintosh computer.  Papers were piled up in an organization that could only be guessed at.
+  In the right corner was a smaller desk with an old Apple II computer on it.  In the left corner was a grandfather clock that appeared to still be keeping time."""
+  #Description of Dining Room
+  diningRoomDescription = """The dining room is very ornate.  In the center is a large dining table with candles.  The table has place settings for 12 people although it appears that it was rarely used.
+  Towards the back of the room is a large mirror that stretches from floor to ceiling.  Above the dining table was a large glass chandelier.  Opposite the mirror is a large portrait of a man."""
   #Create all the rooms in the mansion
-  kitchen = Room("Kitchen","A Place to cook meals",["Map Piece 2"])
-  porch = Room("Porch", "Front porch", [])
-  graveyard = Room("Graveyard", "A cemetery filled with ancient headstones", [])
-  shed = Room("Shed", "An old shed full of cobwebs", ["Shovel"])
-  library = Room("Library", "A room filled with old looking books", ["Book", "Map Piece 3"])
-  study = Room("Study", "A room filled with old papers and an ancient looking computer", ["CD", "Matches", "Tape"])
-  livingRoom = Room("Living Room", "It looks like nobody has lived here for centuries", ["Lantern", "Map Piece 4"])
+  kitchen = Room("Kitchen",kitchenDescription,[])
+  porch = Room("Porch", porchDescription, [])
+  graveyard = Room("Graveyard", graveyardDescription, [])
+  shed = Room("Shed", shedDescription, ["Shovel"])
+  library = Room("Library", libraryDescription, ["Walkman"])
+  study = Room("Study", studyDescription, ["CD", "Matches", "Tape"])
+  livingRoom = Room("Living Room", livingRoomDescription, ["Lantern"])
   ###Lock front door of living room###
-
   #livingRoom.setLocked(true)
-
+  diningRoom = Room("Dining Room", diningRoomDescription, [])
   
   
   ###Build the mansion/room relationships###
@@ -402,6 +532,8 @@ def mysteryMansion():
   livingRoom.setSouth(porch)
   livingRoom.setWest(study)
   livingRoom.setNorth(library)
+  livingRoom.setEast(diningRoom)
+  diningRoom.setWest(livingRoom)
   study.setEast(livingRoom)
   library.setSouth(livingRoom)
   library.setEast(kitchen)
@@ -428,12 +560,12 @@ def mysteryMansion():
     'pickup map piece 4': "player.pickupItem('Map Piece 4')",
     'pickup key': "player.pickupItem('Key')",
     'pickup shovel': "player.pickupItem('Shovel')",
-    'pickup book': "player.pickupItem('Book')",
     'pickup cd': "player.pickupItem('CD')",
     'pickup tape': "player.pickupItem('Tape')",
     'pickup lantern': "player.pickupItem('Lantern')",
     'pickup matches': "player.pickupItem('Matches')",
     'pickup lit lantern': "player.pickupItem('Lit Lantern')",
+    'pickup walkman': "player.pickupItem('Walkman')",
     ###Drop Functions###
     'drop potion': "player.pickupItem('Potion')",
     'drop map piece 1': "player.dropItem('Map Piece 1')",
@@ -442,13 +574,13 @@ def mysteryMansion():
     'drop map piece 4': "player.dropItem('Map Piece 4')",
     'drop key': "player.dropItem('Key')",
     'drop shovel': "player.dropItem('Shovel')",
-    'drop book': "player.dropItem('Book')",
     'drop cd': "player.dropItem('CD')",
     'drop tape': "player.dropItem('Tape')",
     'drop lantern': "player.dropItem('Lantern')",
     'drop matches': "player.dropItem('Matches')",
     'drop broken shovel': "player.dropItem('Broken Shovel')",
     'drop lit lantern': "player.dropItem('Lit Lantern')",
+    'drop walkman': "player.dropItem('Walkman')",
     ###Move Functions###
     'move north': 'player.movePlayerNorth()',
     'move south': 'player.movePlayerSouth()',
@@ -462,13 +594,28 @@ def mysteryMansion():
     'use key': 'player.useKey()',
     'use matches': 'player.useMatches()',
     'use lantern': 'player.useLantern()',
-    ###Search Functions###
-    'search cabinets': "player.search('cabinets')",
+    'use television': 'player.useTelevision()',
+    'use couch': 'player.useCouch()',
+    'use safe': 'player.useSafe()',
+    'use chair': 'player.useChair()',
+    'use walkman': 'player.useWalkman()',
     #Drink Function###
     'drink red potion': "player.drinkRedPotion()",
     #Examine Functions###
     'examine bookshelf': "player.examine('bookshelf')",
     'examine nautilus': "player.examine('nautilus')",
+    'examine tombstone': "player.examine('tombstone')",
+    'examine couch': "player.examine('couch')",
+    'examine television': "player.examine('television')",
+    'examine cabinets': "player.examine('cabinets')",
+    'examine floor mat': "player.examine('floor mat')",
+    'examine portrait': "player.examine('portrait')",
+    'examine mirror': "player.examine('mirror')",
+    'examine furnace': "player.examine('furnace')",
+    'examine poster': "player.examine('poster')",
+    'examine safe': "player.examine('safe')",
+    'examine comic book': "player.examine('comic book')",
+    'examine walkman': "player.examine('walkman')",
   }
 
   #Continue requesting next move until game ends, or user types exit/quit
