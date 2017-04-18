@@ -1,5 +1,5 @@
-import os
-import random
+from random import shuffle
+from random import randint
 
 isPathSet = False
 
@@ -13,6 +13,7 @@ class Room:
   up = None
   down = None
   locked = false
+  isPainted = False
   def __init__(self, name, description, items):
     self.name = name
     self.description = description
@@ -28,13 +29,17 @@ class Room:
 
       hud_normal = makePicture('assets\\images\\huds\\%s HUD.jpg'%self.name)
       hud_red = makePicture('assets\\images\\huds\\%s Red HUD.jpg'%self.name)
+      hud_green = makePicture('assets\\images\\huds\\%s Green HUD.jpg'%self.name)
 
       title_font_size = 77-16
       sty = makeStyle(sansSerif,bold,title_font_size)
       addTextWithStyle(hud_normal,32+title_font_size,70,self.name,sty,black)
       addTextWithStyle(hud_red,32+title_font_size,70,self.name,sty,black)
+      addTextWithStyle(hud_green,32+title_font_size,70,self.name,sty,black)
       self.huds['normal']=hud_normal
       self.huds['red']=hud_red
+      self.huds['green']=hud_green
+
   def get_hud(self,index):
       return self.huds[index]
   def add_hud_description(self, desc,type):
@@ -43,7 +48,7 @@ class Room:
       if len(desc) > 450:
           font_size = 15
           isLong = True
-      printNow(len(desc))
+
       sty = makeStyle(sansSerif,bold,font_size)
       #Text Area: width (x): 30-842; height (y): 602-863
       ln = desc.split('\n')
@@ -146,6 +151,9 @@ class Player:
   safeLocked = true
   #Holds the room that the current player is in
   currentRoom = None
+  #is the player under the effects of a potion
+  hasDrunkRed = False
+  hasDrunkGreen = False
   def __init__(self, name, room):
     self.name = name
     self.currentRoom = room
@@ -213,7 +221,7 @@ class Player:
       if self.currentRoom.getNorth() != None:
         self.currentRoom = self.currentRoom.getNorth()
         printNow(self.currentRoom)
-        show(self.create_hud())
+        #show(self.create_hud())
       else:
         printNow("There is no room to the North!")
 
@@ -221,7 +229,7 @@ class Player:
     if self.currentRoom.getSouth() != None:
       self.currentRoom = self.currentRoom.getSouth()
       printNow(self.currentRoom)
-      show(self.create_hud())
+      ##show(self.create_hud())
     else:
       printNow("There is no room to the South!")
       showInformation("There is no room to the South!")
@@ -230,7 +238,7 @@ class Player:
     if self.currentRoom.getEast() != None:
       self.currentRoom = self.currentRoom.getEast()
       printNow(self.currentRoom)
-      show(self.create_hud())
+      #show(self.create_hud())
     else:
       printNow("There is no room to the East!")
       showInformation("There is no room to the East!")
@@ -239,7 +247,7 @@ class Player:
     if self.currentRoom.getWest() != None:
       self.currentRoom = self.currentRoom.getWest()
       printNow(self.currentRoom)
-      show(self.create_hud())
+      #show(self.create_hud())
     else:
       printNow("There is no room to the West!")
       showInformation("There is no room to the West!")
@@ -248,7 +256,7 @@ class Player:
     if self.currentRoom.getUp() != None:
       self.currentRoom = self.currentRoom.getUp()
       printNow(self.currentRoom)
-      show(self.create_hud())
+      #show(self.create_hud())
     else:
       printNow("There is no room above you!")
       showInformation("There is no room above you!")
@@ -261,7 +269,7 @@ class Player:
         self.secretRoomFound = true
         self.currentRoom.setDescription("""The basement is littered with old AV equipment.  Broken projectors, cassette recorders, televisions, and more.  In the corner is a furnace.
         As your eyes adjust, you notice a poster for E.T. hanging on the wall.  That seems a little odd.""")
-        show(self.create_hud())
+        #show(self.create_hud())
       else:
         self.currentRoom.setDescription("The basement is completely dark.  You cannot see anything.  It would not be safe to explore here unless you can find some sort of light source.")
       printNow(self.currentRoom)
@@ -385,7 +393,20 @@ class Player:
 
   def drinkRedPotion(self):
     if "Red Potion" in self.inventory:
+      hasDrunkRed = True
+      if hasDrunkGreen:
+          hasDrunkGreen = False
       showInformation("This is where we show the room image with moreRed function")
+    else:
+      printNow("You are not carrying this item")
+      showInformation("You are not carrying this item")
+
+  def drinkGreenPotion(self):
+    if "Green Potion" in self.inventory:
+        hasDrunkGreen = True
+        if hasDrunkRed:
+            hasDrunkRed = False
+        showInformation("This is where we show the room image with moreRed function")
     else:
       printNow("You are not carrying this item")
       showInformation("You are not carrying this item")
@@ -567,13 +588,21 @@ class Player:
   def __str__(self):
     return ("Name: %s\nCurrent Location: %s\nPlayer Inventory: %s\n")%(self.name, self.currentRoom, self.inventory)
 
-  def create_hud(self):
-    printNow(self.inventory)
-    self.currentRoom.add_hud_description(str(self.currentRoom),'normal')
-    #if len(self.inventory) > 0:
-    #    for i in range(len(self.inventory)):
-    #        self.add_hud_item(self.currentRoom.get_hud('normal'),i,self.inventory[i])
-    return self.currentRoom.get_hud('normal')
+  def create_hud(self,mustRemake = False):
+    if mustRemake:
+      self.currentRoom.make_huds()
+    if len(self.inventory) > 0:
+        for i in range(len(self.inventory)):
+            self.add_hud_item(self.currentRoom.get_hud('normal'),i,self.inventory[i])
+    if self.hasDrunkRed:
+        self.currentRoom.add_hud_description(str(self.currentRoom),'red')
+        return self.currentRoom.get_hud('red')
+    elif self.hasDrunkGreen:
+        self.currentRoom.add_hud_description(str(self.currentRoom),'green')
+        return self.currentRoom.get_hud('green')
+    else:
+        self.currentRoom.add_hud_description(str(self.currentRoom),'normal')
+        return self.currentRoom.get_hud('normal')
 
   def add_hud_item(self,hud,index,item):
       """
@@ -588,19 +617,20 @@ class Player:
           6: width (x): 1220-1345; height (y): 740-864 [125x124]
       """
       i_path = {
-        'Potion': 'assets\\images\\item_icons\\potion_red.jpg',
-        'Map Piece 1': 'assets\\images\\item_icons\\Map.jpg',
-        'Map Piece 2': 'assets\\images\\item_icons\\Map.jpg',
-        'Map Piece 3': 'assets\\images\\item_icons\\Map.jpg',
-        'Map Piece 4': 'assets\\images\\item_icons\\Map.jpg',
+        'Green Potion': 'assets\\images\\item_icons\\green_potion.jpg',
+        'Map Piece 1': 'assets\\images\\item_icons\\map_piece_1.jpg',
+        'Map Piece 2': 'assets\\images\\item_icons\\map_piece_2.jpg',
+        'Map Piece 3': 'assets\\images\\item_icons\\map_piece_3.jpg',
+        'Map Piece 4': 'assets\\images\\item_icons\\map_piece_4.jpg',
         'Key': 'assets\\images\\item_icons\\key.jpg',
-        'Shovel': 'assets\\images\\item_icons\\broken_shovel.jpg',
-        'CD': 'assets\\images\\item_icons\\broken_shovel.jpg',
-        'Tape': 'assets\\images\\item_icons\\broken_shovel.jpg',
+        'Small Key': 'assets\\images\\item_icons\\small_key.jpg',
+        'Shovel': 'assets\\images\\item_icons\\shovel.jpg',
+        'CD': 'assets\\images\\item_icons\\CD.jpg',
+        'Tape': 'assets\\images\\item_icons\\tape.jpg',
         'Lantern': 'assets\\images\\item_icons\\lantern.jpg',
-        'Matches': 'assets\\images\\item_icons\\broken_shovel.jpg',
-        'Lit Lantern': 'assets\\images\\item_icons\\broken_shovel.jpg',
-        'Walkman': 'assets\\images\\item_icons\\broken_shovel.jpg',
+        'Matches': 'assets\\images\\item_icons\\matches.jpg',
+        'Lit Lantern': 'assets\\images\\item_icons\\lit_lantern.jpg',
+        'Walkman': 'assets\\images\\item_icons\\walkman.jpg',
           }
       origins = [(903,602),(1062,602),(1220,602),(903,740),(1062,740),(1220,740)]
       pyCopyEx(makePicture(i_path[item]),hud,origins[index][0],origins[index][1],getColor(getPixel(makePicture(i_path[item]),0,0)))
@@ -705,7 +735,6 @@ def mysteryMansion():
   player = Player(playerName, diner)
   #Print player details
   printNow(player)
-  showInformation(str(player))
   show(player.create_hud())
   #All the possible actions a user may enter and the corresponding function to call
   actions = {
@@ -714,7 +743,8 @@ def mysteryMansion():
     'print inventory': 'printNow(player.inventory)',
     'print player': 'printNow(player)',
     ###Pickup Functions###
-    'pickup potion': "player.pickupItem('Potion')",
+    'pickup red potion': "player.pickupItem('Red Potion')",
+    'pickup green potion': "player.pickupItem('Green Potion')",
     'pickup map piece 1': "player.pickupItem('Map Piece 1')",
     'pickup map piece 2': "player.pickupItem('Map Piece 2')",
     'pickup map piece 3': "player.pickupItem('Map Piece 3')",
@@ -728,7 +758,8 @@ def mysteryMansion():
     'pickup lit lantern': "player.pickupItem('Lit Lantern')",
     'pickup walkman': "player.pickupItem('Walkman')",
     ###Drop Functions###
-    'drop potion': "player.pickupItem('Potion')",
+    'drop red potion': "player.dropItem('Red Potion')",
+    'drop green potion': "player.dropItem('Green Potion')",
     'drop map piece 1': "player.dropItem('Map Piece 1')",
     'drop map piece 2': "player.dropItem('Map Piece 2')",
     'drop map piece 3': "player.dropItem('Map Piece 3')",
@@ -762,6 +793,7 @@ def mysteryMansion():
     'use walkman': 'player.useWalkman()',
     #Drink Function###
     'drink red potion': "player.drinkRedPotion()",
+    'drink green potion': "player.drinkGreenPotion()",
     #Examine Functions###
     'examine bookshelf': "player.examine('bookshelf')",
     'examine nautilus': "player.examine('nautilus')",
@@ -798,6 +830,15 @@ def mysteryMansion():
     else:
       try:
         eval(actions[action])
+        if 'pickup' in actions[action] or 'drop' in actions[action] or 'use matches' == action:
+            show(player.create_hud(True))
+        else:
+            if not player.currentRoom.isPainted:
+                show(player.create_hud(False))
+                player.currentRoom.isPainted = True
+            else:
+                repaint(player.create_hud(False))
+
       #Handles error from an invalid action
       except:
         printNow("Not a valid move")
