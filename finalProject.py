@@ -416,7 +416,7 @@ class Player:
       printNow("You look closely at the bookshelf.  It is filled with many great novels.  You notice several of your favorites.  Doug had good taste in literature.")
       showInformation("You look closely at the bookshelf.  It is filled with many great novels.  You notice several of your favorites.  Doug had good taste in literature.")
     elif item == "nautilus" and self.currentRoom.getName() == "Library":
-      printNow("""You realize that Doug has several Jules Verne novels.  You reach for �?20,000 Leagues Under the Sea�? from the shelf.
+      printNow("""You realize that Doug has several Jules Verne novels.  You reach for \'?20,000 Leagues Under the Sea\'? from the shelf.
       As you attempt to pull the novel off the shelf the novel suddenly stops halfway out and one of the bookshelves pops open a few inches.
       A hidden door.  Brilliant!""")
       #Basement initially set to "It is too dark to see anything
@@ -499,44 +499,83 @@ class Player:
   def talkToBoy(self):
     printNow("""
     Hey!  How goes it?
-    It goes fine.  <eyes you skeptically>  Where you from cause it ain�t from around here?
-    How do you know I�m not from around here?
-    First off, e�ryone knows e�ryone �round here.
+    It goes fine.  <eyes you skeptically>  Where you from cause it ain\'t from around here?
+    How do you know I\'m not from around here?
+    First off, e\'ryone knows e\'ryone \'round here.
     Second, you talks funny.
     I talks funny?
-    Anyway, I�m in town visiting my grandparent�s for a few weeks.  I just came from the diner and was look for something to do.  I heard this is where the young folks hang out.
-    Well, that�s true.  Unfortunately, I�m the only young folk around these here parts.  Name�s Opie.
+    Anyway, I\'m in town visiting my grandparent\'s for a few weeks.  I just came from the diner and was look for something to do.  I heard this is where the young folks hang out.
+    Well, that\'s true.  Unfortunately, I\'m the only young folk around these here parts.  Name\'s Opie.
     <under your breath>  Figures.
     Do you know where I could find Bruce then?
     Bruce?  Whatcha want with Bruce?  You need something fixed?  Bruce can fix anything.
-    He�s a mechanical genius.  Cars.  TVs.  Radios.  You name it.
+    He\'s a mechanical genius.  Cars.  TVs.  Radios.  You name it.
     No, nothing like that.  I wanted to ask him about the Mystery at the Mansion.
     <boy goes pale>
     Whatcha wanna go and do that for?  That place is haunted.
-    It�s the old Adams mansion.  The oldest place in all of Plainsfield.
+    It\'s the old Adams mansion.  The oldest place in all of Plainsfield.
     It was passed down from Adams to Adams for centuries.  The last known descendant was Douglas Adams.  He was a fancy media engineer.  Worked with film and audio like they do in Hollywood and stuff.
-    Story goes that Douglas Adams went mad crazy after e�rythang started going from analog to digital.  Couldn�t take it no more.
+    Story goes that Douglas Adams went mad crazy after e\'rythang started going from analog to digital.  Couldn\'t take it no more.
     <silence>
     And then what?
-    And then nothing.  Ol� Doug just up and disappeared.  Place has been abandoned ever since.  Although if you ask me, he ne�er left.  He haunts that place to this day.
+    And then nothing.  Ol\' Doug just up and disappeared.  Place has been abandoned ever since.  Although if you ask me, he ne\'er left.  He haunts that place to this day.
     How does someone just disappear in a town this size?  No one has ever seen him since.
-    Well, that�s kind of the problem too.  No one really knows what Doug looks like.  He was pretty much a recluse when he did live in that there mansion.
+    Well, that\'s kind of the problem too.  No one really knows what Doug looks like.  He was pretty much a recluse when he did live in that there mansion.
     Can you tell me where the mansion is located?
-    I don�t know for sure.  Bruce does though.  He is at the gas station just a little ways from here.
+    I don\'t know for sure.  Bruce does though.  He is at the gas station just a little ways from here.
+    Okay, thanks.""")
+
+    showInformation("""
+    Hey!  How goes it?
+    It goes fine.  <eyes you skeptically>  Where you from cause it ain\'t from around here?
+    How do you know I\'m not from around here?
+    First off, e\'ryone knows e\'ryone \'round here.
+    Second, you talks funny.
+    I talks funny?
+    Anyway, I\'m in town visiting my grandparent\'s for a few weeks.  I just came from the diner and was look for something to do.  I heard this is where the young folks hang out.
+    Well, that\'s true.  Unfortunately, I\'m the only young folk around these here parts.  Name\'s Opie.
+    <under your breath>  Figures.
+    Do you know where I could find Bruce then?
+    Bruce?  Whatcha want with Bruce?  You need something fixed?  Bruce can fix anything.
+    He\'s a mechanical genius.  Cars.  TVs.  Radios.  You name it.
+    No, nothing like that.  I wanted to ask him about the Mystery at the Mansion.
+    <boy goes pale>
+    Whatcha wanna go and do that for?  That place is haunted.
+    It\'s the old Adams mansion.  The oldest place in all of Plainsfield.
+    It was passed down from Adams to Adams for centuries.  The last known descendant was Douglas Adams.  He was a fancy media engineer.  Worked with film and audio like they do in Hollywood and stuff.
+    Story goes that Douglas Adams went mad crazy after e\'rythang started going from analog to digital.  Couldn\'t take it no more.
+    <silence>
+    And then what?
+    And then nothing.  Ol\' Doug just up and disappeared.  Place has been abandoned ever since.  Although if you ask me, he ne\'er left.  He haunts that place to this day.
+    How does someone just disappear in a town this size?  No one has ever seen him since.
+    Well, that\'s kind of the problem too.  No one really knows what Doug looks like.  He was pretty much a recluse when he did live in that there mansion.
+    Can you tell me where the mansion is located?
+    I don\'t know for sure.  Bruce does though.  He is at the gas station just a little ways from here.
     Okay, thanks.""")
 
   def talkToEdith(self):
     printNow("""
-    �Hey Edith.
-    <cough, cough> <raspy voice>  Hey!  You�re not from around here.
-    I�m new in town; visiting my grandparents.  I just wondered what there is to do around here?�
-    You�re doing it.  Other than hanging out at the diner, you could wander over to the church.  There is a rec room there where some of the local young folks like to hang out.�
+    \'Hey Edith.
+    <cough, cough> <raspy voice>  Hey!  You\'re not from around here.
+    I\'m new in town; visiting my grandparents.  I just wondered what there is to do around here?\'
+    You\'re doing it.  Other than hanging out at the diner, you could wander over to the church.  There is a rec room there where some of the local young folks like to hang out.\'
     You could also go find Bruce and talk to him.  He is always working on some contraption or willing to tell some tall tale.  His favorite is the mystery of the mansion.
     Mystery of the Mansion?
     Just a bunch of nonsense if you ask me.
-    �Okay thanks.�
+    \'Okay thanks.\'
     Hmmm.  Mystery of the Mansion?  There might be something exciting in this town after all.
-    I wonder where this Bruce guy is?  Oh well, I guess I�ll go check out this church in the meantime.""")
+    I wonder where this Bruce guy is?  Oh well, I guess I\'ll go check out this church in the meantime.""")
+    showInformation("""
+    \'Hey Edith.
+    <cough, cough> <raspy voice>  Hey!  You\'re not from around here.
+    I\'m new in town; visiting my grandparents.  I just wondered what there is to do around here?\'
+    You\'re doing it.  Other than hanging out at the diner, you could wander over to the church.  There is a rec room there where some of the local young folks like to hang out.\'
+    You could also go find Bruce and talk to him.  He is always working on some contraption or willing to tell some tall tale.  His favorite is the mystery of the mansion.
+    Mystery of the Mansion?
+    Just a bunch of nonsense if you ask me.
+    \'Okay thanks.\'
+    Hmmm.  Mystery of the Mansion?  There might be something exciting in this town after all.
+    I wonder where this Bruce guy is?  Oh well, I guess I\'ll go check out this church in the meantime.""")
 
   def talkToBruce(self):
     if "Comic Book" in self.inventory:
@@ -546,39 +585,78 @@ class Player:
       A whole lot in fact.  I have something for you.
       <gives Bruce the comic book>
       <long pause>
-      I gotta give you credit.  I never thought anyone would ever figure it out.  How�d you figure it out?
+      I gotta give you credit.  I never thought anyone would ever figure it out.  How\'d you figure it out?
       It was the message your dad wrote.  He told you could be either Bruce or Batman.
       And I obviously chose to be Bruce.
       No!  You chose to be Batman.  You gave up the mansion and wealth so that you could silently help the folks here in Plainsfield.  You fix things in the night and keep things running with hardly any recognition for it.
       You are Batman.  You took the name Bruce to hide the fact that you are really Douglas Adams.
-      Well, let me congratulate you again.  You really have solved the Mystery of the Adam�s Mansion.  Well, I guess the jig�s up for me.  Time to be Douglas Adams again.
-      No it�s not.  You should always be yourself, unless you can be Batman, then be Batman.
-      You chose to be Batman, and I�m the last person who will ever turn Bruce Wayne in as being Batman.  Your secret�s safe with me.
-      You�re all right.  Hey, I never did catch your name.
+      Well, let me congratulate you again.  You really have solved the Mystery of the Adam\'s Mansion.  Well, I guess the jig\'s up for me.  Time to be Douglas Adams again.
+      No it\'s not.  You should always be yourself, unless you can be Batman, then be Batman.
+      You chose to be Batman, and I\'m the last person who will ever turn Bruce Wayne in as being Batman.  Your secret\'s safe with me.
+      You\'re all right.  Hey, I never did catch your name.
+      <grins>
+      Just call me Robin.""")
+      showInformation("""
+      Hi Bruce!
+      Hi.  Back from your trip to the mansion?  Find anything interesting?
+      A whole lot in fact.  I have something for you.
+      <gives Bruce the comic book>
+      <long pause>
+      I gotta give you credit.  I never thought anyone would ever figure it out.  How\'d you figure it out?
+      It was the message your dad wrote.  He told you could be either Bruce or Batman.
+      And I obviously chose to be Bruce.
+      No!  You chose to be Batman.  You gave up the mansion and wealth so that you could silently help the folks here in Plainsfield.  You fix things in the night and keep things running with hardly any recognition for it.
+      You are Batman.  You took the name Bruce to hide the fact that you are really Douglas Adams.
+      Well, let me congratulate you again.  You really have solved the Mystery of the Adam\'s Mansion.  Well, I guess the jig\'s up for me.  Time to be Douglas Adams again.
+      No it\'s not.  You should always be yourself, unless you can be Batman, then be Batman.
+      You chose to be Batman, and I\'m the last person who will ever turn Bruce Wayne in as being Batman.  Your secret\'s safe with me.
+      You\'re all right.  Hey, I never did catch your name.
       <grins>
       Just call me Robin.""")
     else:
       printNow("""
       You walk over closer to the man in the faded overalls.  You notice he appears to be working on an old Atari 2600.  Hmm, interesting.
       Hi, are you Bruce.
-      Who�s asking?
+      Who\'s asking?
       I am.  I was hoping you could help me out?
-      Maybe.  You�re not from �round here.
-      That�s what I�m told.  I was interested in the Adams mansion.
-      Adams mansion?  Sounds like you�ve been talking to Opie.
-      Why�s that?
-      That boy�s always spinning tales about that mansion up on the hill.  Thinks it�s haunted.
+      Maybe.  You\'re not from \'round here.
+      That\'s what I\'m told.  I was interested in the Adams mansion.
+      Adams mansion?  Sounds like you\'ve been talking to Opie.
+      Why\'s that?
+      That boy\'s always spinning tales about that mansion up on the hill.  Thinks it\'s haunted.
       <chuckles>
-      You don�t?
+      You don\'t?
       The mansion was abandoned years ago.  Plain and simple.  Everyone wants to say its haunted or that there is some sort of great mystery to it.
       But not you?
-      What�s the mystery?  Doug took off one day and the mansion has been abandoned ever since.
+      What\'s the mystery?  Doug took off one day and the mansion has been abandoned ever since.
       But no one saw him leave?  And he left everything behind, including the car.  How does someone leave this town without a car and without anyone seeing them?
       <grunts>
-      Now you sound like Opie too.  That boy�s always looking for a mystery to solve.
+      Now you sound like Opie too.  That boy\'s always looking for a mystery to solve.
       Can you tell me where to find the mansion?
       Sure, its located over there yonder on that hill.  Be careful snooping around there though.
-      If the guy�s really gone, what�s the harm?
+      If the guy\'s really gone, what\'s the harm?
+      Just be careful.  Some things are best left alone if you ask me.""")
+      showInformation("""
+      You walk over closer to the man in the faded overalls.  You notice he appears to be working on an old Atari 2600.  Hmm, interesting.
+      Hi, are you Bruce.
+      Who\'s asking?
+      I am.  I was hoping you could help me out?
+      Maybe.  You\'re not from \'round here.
+      That\'s what I\'m told.  I was interested in the Adams mansion.
+      Adams mansion?  Sounds like you\'ve been talking to Opie.
+      Why\'s that?
+      That boy\'s always spinning tales about that mansion up on the hill.  Thinks it\'s haunted.
+      <chuckles>
+      You don\'t?
+      The mansion was abandoned years ago.  Plain and simple.  Everyone wants to say its haunted or that there is some sort of great mystery to it.
+      But not you?
+      What\'s the mystery?  Doug took off one day and the mansion has been abandoned ever since.
+      But no one saw him leave?  And he left everything behind, including the car.  How does someone leave this town without a car and without anyone seeing them?
+      <grunts>
+      Now you sound like Opie too.  That boy\'s always looking for a mystery to solve.
+      Can you tell me where to find the mansion?
+      Sure, its located over there yonder on that hill.  Be careful snooping around there though.
+      If the guy\'s really gone, what\'s the harm?
       Just be careful.  Some things are best left alone if you ask me.""")
 
   #Returns current room of player
@@ -683,7 +761,7 @@ def mysteryMansion():
   Above the gas station is a faded metal Texaco sign.  Next to that is a sign that reads: Route 66 Cafe.  On the right side of the porch deck is a vintage Coca-Cola vending machine.
   You spy an old man rustling around the mechanics bay to the right side of the station."""
   #Description of Diner
-  dinerDescription = """You arrive at the diner.  It�s the typical Hollywood portrayal of a rundown midwest diner.  The building itself is a large rectangular piece with metal siding.  Weeds are overgrown all along the outside.
+  dinerDescription = """You arrive at the diner.  It\'s the typical Hollywood portrayal of a rundown midwest diner.  The building itself is a large rectangular piece with metal siding.  Weeds are overgrown all along the outside.
   A large sign stands above the building with giant letters spelling out D-I-N-E-R.  You wonder if the place is even in business.  Oh, well.  Only one way to find out.  You head inside.
   The appearance inside the diner is only slightly more upkept than the outside.  The plastic material on the booths and barstools is cracked.  The paint on the walls is faded and peeling in places.
   Behind the counter is an older woman with Edith on her nametag.  You approach the counter."""
@@ -830,7 +908,7 @@ def mysteryMansion():
     else:
       try:
         eval(actions[action])
-        if 'pickup' in actions[action] or 'drop' in actions[action] or 'use matches' == action:
+        if 'pickup' in actions[action] or 'drop' in actions[action] or 'use' in action:
             show(player.create_hud(True))
         else:
             if not player.currentRoom.isPainted:
