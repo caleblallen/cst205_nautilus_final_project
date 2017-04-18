@@ -3,6 +3,7 @@ import random
 
 isPathSet = False
 
+
 class Room:
   #Initializes every room to have no surrounding rooms and to be in an unlocked state
   north = None
@@ -20,9 +21,13 @@ class Room:
     self.make_huds()
 
   def make_huds(self):
-      setMediaFolder('C:\\Users\\caleb\\Google Drive\\CSUMB\\final_project\\')
-      hud_normal = makePicture('assets\\images\\huds\\hud.jpg')
-      hud_red = makePicture('assets\\images\\huds\\hud.jpg')
+      global isPathSet
+      if not isPathSet:
+          setMediaFolder()
+          isPathSet = True
+
+      hud_normal = makePicture('assets\\images\\huds\\%s HUD.jpg'%self.name)
+      hud_red = makePicture('assets\\images\\huds\\%s Red HUD.jpg'%self.name)
 
       title_font_size = 77-16
       sty = makeStyle(sansSerif,bold,title_font_size)
@@ -216,7 +221,6 @@ class Player:
     if self.currentRoom.getSouth() != None:
       self.currentRoom = self.currentRoom.getSouth()
       printNow(self.currentRoom)
-      showInformation(self.currentRoom)
       show(self.create_hud())
     else:
       printNow("There is no room to the South!")
@@ -235,7 +239,6 @@ class Player:
     if self.currentRoom.getWest() != None:
       self.currentRoom = self.currentRoom.getWest()
       printNow(self.currentRoom)
-      showInformation(self.currentRoom)
       show(self.create_hud())
     else:
       printNow("There is no room to the West!")
@@ -245,7 +248,6 @@ class Player:
     if self.currentRoom.getUp() != None:
       self.currentRoom = self.currentRoom.getUp()
       printNow(self.currentRoom)
-      showInformation(self.currentRoom)
       show(self.create_hud())
     else:
       printNow("There is no room above you!")
@@ -568,9 +570,9 @@ class Player:
   def create_hud(self):
     printNow(self.inventory)
     self.currentRoom.add_hud_description(str(self.currentRoom),'normal')
-    if len(self.inventory) > 0:
-        for i in range(len(self.inventory)):
-            self.add_hud_item(self.currentRoom.get_hud('normal'),i,self.inventory[i])
+    #if len(self.inventory) > 0:
+    #    for i in range(len(self.inventory)):
+    #        self.add_hud_item(self.currentRoom.get_hud('normal'),i,self.inventory[i])
     return self.currentRoom.get_hud('normal')
 
   def add_hud_item(self,hud,index,item):
@@ -608,6 +610,11 @@ n_images = {
 }
 
 def mysteryMansion():
+  global isPathSet
+  if not isPathSet:
+      showInformation("Please Choose the game folder.")
+      setMediaFolder()
+      isPathSet = True
   #Is game over?
   done = false
   #Description of living room
