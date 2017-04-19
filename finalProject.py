@@ -1,5 +1,6 @@
 from random import shuffle
 from random import randint
+from time import sleep
 
 isPathSet = False
 
@@ -279,6 +280,7 @@ class Player:
     if self.currentRoom.getName() == "Study":
       printNow("""You attempt to turn on the Macintosh computer, but unfortunately it will not turn on.  You look over at the Apple II and chuckle.
       You walk over and hit the power button.  To your surprise it boots up.""")
+      play(makeSound('assets\\audio\\MacBoot.wav'))
       showInformation("This is where you play hangman and madlibs")
     else:
       showInformation("There is no computer in this room. Try visiting the Study")
@@ -299,10 +301,15 @@ class Player:
       Finally on your third attempt you feel the shovel make contact with something hard.  Unfortunately, the handle cracks in half at
       the same time.  So much for that.  You get down on your knees and dig around with your hands where you felt the shovel strike something hard.
       In the wet dirt you feel something small and metal.  You pull it up into the light and discover it is a key.  You found a key and a piece of the map!""")
+      play(makeSound('assets\\audio\\shovel.wav'))
+      sleep(3.5)
+      play(makeSound('assets\\audio\\shovel.wav'))
+      sleep(3.5)
+      play(makeSound('assets\\audio\\shovelBreaking.wav'))
       showInformation("""The old shovel creaks under your weight as you plunge it deep into the cold earth.  You try one spot and then another.
-      Finally on your third attempt you feel the shovel make contact with something hard.  Unfortunately, the handle cracks in half at
-      the same time.  So much for that.  You get down on your knees and dig around with your hands where you felt the shovel strike something hard.
-      In the wet dirt you feel something small and metal.  You pull it up into the light and discover it is a key.  You found a key and a piece of the map!""")
+Finally on your third attempt you feel the shovel make contact with something hard.  Unfortunately, the handle cracks in half at
+the same time.  So much for that.  You get down on your knees and dig around with your hands where you felt the shovel strike something hard.
+In the wet dirt you feel something small and metal.  You pull it up into the light and discover it is a key.  You found a key and a piece of the map!""")
       self.inventory.remove('Shovel')
       self.inventory.append('Broken Shovel')
       self.currentRoom.addItem('Key')
@@ -334,6 +341,7 @@ class Player:
   def useMatches(self):
     if "Matches" in self.inventory and "Lantern" in self.inventory:
       printNow("You use the matches to light the lantern")
+      play(makeSound('assets\\audio\\match.wav'))
       showInformation("You use the matches to light the lantern")
       self.inventory.remove("Matches")
       self.inventory.remove("Lantern")
@@ -391,7 +399,10 @@ class Player:
 
   def useWalkman(self):
     if "Walkman" in self.inventory:
-      showInformation("This is where we play reading rainbow")
+      play(makeSound('assets\\audio\\readingRainbow.wav'))
+      sleep(31)
+      play(makeSound('assets\\audio\\rewindRainbow.wav'))
+      sleep(7)
     else:
       printNow("You do not have a walkman in your inventory!")
       showInformation("You do not have a walkman in your inventory!")
@@ -399,6 +410,7 @@ class Player:
   def drinkRedPotion(self):
     if "Red Potion" in self.inventory:
       self.hasDrunkRed = True
+      play(makeSound('assets\\audio\\chug.wav'))
       if self.hasDrunkGreen:
           self.hasDrunkGreen = False
       self.inventory.remove('Red Potion')
@@ -410,6 +422,7 @@ class Player:
   def drinkGreenPotion(self):
     if "Green Potion" in self.inventory:
         self.hasDrunkGreen = True
+        play(makeSound('assets\\audio\\chug.wav'))
         if self.hasDrunkRed:
             hasDrunkRed = False
         self.inventory.remove('Green Potion')
@@ -423,12 +436,12 @@ class Player:
       printNow("You look closely at the bookshelf.  It is filled with many great novels.  You notice several of your favorites.  Doug had good taste in literature.")
       showInformation("You look closely at the bookshelf.  It is filled with many great novels.  You notice several of your favorites.  Doug had good taste in literature.")
     elif item == "nautilus" and self.currentRoom.getName() == "Library":
-      printNow("""You realize that Doug has several Jules Verne novels.  You reach for \'?20,000 Leagues Under the Sea\'? from the shelf.
+      printNow("""You realize that Doug has several Jules Verne novels.  You reach for \"20,000 Leagues Under the Sea\" from the shelf.
       As you attempt to pull the novel off the shelf the novel suddenly stops halfway out and one of the bookshelves pops open a few inches.
       A hidden door.  Brilliant!""")
-      showInformation("""You realize that Doug has several Jules Verne novels.  You reach for \'?20,000 Leagues Under the Sea\'? from the shelf.
-      As you attempt to pull the novel off the shelf the novel suddenly stops halfway out and one of the bookshelves pops open a few inches.
-      A hidden door.  Brilliant!""")
+      showInformation("""You realize that Doug has several Jules Verne novels.  You reach for \"20,000 Leagues Under the Sea\" from the shelf.
+As you attempt to pull the novel off the shelf the novel suddenly stops halfway out and one of the bookshelves pops open a few inches.
+A hidden door.  Brilliant!""")
       #Basement initially set to "It is too dark to see anything
       #User must first find matches and lantern then use matches to light lantern
       #With lit lantern equipped, description changes to reveal contents of basement
@@ -438,43 +451,57 @@ class Player:
       basement.setUp(self.currentRoom)
     elif item == 'tombstone' and self.currentRoom.getName() == "Graveyard" and self.secretRoomFound:
       printNow("""You examine the tombstone again, but this time you lean closer.  You notice that some crabgrass has grown up and blocked the bottom part of the tombstone.
-      You pull back the grass and notice several numbers in printed in small font along the base.  It reads, ?100001000101111111101101?.""")
+      You pull back the grass and notice several numbers in printed small font along the base.  It reads, \"100001000101111111101101\".""")
       showInformation("""You examine the tombstone again, but this time you lean closer.  You notice that some crabgrass has grown up and blocked the bottom part of the tombstone.
-      You pull back the grass and notice several numbers in printed in small font along the base.  It reads, ?100001000101111111101101?.""")
+You pull back the grass and notice several numbers printed in small font along the base.  It reads, \"100001000101111111101101\".""")
     elif item == 'tombstone' and self.currentRoom.getName() == "Graveyard" and not self.secretRoomFound:
-      printNow("""You examine the tombstone and read the name ?Douglas Adams?.  Underneath it says, ?Digital Killed the Analog Star!?""")
-      showInformation("""You examine the tombstone and read the name ?Douglas Adams?.  Underneath it says, ?Digital Killed the Analog Star!?""")
+      printNow("""You examine the tombstone and read the name \"Douglas Adams\".  Underneath it says, \"Digital Killed the Analog Star!\"""")
+      showInformation("""You examine the tombstone and read the name \"Douglas Adams\".  Underneath it says, \"Digital Killed the Analog Star!\"""")
     elif item == 'couch' and self.currentRoom.getName() == "Living Room":
-      printNow("""You find some stale Cheez-Its and spare change in the couch cushions.  You take a look underneath and notice a small piece of parchment.
-      It appears to be a piece to a map.""")
-      showInformation("""You find some stale Cheez-Its and spare change in the couch cushions.  You take a look underneath and notice a small piece of parchment.
-      It appears to be a piece to a map.""")
-      self.inventory.append("Map Piece 4")
-      printNow(self.inventory)
+      if couchDone == True:
+        printNow("You already raided the couch cushions!")
+        showInformation("You already raided the couch cushions!")
+      else:
+        printNow("""You find some stale Cheez-Its and spare change in the couch cushions.  You take a look underneath and notice a small piece of parchment.
+        It appears to be a piece to a map.""")
+        showInformation("""You find some stale Cheez-Its and spare change in the couch cushions.  You take a look underneath and notice a small piece of parchment.
+It appears to be a piece to a map.""")
+        self.inventory.append("Map Piece 4")
+        couchDone = True
+        printNow(self.inventory)
     elif item == 'television' and self.currentRoom.getName() == "Living Room":
       printNow("An old wood grained RCA.  A classic.  You look closer at the betamax tapes.  Hmm.  It looks like the old Adam West Batman series.")
       showInformation("An old wood grained RCA.  A classic.  You look closer at the betamax tapes.  Hmm.  It looks like the old Adam West Batman series.")
     elif item == "cabinets" and self.currentRoom.getName() == "Kitchen":
       printNow("""You root through the cabinets and find a small bottle that reads, Vision en Rouge.
       Sounds fancy.  Wonder how it tastes? You place the potion in your inventory.""")
+      play(makeSound('assets\\audio\\checkCabinet.wav'))
       showInformation("""You root through the cabinets and find a small bottle that reads, Vision en Rouge.
-      Sounds fancy.  Wonder how it tastes? You place the potion in your inventory.""")
+Sounds fancy.  Wonder how it tastes? You place the potion in your inventory.""")
       self.inventory.append("Red Potion")
       printNow(self.inventory)
-
     elif item == "floor mat" and self.currentRoom.getName() == "Kitchen":
-      printNow("You look under the floor mat and discover another piece to the map!")
-      showInformation("You look under the floor mat and discover another piece to the map!")
-      self.inventory.append("Map Piece 2")
-      printNow(self.inventory)
-
+      if floorMatDone == True:
+        printNow("You already looked under the floor mat!")
+        showInformation("You already looked under the floor mat!")
+      else:
+        printNow("You look under the floor mat and discover another piece to the map!")
+        showInformation("You look under the floor mat and discover another piece to the map!")
+        self.inventory.append("Map Piece 2")
+        floorMatDone = True
+        printNow(self.inventory)
     elif item == 'portrait' and self.currentRoom.getName() == "Dining Room":
-      printNow("""The name underneath reads \"Wilfred Adams\".  You notice a small piece of paper sticking out from behind the back.
-      You tug on it and you find yourself holding another piece of the map.""")
-      showInformation("""The name underneath reads \"Wilfred Adams\".  You notice a small piece of paper sticking out from behind the back.
-      You tug on it and you find yourself holding another piece of the map.""")
-      self.inventory.append("Map Piece 3")
-      printNow(self.inventory)
+      if portraitDone == True:
+        printNow("You already examined the portrait!")
+        showInformation("You already examined the portrait!")
+      else:
+        printNow("""The name underneath reads \"Wilfred Adams\".  You notice a small piece of paper sticking out from behind the back.
+        You tug on it and you find yourself holding another piece of the map.""")
+        showInformation("""The name underneath reads \"Wilfred Adams\".  You notice a small piece of paper sticking out from behind the back.
+You tug on it and you find yourself holding another piece of the map.""")
+        self.inventory.append("Map Piece 3")
+        portraitDone = True
+        printNow(self.inventory)
     elif item == 'mirror' and self.currentRoom.getName() == "Dining Room":
       printNow("This mirror has some odd properties to it.")
       showInformation("This mirror has some odd properties to it.")
@@ -487,17 +514,14 @@ class Player:
       printNow("""You look closely at the poster.  It looks genuine.  You notice one corner is not completely held down.
       You give a gentle tug and notice there is something behind the poster.  You pull a little harder, careful not to damage the poster.
       You pull the poster completely off the wall to reveal a safe hidden behind it.  You are close.  You can feel it.""")
-      showInformation("""You look closely at the poster.  It looks genuine.  You notice one corner is not completely held down.
-      You give a gentle tug and notice there is something behind the poster.  You pull a little harder, careful not to damage the poster.
-      You pull the poster completely off the wall to reveal a safe hidden behind it.  You are close.  You can feel it.""")
+      showInformation("You look closely at the poster.  It looks genuine.  You notice one corner is not completely held down. You give a gentle tug and notice there is something behind the poster.  You pull a little harder, careful not to damage the poster.  You pull the poster completely off the wall to reveal a safe hidden behind it.  You are close.  You can feel it.")
     elif item == 'safe' and self.currentRoom.getName() == "Hidden Basement" and self.safeLocked:
       printNow("The safe is locked.")
       showInformation("The safe is locked.")
     elif item == 'safe' and self.currentRoom.getName() == "Hidden Basement" and not self.safeLocked:
       printNow("""You open the safe to reveal its contents.  You pull out a 1978 comic book, ?Batman versus Muhammad Ali?.  It appears the comic book has been autographed.
       You place the comic book in your backpack.""")
-      showInformation("""You open the safe to reveal its contents.  You pull out a 1978 comic book, ?Batman versus Muhammad Ali?.  It appears the comic book has been autographed.
-      You place the comic book in your backpack.""")
+      showInformation("You open the safe to reveal its contents.  You pull out a 1978 comic book, ?Batman versus Muhammad Ali?.  It appears the comic book has been autographed. You place the comic book in your backpack.")
       self.inventory.append("Comic Book")
       printNow(self.inventory)
     elif item == 'comic book' and "Comic Book" in self.inventory:
@@ -513,16 +537,16 @@ class Player:
       OMG!  I had the answer right in front of me from the very beginning.
       I need to get back to town right away.""")
       showInformation("""You look closely at the comic book to read the inscription.
-      ?To my dear son, Douglas.  Whether you grow up to be Batman or Bruce, I\'ll always be proud of you.  I love you.  Dad.?
-      You notice that the cover art to the comic book was by Neal Adams.
-      Neal Adams was Douglas Adams father!  Amazing!
-      But that still doesn\'t solve the mystery.
-      Where is Doug?
-      ********************
-      Batman or Bruce?
-      Batman or Bruce?
-      OMG!  I had the answer right in front of me from the very beginning.
-      I need to get back to town right away.""")
+To my dear son, Douglas.  Whether you grow up to be Batman or Bruce, I\'ll always be proud of you.  I love you.  Dad.?
+You notice that the cover art to the comic book was by Neal Adams.
+Neal Adams was Douglas Adams father!  Amazing!
+But that still doesn\'t solve the mystery.
+Where is Doug?
+********************
+Batman or Bruce?
+Batman or Bruce?
+OMG!  I had the answer right in front of me from the very beginning.
+I need to get back to town right away.""")
     elif item == 'walkman' and 'Walkman' in self.inventory:
       printNow("Wow! Talk about old school.  It looks like it has a mix tape in it.  Wonder if it works?")
       showInformation("Wow! Talk about old school.  It looks like it has a mix tape in it.  Wonder if it works?")
@@ -560,32 +584,34 @@ class Player:
     Okay, thanks.""")
 
     showInformation("""
-    Hey!  How goes it?
-    It goes fine.  <eyes you skeptically>  Where you from cause it ain\'t from around here?
-    How do you know I\'m not from around here?
-    First off, e\'ryone knows e\'ryone \'round here.
-    Second, you talks funny.
-    I talks funny?
-    Anyway, I\'m in town visiting my grandparent\'s for a few weeks.  I just came from the diner and was look for something to do.  I heard this is where the young folks hang out.
-    Well, that\'s true.  Unfortunately, I\'m the only young folk around these here parts.  Name\'s Opie.
-    <under your breath>  Figures.
-    Do you know where I could find Bruce then?
-    Bruce?  Whatcha want with Bruce?  You need something fixed?  Bruce can fix anything.
-    He\'s a mechanical genius.  Cars.  TVs.  Radios.  You name it.
-    No, nothing like that.  I wanted to ask him about the Mystery at the Mansion.
-    <boy goes pale>
-    Whatcha wanna go and do that for?  That place is haunted.
-    It\'s the old Adams mansion.  The oldest place in all of Plainsfield.
-    It was passed down from Adams to Adams for centuries.  The last known descendant was Douglas Adams.  He was a fancy media engineer.  Worked with film and audio like they do in Hollywood and stuff.
-    Story goes that Douglas Adams went mad crazy after e\'rythang started going from analog to digital.  Couldn\'t take it no more.
-    <silence>
-    And then what?
-    And then nothing.  Ol\' Doug just up and disappeared.  Place has been abandoned ever since.  Although if you ask me, he ne\'er left.  He haunts that place to this day.
-    How does someone just disappear in a town this size?  No one has ever seen him since.
-    Well, that\'s kind of the problem too.  No one really knows what Doug looks like.  He was pretty much a recluse when he did live in that there mansion.
-    Can you tell me where the mansion is located?
-    I don\'t know for sure.  Bruce does though.  He is at the gas station just a little ways from here.
-    Okay, thanks.""")
+Hey!  How goes it?
+It goes fine.  <eyes you skeptically>
+Where you from cause it ain\'t from around here?
+How do you know I\'m not from around here?
+First off, e\'ryone knows e\'ryone \'round here.
+Second, you talks funny.
+I talks funny?
+Anyway, I\'m in town visiting my grandparent\'s for a few weeks.
+I just came from the diner and was look for something to do.  I heard this is where the young folks hang out.
+Well, that\'s true.  Unfortunately, I\'m the only young folk around these here parts.  Name\'s Opie.
+<under your breath>  Figures.
+Do you know where I could find Bruce then?
+Bruce?  Whatcha want with Bruce?  You need something fixed?  Bruce can fix anything.
+He\'s a mechanical genius.  Cars.  TVs.  Radios.  You name it.
+No, nothing like that.  I wanted to ask him about the Mystery at the Mansion.
+<boy goes pale>
+Whatcha wanna go and do that for?  That place is haunted.
+It\'s the old Adams mansion.  The oldest place in all of Plainsfield.
+It was passed down from Adams to Adams for centuries.  The last known descendant was Douglas Adams.  He was a fancy media engineer.  Worked with film and audio like they do in Hollywood and stuff.
+Story goes that Douglas Adams went mad crazy after e\'rythang started going from analog to digital.  Couldn\'t take it no more.
+<silence>
+And then what?
+And then nothing.  Ol\' Doug just up and disappeared.  Place has been abandoned ever since.  Although if you ask me, he ne\'er left.  He haunts that place to this day.
+How does someone just disappear in a town this size?  No one has ever seen him since.
+Well, that\'s kind of the problem too.  No one really knows what Doug looks like.  He was pretty much a recluse when he did live in that there mansion.
+Can you tell me where the mansion is located?
+I don\'t know for sure.  Bruce does though.  He is at the gas station just a little ways from here.
+Okay, thanks.""")
 
   def talkToEdith(self):
     printNow("""
@@ -600,17 +626,16 @@ class Player:
     Hmmm.  Mystery of the Mansion?  There might be something exciting in this town after all.
     I wonder where this Bruce guy is?  Oh well, I guess I\'ll go check out this church in the meantime.""")
     showInformation("""
-    \'Hey Edith.
-    <cough, cough> <raspy voice>  Hey!  You\'re not from around here.
-    I\'m new in town; visiting my grandparents.  I just wondered what there is to do around here?\'
-    You\'re doing it.  Other than hanging out at the diner, you could wander over to the church.  There is a rec room there where some of the local young folks like to hang out.\'
-    You could also go find Bruce and talk to him.  He is always working on some contraption or willing to tell some tall tale.  His favorite is the mystery of the mansion.
-    Mystery of the Mansion?
-    Just a bunch of nonsense if you ask me.
-    \'Okay thanks.\'
-    Hmmm.  Mystery of the Mansion?  There might be something exciting in this town after all.
-    I wonder where this Bruce guy is?  Oh well, I guess I\'ll go check out this church in the meantime.""")
-
+Hey Edith.
+<cough, cough> <raspy voice>  Hey!  You\'re not from around here.
+I\'m new in town; visiting my grandparents.  I just wondered what there is to do around here?\'
+You\'re doing it.  Other than hanging out at the diner, you could wander over to the church.  There is a rec room there where some of the local young folks like to hang out.\'
+You could also go find Bruce and talk to him.  He is always working on some contraption or willing to tell some tall tale. His favorite is the mystery of the mansion.
+Mystery of the Mansion?
+Just a bunch of nonsense if you ask me.
+\'Okay thanks.\'
+Hmmm.  Mystery of the Mansion?  There might be something exciting in this town after all. I wonder where this Bruce guy is? Oh well, I guess I\'ll go check out this church in the meantime.""")
+  
   def talkToBruce(self):
     if "Comic Book" in self.inventory:
       printNow("""
@@ -631,22 +656,22 @@ class Player:
       <grins>
       Just call me Robin.""")
       showInformation("""
-      Hi Bruce!
-      Hi.  Back from your trip to the mansion?  Find anything interesting?
-      A whole lot in fact.  I have something for you.
-      <gives Bruce the comic book>
-      <long pause>
-      I gotta give you credit.  I never thought anyone would ever figure it out.  How\'d you figure it out?
-      It was the message your dad wrote.  He told you could be either Bruce or Batman.
-      And I obviously chose to be Bruce.
-      No!  You chose to be Batman.  You gave up the mansion and wealth so that you could silently help the folks here in Plainsfield.  You fix things in the night and keep things running with hardly any recognition for it.
-      You are Batman.  You took the name Bruce to hide the fact that you are really Douglas Adams.
-      Well, let me congratulate you again.  You really have solved the Mystery of the Adam\'s Mansion.  Well, I guess the jig\'s up for me.  Time to be Douglas Adams again.
-      No it\'s not.  You should always be yourself, unless you can be Batman, then be Batman.
-      You chose to be Batman, and I\'m the last person who will ever turn Bruce Wayne in as being Batman.  Your secret\'s safe with me.
-      You\'re all right.  Hey, I never did catch your name.
-      <grins>
-      Just call me Robin.""")
+Hi Bruce!
+Hi.  Back from your trip to the mansion?  Find anything interesting?
+A whole lot in fact.  I have something for you.
+<gives Bruce the comic book>
+<long pause>
+I gotta give you credit.  I never thought anyone would ever figure it out.  How\'d you figure it out?
+It was the message your dad wrote.  He told you could be either Bruce or Batman.
+And I obviously chose to be Bruce.
+No!  You chose to be Batman.  You gave up the mansion and wealth so that you could silently help the folks here in Plainsfield.  You fix things in the night and keep things running with hardly any recognition for it.
+You are Batman.  You took the name Bruce to hide the fact that you are really Douglas Adams.
+Well, let me congratulate you again.  You really have solved the Mystery of the Adam\'s Mansion.  Well, I guess the jig\'s up for me.  Time to be Douglas Adams again.
+No it\'s not.  You should always be yourself, unless you can be Batman, then be Batman.
+You chose to be Batman, and I\'m the last person who will ever turn Bruce Wayne in as being Batman.  Your secret\'s safe with me.
+You\'re all right.  Hey, I never did catch your name.
+<grins>
+Just call me Robin.""")
     else:
       printNow("""
       You walk over closer to the man in the faded overalls.  You notice he appears to be working on an old Atari 2600.  Hmm, interesting.
@@ -671,28 +696,28 @@ class Player:
       If the guy\'s really gone, what\'s the harm?
       Just be careful.  Some things are best left alone if you ask me.""")
       showInformation("""
-      You walk over closer to the man in the faded overalls.  You notice he appears to be working on an old Atari 2600.  Hmm, interesting.
-      Hi, are you Bruce.
-      Who\'s asking?
-      I am.  I was hoping you could help me out?
-      Maybe.  You\'re not from \'round here.
-      That\'s what I\'m told.  I was interested in the Adams mansion.
-      Adams mansion?  Sounds like you\'ve been talking to Opie.
-      Why\'s that?
-      That boy\'s always spinning tales about that mansion up on the hill.  Thinks it\'s haunted.
-      <chuckles>
-      You don\'t?
-      The mansion was abandoned years ago.  Plain and simple.  Everyone wants to say its haunted or that there is some sort of great mystery to it.
-      But not you?
-      What\'s the mystery?  Doug took off one day and the mansion has been abandoned ever since.
-      But no one saw him leave?  And he left everything behind, including the car.  How does someone leave this town without a car and without anyone seeing them?
-      <grunts>
-      Now you sound like Opie too.  That boy\'s always looking for a mystery to solve.
-      Can you tell me where to find the mansion?
-      Sure, its located over there yonder on that hill.  Be careful snooping around there though.
-      If the guy\'s really gone, what\'s the harm?
-      Just be careful.  Some things are best left alone if you ask me.""")
-
+You walk over closer to the man in the faded overalls.  You notice he appears to be working on an old Atari 2600.  Hmm, interesting.
+Hi, are you Bruce.
+Who\'s asking?
+I am.  I was hoping you could help me out?
+Maybe.  You\'re not from \'round here.
+That\'s what I\'m told.  I was interested in the Adams mansion.
+Adams mansion?  Sounds like you\'ve been talking to Opie.
+Why\'s that?
+That boy\'s always spinning tales about that mansion up on the hill.  Thinks it\'s haunted.
+<chuckles>
+You don\'t?
+The mansion was abandoned years ago.  Plain and simple.  Everyone wants to say its haunted or that there is some sort of great mystery to it.
+But not you?
+What\'s the mystery?  Doug took off one day and the mansion has been abandoned ever since.
+But no one saw him leave?  And he left everything behind, including the car.  How does someone leave this town without a car and without anyone seeing them?
+<grunts>
+Now you sound like Opie too.  That boy\'s always looking for a mystery to solve.
+Can you tell me where to find the mansion?
+Sure, its located over there yonder on that hill.  Be careful snooping around there though.
+If the guy\'s really gone, what\'s the harm?
+Just be careful.  Some things are best left alone if you ask me.""")
+  
   #Returns current room of player
   def getCurrentRoom(self):
     return self.currentRoom
@@ -772,42 +797,46 @@ class Player:
 def mysteryMansion():
   global isPathSet
   if not isPathSet:
+      showInformation("Welcome to Mystery Mansion! At any time you may quit the game by typing exit or quit. As you explore Plainsfield you will have several options for interacting with your environment. Commands include: print, pickup, drop, move, use, drink, examine, and talk to. If you are stuck, the help command will print out detailed command information. Thanks for playing!")
       showInformation("Please Choose the game folder.")
       setMediaFolder()
       isPathSet = True
   #Is game over?
   done = false
+  #variables for examined objects. This is to prevent spawning multiple map pieces.
+  floorMatDone = false
+  portraitDone = false
+  couchDone = false
   #Description of living room
-  livingRoomDescription = """The living room is one of the largest rooms in the old mansion.  It interior is dark as most of the curtains and shades are drawn.
-  In the middle is a couch with two end tables on each side.  One end table has a lamp on it, while the other has a lantern.  To the left is a large overstuffed arm chair.
-  There is a coffee table in front of the couch and an old wood grained RCA television sitting on the floor in front of the coffee table.  On top of the television was a betamax player
+  livingRoomDescription = """The living room is one of the largest rooms in the old mansion.  The interior is dark as most of the curtains and shades are drawn.
+  In the middle is a \'couch\' with two end tables on each side.  One end table has a lamp on it, while the other has a lantern.  To the left is a large overstuffed arm chair.
+  There is a coffee table in front of the couch and an old wood grained RCA \'television\' sitting on the floor in front of the coffee table.  On top of the television was a betamax player
   and several betamax tapes.  Framed pictures decorate the walls on every side."""
   #Description of kitchen
-  kitchenDescription = """The kitchen was surprisingly one of the cleaner rooms in the mansion.  ?Guessing the owner was not much of a cook.?  The interior was vintage 70s.  Wood cabinets with old ivory pull knobs.
+  kitchenDescription = """The kitchen was surprisingly one of the cleaner rooms in the mansion.  I guess the owner was not much of a cook?  The interior was vintage 70s.  Wood \'cabinets\' with old ivory pull knobs.
   There was an oven, range top stove, and refrigerator...all avocado green.  The sink still has a few glasses in it, but nothing else seemed to be out of place.
-  The floor was linoleum and there was an old mat in front of the kitchen sink.  The dirtiest thing in the whole room was an old microwave sitting on the counter.
-  This was obviously the owner?s appliance of choice, lol.  By the far wall under the window was a small table with a single solitary chair.  ?Guess he didn\ entertain too many guests.?
-  On the table was some sort of bar."""
+  The floor was linoleum and there was an old \'floor mat\' in front of the kitchen sink.  The dirtiest thing in the whole room was an old microwave sitting on the counter.
+  This was obviously the owner\'s appliance of choice, lol.  By the far wall under the window was a small table with a single solitary chair.  Guess he didn\'t entertain too many guests?"""
   #Description of Porch
   porchDescription = """The porch is big and expansive as was the style in the midwest.  The floor boards and rails are showing their age.  The whole thing is in desperate need of being refinished.
-  On the left side of the porch is an old rocking chair with a small table next to it.  On the table is an ashtray and a coaster.  To the right of the rocking chair is the front door to the mansion painted a bright red color.
-  Beneath the door is a mat that says ?Welcome?."""
+  On the left side of the porch is an old rocking \'chair\' with a small table next to it.  On the table is an ashtray and a coaster.  To the right of the rocking chair is the front door of the mansion painted a bright red color.
+  Beneath the door is a mat that says \"Welcome\"."""
   #Description of Graveyard
-  graveyardDescription = """The graveyard is small and sits on a hill adjacent to the mansion.  The headstones are laid out in a haphazard manner.  It appears to be a family cemetery for the Adams? family.
+  graveyardDescription = """The graveyard is small and sits on a hill adjacent to the mansion.  The \'tombstone\'s are laid out in a haphazard manner.  It appears to be a family cemetery for the Adam\'s family.
   Some of the dates go back to the 1700s.   The cemetery suffers from obvious years of neglect as many of the headstones are in disrepair and the weeds and ivy are overgrown.
   In the middle of the graveyard is an old oak tree that stretches far above the entire cemetery."""
   #Description of Shed
   shedDescription = """The shed is an old dilapidated shed halfway between the graveyard and the mansion.  It appears it was probably used to store tools and such, although it could contain anything.
   The shed has a small padlock on the outside."""
   #Description of Library
-  libraryDescription = """You are immediately confronted with the smell of musty books.  The library is filled with bookshelves along every wall.  Each shelf is stuffed with books of every shape and size.
-  In the middle of the library is an old leather arm chair and an end table.  On the end table appears to be a walkman."""
+  libraryDescription = """You are immediately confronted with the smell of musty books.  The library contains a \'bookshelf\' for every wall.  Each shelf is stuffed with books of every shape and size.
+  In the middle of the library is an old leather arm \'chair\' and an end table.  On the end table you notice a walkman."""
   #Description of Study
-  studyDescription = """The study was the messiest of all the rooms.  There was a desk in the middle with an old Macintosh computer.  Papers were piled up in an organization that could only be guessed at.
+  studyDescription = """The study was the messiest of all the rooms.  There was a desk in the middle with an old Macintosh \'computer\'.  Papers were piled up in an organization that could only be guessed at.
   In the right corner was a smaller desk with an old Apple II computer on it.  In the left corner was a grandfather clock that appeared to still be keeping time."""
   #Description of Dining Room
   diningRoomDescription = """The dining room is very ornate.  In the center is a large dining table with candles.  The table has place settings for 12 people although it appears that it was rarely used.
-  Towards the back of the room is a large mirror that stretches from floor to ceiling.  Above the dining table was a large glass chandelier.  Opposite the mirror is a large portrait of a man."""
+  Towards the back of the room is a large \'mirror\' that stretches from floor to ceiling.  Above the dining table was a large glass chandelier.  Opposite the mirror is a large \'portrait\' of a man."""
   #Description of Gas Station
   gasStationDescription = """You arrive at the gas station.  The main building is made of wood.  There is a window to the left that has been broken.  Outside the gas station on the deck is a simple wooden chair and a small wooden table.
   Above the gas station is a faded metal Texaco sign.  Next to that is a sign that reads: Route 66 Cafe.  On the right side of the porch deck is a vintage Coca-Cola vending machine.
@@ -951,7 +980,17 @@ def mysteryMansion():
     action = requestString("Please enter next move").lower()
     #Get help screen
     if action == "help":
-      showInformation("Help goes here....")
+      showInformation("""List of commands:
+Print - prints your name, inventory, or current room.
+Pickup - picks up items you find in rooms.
+Drop - drops items from your inventory.
+Move - moves to the next room. Directions are given in North, South, East, and West.
+Use - most inventory items and some objects and furniture in a room can be used.
+Drink - drinks any delicious beverages you might find.
+Examine - many of the items in a room's description can be examined.
+Talk to - talk to the denizens of Plainsfield.
+Quit/Exit - ends the game
+Objects you are able to interact with can be identified by the \' \' around it.""")
     #End game if user types 'exit' or 'quit'
     elif action == "exit" or action == "quit":
       done = true

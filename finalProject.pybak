@@ -1,7 +1,9 @@
-import os
-import random
+from random import shuffle
+from random import randint
+from time import sleep
 
 isPathSet = False
+
 
 class Room:
   #Initializes every room to have no surrounding rooms and to be in an unlocked state
@@ -12,60 +14,53 @@ class Room:
   up = None
   down = None
   locked = false
-  def __init__(self, name, description, items, img_path = None):
+  isPainted = False
+  def __init__(self, name, description, items,coords = (0,0)):
     self.name = name
     self.description = description
     self.items = items
-    self.huds = []
-    if img_path != None:
-        self.make_huds(img_path)
+    self.huds = {}
+    self.make_huds()
+    self.coords = coords
 
-  def make_huds(self,i_path):
-        #setMediaFolder('C:\\Users\\callen\\Google Drive\\CSUMB\\final_project\\')
-        global isPathSet
-        if not isPathSet:
-            showInformation("Please Select the Root folder of our upload. The one that contains the *.py file.")
-            setMediaFolder()
-            isPathSet = True
-        #font size for text
-        font_size = 25
-        """
-        Hud Breakdown:
-            Title: width (x): 30-842; height (y): 16-77
-            Location Picture: width (x): 26-846; height (y): 100-559 [820x459]
-            Text Area: width (x): 30-842; height (y): 602-863
-            Map Area: width (x): 891-1359; height (y): 16-558 [468x542]
-            Inventory Items:
-                |1|2|3|
-                |4|5|6|
-                1: width (x): 903-1028; height (y): 602-726 [125x124]
-                2: width (x): 1062-1187; height (y): 602-726 [125x124]
-                3: width (x): 1220-1345; height (y): 602-726 [125x124]
-                4: width (x): 903-1028; height (y): 740-864 [125x124]
-                5: width (x): 1062-1187; height (y): 740-864 [125x124]
-                6: width (x): 1220-1345; height (y): 740-864 [125x124]
-        """
-        path = 'assets\\images\\hud.jpg'
-        hud_normal = makePicture(path)
-        hud_red = makePicture(path)
-        title_font_size = 77-16
-        sty = makeStyle(sansSerif,bold,title_font_size)
-        addTextWithStyle(hud_normal,32+title_font_size,70,self.name,sty,black)
-        addTextWithStyle(hud_red,32+title_font_size,70,self.name,sty,black)
-        rm_img = makePicture(i_path)
-        #pyCopyEx(makePicture(self.getImagePath()),hud_normal,26,100)
-        #pyCopyEx(makePicture(self.getImagePath()),hud_red,26,100)
+  def make_huds(self):
+      global isPathSet
+      if not isPathSet:
+          setMediaFolder()
+          isPathSet = True
 
-        for x in range (0, getWidth(rm_img)):
-            for y in range (0, getHeight(rm_img)):
-                if x+26 < getWidth(hud_normal) and y+100 < getHeight(hud_normal):
-                    src_color = getColor(getPixel(rm_img, x, y))
-                    setColor(getPixel(hud_normal, x+26, y+100), src_color)
-                    setColor(getPixel(hud_red, x+26, y+100), makeColor(min(int(src_color.getRed()*2),255),src_color.getGreen(),src_color.getBlue()))
+      hud_normal = makePicture('assets\\images\\huds\\%s HUD.jpg'%self.name)
+      hud_red = makePicture('assets\\images\\huds\\%s Red HUD.jpg'%self.name)
+      hud_green = makePicture('assets\\images\\huds\\%s Green HUD.jpg'%self.name)
 
+      title_font_size = 77-16
+      sty = makeStyle(sansSerif,bold,title_font_size)
+      addTextWithStyle(hud_normal,32+title_font_size,70,self.name,sty,black)
+      addTextWithStyle(hud_red,32+title_font_size,70,self.name,sty,black)
+      addTextWithStyle(hud_green,32+title_font_size,70,self.name,sty,black)
+      self.huds['normal']=hud_normal
+      self.huds['red']=hud_red
+      self.huds['green']=hud_green
 
-        self.huds.append(hud_normal)
-        self.huds.append(hud_red)
+  def get_hud(self,index):
+      return self.huds[index]
+  def add_hud_description(self, desc,type):
+      font_size = 25
+      isLong = False
+      if len(desc) > 450:
+          font_size = 15
+          isLong = True
+
+      sty = makeStyle(sansSerif,bold,font_size)
+      #Text Area: width (x): 30-842; height (y): 602-863
+      ln = desc.split('\n')
+      line_num = 0
+      for line in ln:
+          lines = txt_to_lines(line,font_size,isLong)
+          for l in lines:
+              line_num += 1
+              addTextWithStyle(self.huds[type],32,604+font_size*line_num,l,sty,black)
+          line_num += 1
 
 
   #Allows rooms to be placed in various locations around current room object
@@ -158,6 +153,9 @@ class Player:
   safeLocked = true
   #Holds the room that the current player is in
   currentRoom = None
+  #is the player under the effects of a potion
+  hasDrunkRed = False
+  hasDrunkGreen = False
   def __init__(self, name, room):
     self.name = name
     self.currentRoom = room
@@ -166,12 +164,6 @@ class Player:
   def getName(self):
     return self.name
 
-  #Heads Up Display set and get functions.
-  def setHUD(self,hud_image):
-    self.hud = hud_image
-
-  def getHUD(self):
-      return self.hud
 
   ###Pickup Item Function###
   #step 1: Don't pickup if item is already in inventory
@@ -181,20 +173,27 @@ class Player:
     #Check if player is already holding that item
     if item in self.inventory:
       printNow("You are already carrying that item")
+      showInformation("You are already carrying that item")
     else:
       #Check if item is in the current room
       if item in self.currentRoom.getItems():
         if item == "Tape" or item == "Matches" or item == "CD":
           printNow("This might come in handy later")
+          showInformation("This might come in handy later")
+
         if item == "Lantern":
           printNow("This will come in very handy.  Now if only I can find some matches to actually light it with.")
+          showInformation("This will come in very handy.  Now if only I can find some matches to actually light it with.")
         self.inventory.append(item)
         self.currentRoom.removeItem(item)
         printNow("You are now holding: %s"%self.inventory)
+        showInformation("You are now holding: %s"%self.inventory)
         printNow("The room now contains: %s"%self.currentRoom.getItems())
+        showInformation("The room now contains: %s"%self.currentRoom.getItems())
       #If item is not in current room, print item not found
       else:
         printNow("Item not found")
+        showInformation("Item not found")
 
   ###Drop Item Function###
   #step 1: If player is holding item, add the item to current room items and remove from player inventory
@@ -207,6 +206,7 @@ class Player:
       printNow("The room now contains: %s"%self.currentRoom.getItems())
     else:
       printNow("You do not have that item!")
+      showInformation("You do not have that item!")
 
   #Returns the current inventory list of the user
   def getInventory(self):
@@ -218,12 +218,14 @@ class Player:
   def movePlayerNorth(self):
     if self.currentRoom.getNorth().getName() == "Living Room" and self.currentRoom.getNorth().isLocked():
       printNow("The door is locked.  You need a key.")
+      showInformation("The door is locked.  You need a key.")
     else:
       if self.currentRoom.getNorth() != None:
         self.currentRoom = self.currentRoom.getNorth()
         printNow(self.currentRoom)
       else:
         printNow("There is no room to the North!")
+        showInformation("There is no room to the North!")
 
   def movePlayerSouth(self):
     if self.currentRoom.getSouth() != None:
@@ -231,6 +233,7 @@ class Player:
       printNow(self.currentRoom)
     else:
       printNow("There is no room to the South!")
+      showInformation("There is no room to the South!")
 
   def movePlayerEast(self):
     if self.currentRoom.getEast() != None:
@@ -238,6 +241,7 @@ class Player:
       printNow(self.currentRoom)
     else:
       printNow("There is no room to the East!")
+      showInformation("There is no room to the East!")
 
   def movePlayerWest(self):
     if self.currentRoom.getWest() != None:
@@ -245,6 +249,7 @@ class Player:
       printNow(self.currentRoom)
     else:
       printNow("There is no room to the West!")
+      showInformation("There is no room to the West!")
 
   def movePlayerUp(self):
     if self.currentRoom.getUp() != None:
@@ -252,6 +257,7 @@ class Player:
       printNow(self.currentRoom)
     else:
       printNow("There is no room above you!")
+      showInformation("There is no room above you!")
 
   ###Only used to enter basement so user must have lit lantern equipped to see###
   def movePlayerDown(self):
@@ -259,19 +265,22 @@ class Player:
       self.currentRoom = self.currentRoom.getDown()
       if "Lit Lantern" in self.inventory:
         self.secretRoomFound = true
-        self.currentRoom.setDescription("""The basement is littered with old AV equipment.  Broken projectors, cassette recorders, televisions, and more.  In the corner is a furnace.  
+        self.currentRoom.setDescription("""The basement is littered with old AV equipment.  Broken projectors, cassette recorders, televisions, and more.  In the corner is a furnace.
         As your eyes adjust, you notice a poster for E.T. hanging on the wall.  That seems a little odd.""")
+        #show(self.create_hud())
       else:
         self.currentRoom.setDescription("The basement is completely dark.  You cannot see anything.  It would not be safe to explore here unless you can find some sort of light source.")
       printNow(self.currentRoom)
     else:
       printNow("There is no room below you!")
+      showInformation("There is no room below you!")
 
   ###Use Item Functions###
   def useComputer(self):
     if self.currentRoom.getName() == "Study":
       printNow("""You attempt to turn on the Macintosh computer, but unfortunately it will not turn on.  You look over at the Apple II and chuckle.
       You walk over and hit the power button.  To your surprise it boots up.""")
+      play(makeSound('assets\\audio\\MacBoot.wav'))
       showInformation("This is where you play hangman and madlibs")
     else:
       showInformation("There is no computer in this room. Try visiting the Study")
@@ -283,13 +292,24 @@ class Player:
   def useShovel(self):
     if "Shovel" not in self.inventory:
       printNow("You do not have a shovel to use!")
+      showInformation("You do not have a shovel to use!")
     elif self.currentRoom.getName() != "Graveyard":
       printNow("You can't use the shovel here. Try using it somewhere outside.")
+      showInformation("You can't use the shovel here. Try using it somewhere outside.")
     elif self.currentRoom.getName() == "Graveyard" and "Shovel" in self.inventory:
       printNow("""The old shovel creaks under your weight as you plunge it deep into the cold earth.  You try one spot and then another.
-      Finally on your third attempt you feel the shovel make contact with something hard.  Unfortunately, the handle cracks in half at 
+      Finally on your third attempt you feel the shovel make contact with something hard.  Unfortunately, the handle cracks in half at
       the same time.  So much for that.  You get down on your knees and dig around with your hands where you felt the shovel strike something hard.
       In the wet dirt you feel something small and metal.  You pull it up into the light and discover it is a key.  You found a key and a piece of the map!""")
+      play(makeSound('assets\\audio\\shovel.wav'))
+      sleep(3.5)
+      play(makeSound('assets\\audio\\shovel.wav'))
+      sleep(3.5)
+      play(makeSound('assets\\audio\\shovelBreaking.wav'))
+      showInformation("""The old shovel creaks under your weight as you plunge it deep into the cold earth.  You try one spot and then another.
+Finally on your third attempt you feel the shovel make contact with something hard.  Unfortunately, the handle cracks in half at
+the same time.  So much for that.  You get down on your knees and dig around with your hands where you felt the shovel strike something hard.
+In the wet dirt you feel something small and metal.  You pull it up into the light and discover it is a key.  You found a key and a piece of the map!""")
       self.inventory.remove('Shovel')
       self.inventory.append('Broken Shovel')
       self.currentRoom.addItem('Key')
@@ -301,190 +321,321 @@ class Player:
   def useKey(self):
     if 'Key' not in self.inventory:
       printNow("You do not have a key!")
+      showInformation("You do not have a key!")
     else:
       if self.currentRoom.getName() == "Porch":
         if self.currentRoom.getNorth().isLocked():
           self.currentRoom.getNorth().setLocked(false)
           printNow("You hear the sweet sound of the front door unlocking.")
+          showInformation("You hear the sweet sound of the front door unlocking.")
         else:
            self.currentRoom.getNorth().setLocked(true)
            printNow("The lock clicks in place as the door is secured.")
+           showInformation("The lock clicks in place as the door is secured.")
       else:
         printNow("You cannot use the key here!")
+        showInformation("You cannot use the key here!")
   #step 1: Make sure user is holding the matches and lantern
   #step 2: if user has matches but not the lantern, tell user they don't have anything to use matches on
   #step 3: Else: user doesn't have matches to use
   def useMatches(self):
     if "Matches" in self.inventory and "Lantern" in self.inventory:
       printNow("You use the matches to light the lantern")
+      play(makeSound('assets\\audio\\match.wav'))
+      showInformation("You use the matches to light the lantern")
       self.inventory.remove("Matches")
       self.inventory.remove("Lantern")
       self.inventory.append("Lit Lantern")
       printNow(self.inventory)
     elif "Matches" in self.inventory and "Lantern" not in self.inventory:
       printNow("You do not have anything to use the matches on!")
+      showInformation("You do not have anything to use the matches on!")
     else:
       printNow("You do not have any matches!")
-      
+      showInformation("You do not have any matches!")
+
   def useCouch(self):
     if self.currentRoom.getName() == "Living Room":
       printNow("Aaahhhh.  A well deserved break.  Well, time to get back to what you came here for.")
+      showInformation("Aaahhhh.  A well deserved break.  Well, time to get back to what you came here for.")
     else:
       printNow("There is no couch in this room.  Try going to the living room.")
-      
+      showInformation("There is no couch in this room.  Try going to the living room.")
+
   def useTelevision(self):
     if self.currentRoom.getName() == "Living Room":
-      printNow("Broken!  Oh well, you didn?t come here to watch TV.")
+      printNow("Broken!  Oh well, you didn\'t come here to watch TV.")
+      showInformation("Broken!  Oh well, you didn\'t come here to watch TV.")
     else:
-      printNow("There is no television in this room.  Try going to the living room.")      
-      
+      printNow("There is no television in this room.  Try going to the living room.")
+      showInformation("There is no television in this room.  Try going to the living room.")
+
   def useSafe(self):
     if self.currentRoom.getName() == "Hidden Basement":
       code = requestString("Please enter the 7 digit code:")
       if code == "8675309":
         printNow("Success!  As you enter the last digit, you hear a click as the safe door pops open.")
+        showInformation("Success!  As you enter the last digit, you hear a click as the safe door pops open.")
         self.safeLocked = false
       else:
         printNow("Nothing!  You must have the wrong code.")
+        showInformation("Nothing!  You must have the wrong code.")
     else:
       printNow("There is no safe in here.")
-        
+      showInformation("There is no safe in here.")
+
   def useChair(self):
     if self.currentRoom.getName() == "Porch":
       printNow("""Not too bad; pretty comfy in fact.  As you slowly rock back and forth you begin to understand a little more of the appeal of a slower lifestyle.
       Oh, well.  Enough sitting.  Time to get back to it.""")
+      showInformation("""Not too bad; pretty comfy in fact.  As you slowly rock back and forth you begin to understand a little more of the appeal of a slower lifestyle.
+      Oh, well.  Enough sitting.  Time to get back to it.""")
     elif self.currentRoom.getName() == "Library":
       printNow("Aahhh.  Now I just need a good book to read.  Which one to pick?")
+      showInformation("Aahhh.  Now I just need a good book to read.  Which one to pick?")
     else:
       printNow("There is no chair in here.")
-      
+      showInformation("There is no chair in here.")
+
   def useWalkman(self):
     if "Walkman" in self.inventory:
-      showInformation("This is where we play reading rainbow")
+      play(makeSound('assets\\audio\\readingRainbow.wav'))
+      sleep(31)
+      play(makeSound('assets\\audio\\rewindRainbow.wav'))
+      sleep(7)
     else:
       printNow("You do not have a walkman in your inventory!")
+      showInformation("You do not have a walkman in your inventory!")
 
   def drinkRedPotion(self):
     if "Red Potion" in self.inventory:
-      showInformation("This is where we show the room image with moreRed function")
+      self.hasDrunkRed = True
+      play(makeSound('assets\\audio\\chug.wav'))
+      if self.hasDrunkGreen:
+          self.hasDrunkGreen = False
+      self.inventory.remove('Red Potion')
+      showInformation("You become irrationally enraged!")
     else:
       printNow("You are not carrying this item")
-    
+      showInformation("You are not carrying this item")
+
+  def drinkGreenPotion(self):
+    if "Green Potion" in self.inventory:
+        self.hasDrunkGreen = True
+        play(makeSound('assets\\audio\\chug.wav'))
+        if self.hasDrunkRed:
+            hasDrunkRed = False
+        self.inventory.remove('Green Potion')
+        showInformation("You become envious of everyone and everything!")
+    else:
+      printNow("You are not carrying this item")
+      showInformation("You are not carrying this item")
+
   def examine(self, item):
     if item == "bookshelf" and self.currentRoom.getName() == "Library":
       printNow("You look closely at the bookshelf.  It is filled with many great novels.  You notice several of your favorites.  Doug had good taste in literature.")
+      showInformation("You look closely at the bookshelf.  It is filled with many great novels.  You notice several of your favorites.  Doug had good taste in literature.")
     elif item == "nautilus" and self.currentRoom.getName() == "Library":
-      printNow("""You realize that Doug has several Jules Verne novels.  You reach for Â?20,000 Leagues Under the SeaÂ? from the shelf.  
-      As you attempt to pull the novel off the shelf the novel suddenly stops halfway out and one of the bookshelves pops open a few inches.  
+      printNow("""You realize that Doug has several Jules Verne novels.  You reach for \"20,000 Leagues Under the Sea\" from the shelf.
+      As you attempt to pull the novel off the shelf the novel suddenly stops halfway out and one of the bookshelves pops open a few inches.
       A hidden door.  Brilliant!""")
+      showInformation("""You realize that Doug has several Jules Verne novels.  You reach for \"20,000 Leagues Under the Sea\" from the shelf.
+As you attempt to pull the novel off the shelf the novel suddenly stops halfway out and one of the bookshelves pops open a few inches.
+A hidden door.  Brilliant!""")
       #Basement initially set to "It is too dark to see anything
       #User must first find matches and lantern then use matches to light lantern
       #With lit lantern equipped, description changes to reveal contents of basement
-      basement = Room("Hidden Basement", "This room is too dark to see anything! Try to find something to help you see.", [])
+      basement = Room("Hidden Basement", "This room is too dark to see anything! Try to find something to help you see.", [],(958,138))
       self.currentRoom.setDown(basement)
       printNow(self.currentRoom)
       basement.setUp(self.currentRoom)
     elif item == 'tombstone' and self.currentRoom.getName() == "Graveyard" and self.secretRoomFound:
       printNow("""You examine the tombstone again, but this time you lean closer.  You notice that some crabgrass has grown up and blocked the bottom part of the tombstone.
-      You pull back the grass and notice several numbers in printed in small font along the base.  It reads, ?100001000101111111101101?.""")
+      You pull back the grass and notice several numbers in printed small font along the base.  It reads, \"100001000101111111101101\".""")
+      showInformation("""You examine the tombstone again, but this time you lean closer.  You notice that some crabgrass has grown up and blocked the bottom part of the tombstone.
+You pull back the grass and notice several numbers printed in small font along the base.  It reads, \"100001000101111111101101\".""")
     elif item == 'tombstone' and self.currentRoom.getName() == "Graveyard" and not self.secretRoomFound:
-      printNow("""You examine the tombstone and read the name ?Douglas Adams?.  Underneath it says, ?Digital Killed the Analog Star!?""")
+      printNow("""You examine the tombstone and read the name \"Douglas Adams\".  Underneath it says, \"Digital Killed the Analog Star!\"""")
+      showInformation("""You examine the tombstone and read the name \"Douglas Adams\".  Underneath it says, \"Digital Killed the Analog Star!\"""")
     elif item == 'couch' and self.currentRoom.getName() == "Living Room":
-      printNow("""You find some stale Cheez-Its and spare change in the couch cushions.  You take a look underneath and notice a small piece of parchment.
-      It appears to be a piece to a map.""")
-      self.inventory.append("Map Piece 4")
-      printNow(self.inventory)
+      if couchDone == True:
+        printNow("You already raided the couch cushions!")
+        showInformation("You already raided the couch cushions!")
+      else:
+        printNow("""You find some stale Cheez-Its and spare change in the couch cushions.  You take a look underneath and notice a small piece of parchment.
+        It appears to be a piece to a map.""")
+        showInformation("""You find some stale Cheez-Its and spare change in the couch cushions.  You take a look underneath and notice a small piece of parchment.
+It appears to be a piece to a map.""")
+        self.inventory.append("Map Piece 4")
+        couchDone = True
+        printNow(self.inventory)
     elif item == 'television' and self.currentRoom.getName() == "Living Room":
       printNow("An old wood grained RCA.  A classic.  You look closer at the betamax tapes.  Hmm.  It looks like the old Adam West Batman series.")
+      showInformation("An old wood grained RCA.  A classic.  You look closer at the betamax tapes.  Hmm.  It looks like the old Adam West Batman series.")
     elif item == "cabinets" and self.currentRoom.getName() == "Kitchen":
       printNow("""You root through the cabinets and find a small bottle that reads, Vision en Rouge.
       Sounds fancy.  Wonder how it tastes? You place the potion in your inventory.""")
+      play(makeSound('assets\\audio\\checkCabinet.wav'))
+      showInformation("""You root through the cabinets and find a small bottle that reads, Vision en Rouge.
+Sounds fancy.  Wonder how it tastes? You place the potion in your inventory.""")
       self.inventory.append("Red Potion")
       printNow(self.inventory)
     elif item == "floor mat" and self.currentRoom.getName() == "Kitchen":
-      printNow("You look under the floor mat and discover another piece to the map!")
-      self.inventory.append("Map Piece 2")
-      printNow(self.inventory)
+      if floorMatDone == True:
+        printNow("You already looked under the floor mat!")
+        showInformation("You already looked under the floor mat!")
+      else:
+        printNow("You look under the floor mat and discover another piece to the map!")
+        showInformation("You look under the floor mat and discover another piece to the map!")
+        self.inventory.append("Map Piece 2")
+        floorMatDone = True
+        printNow(self.inventory)
     elif item == 'portrait' and self.currentRoom.getName() == "Dining Room":
-      printNow("""The name underneath reads ?Wilfred Adams?.  You notice a small piece of paper sticking out from behind the back.
-      You tug on it and you find yourself holding another piece of the map.""")
-      self.inventory.append("Map Piece 3")
-      printNow(self.inventory)
+      if portraitDone == True:
+        printNow("You already examined the portrait!")
+        showInformation("You already examined the portrait!")
+      else:
+        printNow("""The name underneath reads \"Wilfred Adams\".  You notice a small piece of paper sticking out from behind the back.
+        You tug on it and you find yourself holding another piece of the map.""")
+        showInformation("""The name underneath reads \"Wilfred Adams\".  You notice a small piece of paper sticking out from behind the back.
+You tug on it and you find yourself holding another piece of the map.""")
+        self.inventory.append("Map Piece 3")
+        portraitDone = True
+        printNow(self.inventory)
     elif item == 'mirror' and self.currentRoom.getName() == "Dining Room":
       printNow("This mirror has some odd properties to it.")
-      showInformation("Here we must implement mirrored image functionality")
+      showInformation("This mirror has some odd properties to it.")
+      #showInformation("Here we must implement mirrored image functionality")
+      #TODO: Add the mirror functionality if we have time.
     elif item == 'furnace' and self.currentRoom.getName() == "Hidden Basement":
       printNow("This has not been lit in years.  Better not chance it.")
+      showInformation("This has not been lit in years.  Better not chance it.")
     elif item == 'poster' and self.currentRoom.getName() == "Hidden Basement":
       printNow("""You look closely at the poster.  It looks genuine.  You notice one corner is not completely held down.
       You give a gentle tug and notice there is something behind the poster.  You pull a little harder, careful not to damage the poster.
       You pull the poster completely off the wall to reveal a safe hidden behind it.  You are close.  You can feel it.""")
+      showInformation("You look closely at the poster.  It looks genuine.  You notice one corner is not completely held down. You give a gentle tug and notice there is something behind the poster.  You pull a little harder, careful not to damage the poster.  You pull the poster completely off the wall to reveal a safe hidden behind it.  You are close.  You can feel it.")
     elif item == 'safe' and self.currentRoom.getName() == "Hidden Basement" and self.safeLocked:
       printNow("The safe is locked.")
+      showInformation("The safe is locked.")
     elif item == 'safe' and self.currentRoom.getName() == "Hidden Basement" and not self.safeLocked:
       printNow("""You open the safe to reveal its contents.  You pull out a 1978 comic book, ?Batman versus Muhammad Ali?.  It appears the comic book has been autographed.
       You place the comic book in your backpack.""")
+      showInformation("You open the safe to reveal its contents.  You pull out a 1978 comic book, ?Batman versus Muhammad Ali?.  It appears the comic book has been autographed. You place the comic book in your backpack.")
       self.inventory.append("Comic Book")
       printNow(self.inventory)
     elif item == 'comic book' and "Comic Book" in self.inventory:
       printNow("""You look closely at the comic book to read the inscription.
-      ?To my dear son, Douglas.  Whether you grow up to be Batman or Bruce, I?ll always be proud of you.  I love you.  Dad.?
+      ?To my dear son, Douglas.  Whether you grow up to be Batman or Bruce, I\'ll always be proud of you.  I love you.  Dad.?
       You notice that the cover art to the comic book was by Neal Adams.
       Neal Adams was Douglas Adams father!  Amazing!
-      But that still doesn?t solve the mystery.
+      But that still doesn\'t solve the mystery.
       Where is Doug?
       ********************
       Batman or Bruce?
       Batman or Bruce?
       OMG!  I had the answer right in front of me from the very beginning.
       I need to get back to town right away.""")
+      showInformation("""You look closely at the comic book to read the inscription.
+To my dear son, Douglas.  Whether you grow up to be Batman or Bruce, I\'ll always be proud of you.  I love you.  Dad.?
+You notice that the cover art to the comic book was by Neal Adams.
+Neal Adams was Douglas Adams father!  Amazing!
+But that still doesn\'t solve the mystery.
+Where is Doug?
+********************
+Batman or Bruce?
+Batman or Bruce?
+OMG!  I had the answer right in front of me from the very beginning.
+I need to get back to town right away.""")
     elif item == 'walkman' and 'Walkman' in self.inventory:
       printNow("Wow! Talk about old school.  It looks like it has a mix tape in it.  Wonder if it works?")
+      showInformation("Wow! Talk about old school.  It looks like it has a mix tape in it.  Wonder if it works?")
     else:
       printNow("You can't do that!")
-     
-  def talkToBoy(self):  
+      showInformation("You can't do that!")
+
+  def talkToBoy(self):
     printNow("""
     Hey!  How goes it?
-    It goes fine.  <eyes you skeptically>  Where you from cause it ain’t from around here?
-    How do you know I’m not from around here?
-    First off, e’ryone knows e’ryone ‘round here.
+    It goes fine.  <eyes you skeptically>  Where you from cause it ain\'t from around here?
+    How do you know I\'m not from around here?
+    First off, e\'ryone knows e\'ryone \'round here.
     Second, you talks funny.
     I talks funny?
-    Anyway, I’m in town visiting my grandparent’s for a few weeks.  I just came from the diner and was look for something to do.  I heard this is where the young folks hang out.
-    Well, that’s true.  Unfortunately, I’m the only young folk around these here parts.  Name’s Opie.
+    Anyway, I\'m in town visiting my grandparent\'s for a few weeks.  I just came from the diner and was look for something to do.  I heard this is where the young folks hang out.
+    Well, that\'s true.  Unfortunately, I\'m the only young folk around these here parts.  Name\'s Opie.
     <under your breath>  Figures.
     Do you know where I could find Bruce then?
     Bruce?  Whatcha want with Bruce?  You need something fixed?  Bruce can fix anything.
-    He’s a mechanical genius.  Cars.  TVs.  Radios.  You name it.
+    He\'s a mechanical genius.  Cars.  TVs.  Radios.  You name it.
     No, nothing like that.  I wanted to ask him about the Mystery at the Mansion.
     <boy goes pale>
     Whatcha wanna go and do that for?  That place is haunted.
-    It’s the old Adams mansion.  The oldest place in all of Plainsfield.
+    It\'s the old Adams mansion.  The oldest place in all of Plainsfield.
     It was passed down from Adams to Adams for centuries.  The last known descendant was Douglas Adams.  He was a fancy media engineer.  Worked with film and audio like they do in Hollywood and stuff.
-    Story goes that Douglas Adams went mad crazy after e’rythang started going from analog to digital.  Couldn’t take it no more.
+    Story goes that Douglas Adams went mad crazy after e\'rythang started going from analog to digital.  Couldn\'t take it no more.
     <silence>
     And then what?
-    And then nothing.  Ol’ Doug just up and disappeared.  Place has been abandoned ever since.  Although if you ask me, he ne’er left.  He haunts that place to this day.
+    And then nothing.  Ol\' Doug just up and disappeared.  Place has been abandoned ever since.  Although if you ask me, he ne\'er left.  He haunts that place to this day.
     How does someone just disappear in a town this size?  No one has ever seen him since.
-    Well, that’s kind of the problem too.  No one really knows what Doug looks like.  He was pretty much a recluse when he did live in that there mansion.
+    Well, that\'s kind of the problem too.  No one really knows what Doug looks like.  He was pretty much a recluse when he did live in that there mansion.
     Can you tell me where the mansion is located?
-    I don’t know for sure.  Bruce does though.  He is at the gas station just a little ways from here.
+    I don\'t know for sure.  Bruce does though.  He is at the gas station just a little ways from here.
     Okay, thanks.""")
-    
+
+    showInformation("""
+Hey!  How goes it?
+It goes fine.  <eyes you skeptically>
+Where you from cause it ain\'t from around here?
+How do you know I\'m not from around here?
+First off, e\'ryone knows e\'ryone \'round here.
+Second, you talks funny.
+I talks funny?
+Anyway, I\'m in town visiting my grandparent\'s for a few weeks.
+I just came from the diner and was look for something to do.  I heard this is where the young folks hang out.
+Well, that\'s true.  Unfortunately, I\'m the only young folk around these here parts.  Name\'s Opie.
+<under your breath>  Figures.
+Do you know where I could find Bruce then?
+Bruce?  Whatcha want with Bruce?  You need something fixed?  Bruce can fix anything.
+He\'s a mechanical genius.  Cars.  TVs.  Radios.  You name it.
+No, nothing like that.  I wanted to ask him about the Mystery at the Mansion.
+<boy goes pale>
+Whatcha wanna go and do that for?  That place is haunted.
+It\'s the old Adams mansion.  The oldest place in all of Plainsfield.
+It was passed down from Adams to Adams for centuries.  The last known descendant was Douglas Adams.  He was a fancy media engineer.  Worked with film and audio like they do in Hollywood and stuff.
+Story goes that Douglas Adams went mad crazy after e\'rythang started going from analog to digital.  Couldn\'t take it no more.
+<silence>
+And then what?
+And then nothing.  Ol\' Doug just up and disappeared.  Place has been abandoned ever since.  Although if you ask me, he ne\'er left.  He haunts that place to this day.
+How does someone just disappear in a town this size?  No one has ever seen him since.
+Well, that\'s kind of the problem too.  No one really knows what Doug looks like.  He was pretty much a recluse when he did live in that there mansion.
+Can you tell me where the mansion is located?
+I don\'t know for sure.  Bruce does though.  He is at the gas station just a little ways from here.
+Okay, thanks.""")
+
   def talkToEdith(self):
     printNow("""
-    ‘Hey Edith.
-    <cough, cough> <raspy voice>  Hey!  You’re not from around here.
-    I’m new in town; visiting my grandparents.  I just wondered what there is to do around here?’
-    You’re doing it.  Other than hanging out at the diner, you could wander over to the church.  There is a rec room there where some of the local young folks like to hang out.’
+    \'Hey Edith.
+    <cough, cough> <raspy voice>  Hey!  You\'re not from around here.
+    I\'m new in town; visiting my grandparents.  I just wondered what there is to do around here?\'
+    You\'re doing it.  Other than hanging out at the diner, you could wander over to the church.  There is a rec room there where some of the local young folks like to hang out.\'
     You could also go find Bruce and talk to him.  He is always working on some contraption or willing to tell some tall tale.  His favorite is the mystery of the mansion.
     Mystery of the Mansion?
     Just a bunch of nonsense if you ask me.
-    ‘Okay thanks.’
+    \'Okay thanks.\'
     Hmmm.  Mystery of the Mansion?  There might be something exciting in this town after all.
-    I wonder where this Bruce guy is?  Oh well, I guess I’ll go check out this church in the meantime.""")
-    
+    I wonder where this Bruce guy is?  Oh well, I guess I\'ll go check out this church in the meantime.""")
+    showInformation("""
+Hey Edith.
+<cough, cough> <raspy voice>  Hey!  You\'re not from around here.
+I\'m new in town; visiting my grandparents.  I just wondered what there is to do around here?\'
+You\'re doing it.  Other than hanging out at the diner, you could wander over to the church.  There is a rec room there where some of the local young folks like to hang out.\'
+You could also go find Bruce and talk to him.  He is always working on some contraption or willing to tell some tall tale. His favorite is the mystery of the mansion.
+Mystery of the Mansion?
+Just a bunch of nonsense if you ask me.
+\'Okay thanks.\'
+Hmmm.  Mystery of the Mansion?  There might be something exciting in this town after all. I wonder where this Bruce guy is? Oh well, I guess I\'ll go check out this church in the meantime.""")
+  
   def talkToBruce(self):
     if "Comic Book" in self.inventory:
       printNow("""
@@ -493,41 +644,80 @@ class Player:
       A whole lot in fact.  I have something for you.
       <gives Bruce the comic book>
       <long pause>
-      I gotta give you credit.  I never thought anyone would ever figure it out.  How’d you figure it out?
+      I gotta give you credit.  I never thought anyone would ever figure it out.  How\'d you figure it out?
       It was the message your dad wrote.  He told you could be either Bruce or Batman.
       And I obviously chose to be Bruce.
       No!  You chose to be Batman.  You gave up the mansion and wealth so that you could silently help the folks here in Plainsfield.  You fix things in the night and keep things running with hardly any recognition for it.
       You are Batman.  You took the name Bruce to hide the fact that you are really Douglas Adams.
-      Well, let me congratulate you again.  You really have solved the Mystery of the Adam’s Mansion.  Well, I guess the jig’s up for me.  Time to be Douglas Adams again.
-      No it’s not.  You should always be yourself, unless you can be Batman, then be Batman.
-      You chose to be Batman, and I’m the last person who will ever turn Bruce Wayne in as being Batman.  Your secret’s safe with me.
-      You’re all right.  Hey, I never did catch your name.
+      Well, let me congratulate you again.  You really have solved the Mystery of the Adam\'s Mansion.  Well, I guess the jig\'s up for me.  Time to be Douglas Adams again.
+      No it\'s not.  You should always be yourself, unless you can be Batman, then be Batman.
+      You chose to be Batman, and I\'m the last person who will ever turn Bruce Wayne in as being Batman.  Your secret\'s safe with me.
+      You\'re all right.  Hey, I never did catch your name.
       <grins>
       Just call me Robin.""")
+      showInformation("""
+Hi Bruce!
+Hi.  Back from your trip to the mansion?  Find anything interesting?
+A whole lot in fact.  I have something for you.
+<gives Bruce the comic book>
+<long pause>
+I gotta give you credit.  I never thought anyone would ever figure it out.  How\'d you figure it out?
+It was the message your dad wrote.  He told you could be either Bruce or Batman.
+And I obviously chose to be Bruce.
+No!  You chose to be Batman.  You gave up the mansion and wealth so that you could silently help the folks here in Plainsfield.  You fix things in the night and keep things running with hardly any recognition for it.
+You are Batman.  You took the name Bruce to hide the fact that you are really Douglas Adams.
+Well, let me congratulate you again.  You really have solved the Mystery of the Adam\'s Mansion.  Well, I guess the jig\'s up for me.  Time to be Douglas Adams again.
+No it\'s not.  You should always be yourself, unless you can be Batman, then be Batman.
+You chose to be Batman, and I\'m the last person who will ever turn Bruce Wayne in as being Batman.  Your secret\'s safe with me.
+You\'re all right.  Hey, I never did catch your name.
+<grins>
+Just call me Robin.""")
     else:
       printNow("""
       You walk over closer to the man in the faded overalls.  You notice he appears to be working on an old Atari 2600.  Hmm, interesting.
       Hi, are you Bruce.
-      Who’s asking?
+      Who\'s asking?
       I am.  I was hoping you could help me out?
-      Maybe.  You’re not from ‘round here.
-      That’s what I’m told.  I was interested in the Adams mansion.
-      Adams mansion?  Sounds like you’ve been talking to Opie.
-      Why’s that?
-      That boy’s always spinning tales about that mansion up on the hill.  Thinks it’s haunted.
+      Maybe.  You\'re not from \'round here.
+      That\'s what I\'m told.  I was interested in the Adams mansion.
+      Adams mansion?  Sounds like you\'ve been talking to Opie.
+      Why\'s that?
+      That boy\'s always spinning tales about that mansion up on the hill.  Thinks it\'s haunted.
       <chuckles>
-      You don’t?
+      You don\'t?
       The mansion was abandoned years ago.  Plain and simple.  Everyone wants to say its haunted or that there is some sort of great mystery to it.
       But not you?
-      What’s the mystery?  Doug took off one day and the mansion has been abandoned ever since.
+      What\'s the mystery?  Doug took off one day and the mansion has been abandoned ever since.
       But no one saw him leave?  And he left everything behind, including the car.  How does someone leave this town without a car and without anyone seeing them?
       <grunts>
-      Now you sound like Opie too.  That boy’s always looking for a mystery to solve.
+      Now you sound like Opie too.  That boy\'s always looking for a mystery to solve.
       Can you tell me where to find the mansion?
       Sure, its located over there yonder on that hill.  Be careful snooping around there though.
-      If the guy’s really gone, what’s the harm?
+      If the guy\'s really gone, what\'s the harm?
       Just be careful.  Some things are best left alone if you ask me.""")
-      
+      showInformation("""
+You walk over closer to the man in the faded overalls.  You notice he appears to be working on an old Atari 2600.  Hmm, interesting.
+Hi, are you Bruce.
+Who\'s asking?
+I am.  I was hoping you could help me out?
+Maybe.  You\'re not from \'round here.
+That\'s what I\'m told.  I was interested in the Adams mansion.
+Adams mansion?  Sounds like you\'ve been talking to Opie.
+Why\'s that?
+That boy\'s always spinning tales about that mansion up on the hill.  Thinks it\'s haunted.
+<chuckles>
+You don\'t?
+The mansion was abandoned years ago.  Plain and simple.  Everyone wants to say its haunted or that there is some sort of great mystery to it.
+But not you?
+What\'s the mystery?  Doug took off one day and the mansion has been abandoned ever since.
+But no one saw him leave?  And he left everything behind, including the car.  How does someone leave this town without a car and without anyone seeing them?
+<grunts>
+Now you sound like Opie too.  That boy\'s always looking for a mystery to solve.
+Can you tell me where to find the mansion?
+Sure, its located over there yonder on that hill.  Be careful snooping around there though.
+If the guy\'s really gone, what\'s the harm?
+Just be careful.  Some things are best left alone if you ask me.""")
+  
   #Returns current room of player
   def getCurrentRoom(self):
     return self.currentRoom
@@ -535,8 +725,43 @@ class Player:
   def __str__(self):
     return ("Name: %s\nCurrent Location: %s\nPlayer Inventory: %s\n")%(self.name, self.currentRoom, self.inventory)
 
-  def print_hud_item(self,hud,index,item):
+  def create_hud(self,mustRemake = False):
+    ########################################
+    """
+        This is where we create the hud.
+
+        JES's image processing and memory
+        management is God-awful inefficient
+        so we prefabricated the HUD images
+        and load them as needed.
+    """
+    ########################################
+    if mustRemake:
+      self.currentRoom.make_huds() #Reload HUDS from folder
+    if len(self.inventory) > 0:#Print the items in player inventory
+        for i in range(len(self.inventory)):
+            self.add_hud_item(self.currentRoom.get_hud('normal'),i,self.inventory[i])
+    if self.hasDrunkRed: #Handle red potion
+        self.currentRoom.add_hud_description(str(self.currentRoom),'red')
+        if not (self.currentRoom.coords[0] == 0 and self.currentRoom.coords[0] == 0):
+            addOvalFilled(self.currentRoom.get_hud('red'),self.currentRoom.coords[0],self.currentRoom.coords[1],25,25,green)
+        return self.currentRoom.get_hud('red')
+    elif self.hasDrunkGreen: #Handle green potion
+        self.currentRoom.add_hud_description(str(self.currentRoom),'green')
+        if not (self.currentRoom.coords[0] == 0 and self.currentRoom.coords[0] == 0):
+            addOvalFilled(self.currentRoom.get_hud('green'),self.currentRoom.coords[0],self.currentRoom.coords[1],25,25,green)
+        return self.currentRoom.get_hud('green')
+    else: #Add room description and then put player map pin
+        self.currentRoom.add_hud_description(str(self.currentRoom),'normal')
+        if not (self.currentRoom.coords[0] == 0 and self.currentRoom.coords[0] == 0):
+            addOvalFilled(self.currentRoom.get_hud('normal'),self.currentRoom.coords[0],self.currentRoom.coords[1],25,25,green)
+        return self.currentRoom.get_hud('normal')
+
+  def add_hud_item(self,hud,index,item):
       """
+      This function adds an inventory item to the HUD in one of
+      six inventory slots detailed below.
+
       Inventory Items:
           |1|2|3|
           |4|5|6|
@@ -548,60 +773,76 @@ class Player:
           6: width (x): 1220-1345; height (y): 740-864 [125x124]
       """
       i_path = {
-          'Key': 'assets\\images\\item_icons\\key.jpg',
-          'Red Potion': 'assets\\images\\item_icons\\potion_red.jpg',
-          'Purple Potion': 'assets\\images\\item_icons\\potion_purple.jpg',
-          'Map': 'assets\\images\\item_icons\\Map.jpg',
-          'Lantern': 'assets\\images\\item_icons\\lantern.jpg',
-          'Broken Shovel': 'assets\\images\\item_icons\\broken_shovel.jpg',
+        'Red Potion': 'assets\\images\\item_icons\\potion_red.jpg',
+        'Green Potion': 'assets\\images\\item_icons\\green_potion.jpg',
+        'Map Piece 1': 'assets\\images\\item_icons\\map_piece_1.jpg',
+        'Map Piece 2': 'assets\\images\\item_icons\\map_piece_2.jpg',
+        'Map Piece 3': 'assets\\images\\item_icons\\map_piece_3.jpg',
+        'Map Piece 4': 'assets\\images\\item_icons\\map_piece_4.jpg',
+        'Key': 'assets\\images\\item_icons\\key.jpg',
+        'Small Key': 'assets\\images\\item_icons\\small_key.jpg',
+        'Shovel': 'assets\\images\\item_icons\\shovel.jpg',
+        'Broken Shovel': 'assets\\images\\item_icons\\broken_shovel.jpg',
+        'CD': 'assets\\images\\item_icons\\CD.jpg',
+        'Tape': 'assets\\images\\item_icons\\tape.jpg',
+        'Lantern': 'assets\\images\\item_icons\\lantern.jpg',
+        'Matches': 'assets\\images\\item_icons\\matches.jpg',
+        'Lit Lantern': 'assets\\images\\item_icons\\lit_lantern.jpg',
+        'Walkman': 'assets\\images\\item_icons\\walkman.jpg',
+        'Comic Book': 'assets\\images\\item_icons\\ComicBook.jpg',
           }
       origins = [(903,602),(1062,602),(1220,602),(903,740),(1062,740),(1220,740)]
       pyCopyEx(makePicture(i_path[item]),hud,origins[index][0],origins[index][1],getColor(getPixel(makePicture(i_path[item]),0,0)))
 
-n_images = {
-    'map': [],
-}
-
 def mysteryMansion():
+  global isPathSet
+  if not isPathSet:
+      showInformation("Welcome to Mystery Mansion! At any time you may quit the game by typing exit or quit. As you explore Plainsfield you will have several options for interacting with your environment. Commands include: print, pickup, drop, move, use, drink, examine, and talk to. If you are stuck, the help command will print out detailed command information. Thanks for playing!")
+      showInformation("Please Choose the game folder.")
+      setMediaFolder()
+      isPathSet = True
   #Is game over?
   done = false
+  #variables for examined objects. This is to prevent spawning multiple map pieces.
+  floorMatDone = false
+  portraitDone = false
+  couchDone = false
   #Description of living room
-  livingRoomDescription = """The living room is one of the largest rooms in the old mansion.  It interior is dark as most of the curtains and shades are drawn.
-  In the middle is a couch with two end tables on each side.  One end table has a lamp on it, while the other has a lantern.  To the left is a large overstuffed arm chair.
-  There is a coffee table in front of the couch and an old wood grained RCA television sitting on the floor in front of the coffee table.  On top of the television was a betamax player
+  livingRoomDescription = """The living room is one of the largest rooms in the old mansion.  The interior is dark as most of the curtains and shades are drawn.
+  In the middle is a \'couch\' with two end tables on each side.  One end table has a lamp on it, while the other has a lantern.  To the left is a large overstuffed arm chair.
+  There is a coffee table in front of the couch and an old wood grained RCA \'television\' sitting on the floor in front of the coffee table.  On top of the television was a betamax player
   and several betamax tapes.  Framed pictures decorate the walls on every side."""
   #Description of kitchen
-  kitchenDescription = """The kitchen was surprisingly one of the cleaner rooms in the mansion.  ?Guessing the owner was not much of a cook.?  The interior was vintage 70s.  Wood cabinets with old ivory pull knobs.
+  kitchenDescription = """The kitchen was surprisingly one of the cleaner rooms in the mansion.  I guess the owner was not much of a cook?  The interior was vintage 70s.  Wood \'cabinets\' with old ivory pull knobs.
   There was an oven, range top stove, and refrigerator...all avocado green.  The sink still has a few glasses in it, but nothing else seemed to be out of place.
-  The floor was linoleum and there was an old mat in front of the kitchen sink.  The dirtiest thing in the whole room was an old microwave sitting on the counter.
-  This was obviously the owner?s appliance of choice, lol.  By the far wall under the window was a small table with a single solitary chair.  ?Guess he didn?t entertain too many guests.?
-  On the table was some sort of bar."""
+  The floor was linoleum and there was an old \'floor mat\' in front of the kitchen sink.  The dirtiest thing in the whole room was an old microwave sitting on the counter.
+  This was obviously the owner\'s appliance of choice, lol.  By the far wall under the window was a small table with a single solitary chair.  Guess he didn\'t entertain too many guests?"""
   #Description of Porch
   porchDescription = """The porch is big and expansive as was the style in the midwest.  The floor boards and rails are showing their age.  The whole thing is in desperate need of being refinished.
-  On the left side of the porch is an old rocking chair with a small table next to it.  On the table is an ashtray and a coaster.  To the right of the rocking chair is the front door to the mansion painted a bright red color.
-  Beneath the door is a mat that says ?Welcome?."""
+  On the left side of the porch is an old rocking \'chair\' with a small table next to it.  On the table is an ashtray and a coaster.  To the right of the rocking chair is the front door of the mansion painted a bright red color.
+  Beneath the door is a mat that says \"Welcome\"."""
   #Description of Graveyard
-  graveyardDescription = """The graveyard is small and sits on a hill adjacent to the mansion.  The headstones are laid out in a haphazard manner.  It appears to be a family cemetery for the Adams? family.
+  graveyardDescription = """The graveyard is small and sits on a hill adjacent to the mansion.  The \'tombstone\'s are laid out in a haphazard manner.  It appears to be a family cemetery for the Adam\'s family.
   Some of the dates go back to the 1700s.   The cemetery suffers from obvious years of neglect as many of the headstones are in disrepair and the weeds and ivy are overgrown.
   In the middle of the graveyard is an old oak tree that stretches far above the entire cemetery."""
   #Description of Shed
   shedDescription = """The shed is an old dilapidated shed halfway between the graveyard and the mansion.  It appears it was probably used to store tools and such, although it could contain anything.
   The shed has a small padlock on the outside."""
   #Description of Library
-  libraryDescription = """You are immediately confronted with the smell of musty books.  The library is filled with bookshelves along every wall.  Each shelf is stuffed with books of every shape and size.
-  In the middle of the library is an old leather arm chair and an end table.  On the end table appears to be a walkman."""
+  libraryDescription = """You are immediately confronted with the smell of musty books.  The library contains a \'bookshelf\' for every wall.  Each shelf is stuffed with books of every shape and size.
+  In the middle of the library is an old leather arm \'chair\' and an end table.  On the end table you notice a walkman."""
   #Description of Study
-  studyDescription = """The study was the messiest of all the rooms.  There was a desk in the middle with an old Macintosh computer.  Papers were piled up in an organization that could only be guessed at.
+  studyDescription = """The study was the messiest of all the rooms.  There was a desk in the middle with an old Macintosh \'computer\'.  Papers were piled up in an organization that could only be guessed at.
   In the right corner was a smaller desk with an old Apple II computer on it.  In the left corner was a grandfather clock that appeared to still be keeping time."""
   #Description of Dining Room
   diningRoomDescription = """The dining room is very ornate.  In the center is a large dining table with candles.  The table has place settings for 12 people although it appears that it was rarely used.
-  Towards the back of the room is a large mirror that stretches from floor to ceiling.  Above the dining table was a large glass chandelier.  Opposite the mirror is a large portrait of a man."""
+  Towards the back of the room is a large \'mirror\' that stretches from floor to ceiling.  Above the dining table was a large glass chandelier.  Opposite the mirror is a large \'portrait\' of a man."""
   #Description of Gas Station
   gasStationDescription = """You arrive at the gas station.  The main building is made of wood.  There is a window to the left that has been broken.  Outside the gas station on the deck is a simple wooden chair and a small wooden table.
-  Above the gas station is a faded metal Texaco sign.  Next to that is a sign that reads: Route 66 Cafe.  On the right side of the porch deck is a vintage Coca-Cola vending machine.  
+  Above the gas station is a faded metal Texaco sign.  Next to that is a sign that reads: Route 66 Cafe.  On the right side of the porch deck is a vintage Coca-Cola vending machine.
   You spy an old man rustling around the mechanics bay to the right side of the station."""
   #Description of Diner
-  dinerDescription = """You arrive at the diner.  It’s the typical Hollywood portrayal of a rundown midwest diner.  The building itself is a large rectangular piece with metal siding.  Weeds are overgrown all along the outside.
+  dinerDescription = """You arrive at the diner.  It\'s the typical Hollywood portrayal of a rundown midwest diner.  The building itself is a large rectangular piece with metal siding.  Weeds are overgrown all along the outside.
   A large sign stands above the building with giant letters spelling out D-I-N-E-R.  You wonder if the place is even in business.  Oh, well.  Only one way to find out.  You head inside.
   The appearance inside the diner is only slightly more upkept than the outside.  The plastic material on the booths and barstools is cracked.  The paint on the walls is faded and peeling in places.
   Behind the counter is an older woman with Edith on her nametag.  You approach the counter."""
@@ -609,21 +850,21 @@ def mysteryMansion():
   churchDescription = """The local church is a small brightly painted red chapel with a large steeple with a bell in it.  It is obvious the locals care about this building as it seems to be the best upkept building in the whole town.
   You look around to see if there is anyone to talk to or anything to do.  You spy a young boy sitting near the steps of the church."""
   #Create all the rooms in the mansion
-  kitchen = Room("Kitchen",kitchenDescription,[])
-  porch = Room("Porch", porchDescription, [])
-  graveyard = Room("Graveyard", graveyardDescription, [])
-  shed = Room("Shed", shedDescription, ["Shovel"])
-  library = Room("Library", libraryDescription, ["Walkman"])
-  study = Room("Study", studyDescription, ["CD", "Matches", "Tape"])
-  livingRoom = Room("Living Room", livingRoomDescription, ["Lantern"])
+  kitchen = Room("Kitchen",kitchenDescription,[],(1143,162))
+  porch = Room("Porch", porchDescription, [],(1130,338))
+  graveyard = Room("Graveyard", graveyardDescription, [],(1324,256))
+  shed = Room("Shed", shedDescription, ["Shovel"],(1321,191))
+  library = Room("Library", libraryDescription, ["Walkman"],(1042,166))
+  study = Room("Study", studyDescription, ["CD", "Matches", "Tape"],(1034,283))
+  livingRoom = Room("Living Room", livingRoomDescription, ["Lantern"],(1132,294))
   ###Lock front door of living room###
   #livingRoom.setLocked(true)
-  diningRoom = Room("Dining Room", diningRoomDescription, [])
-  church = Room("Church", churchDescription, [])
-  gasStation = Room("Gas Station", gasStationDescription, [])
-  diner = Room("Diner", dinerDescription, [])
-  
-  
+  diningRoom = Room("Dining Room", diningRoomDescription, [],(1224,295))
+  church = Room("Church", churchDescription, [],(1041,152))
+  gasStation = Room("Gas Station", gasStationDescription, [],(932,228))
+  diner = Room("Diner", dinerDescription, [],(1157,242))
+
+
   ###Build the mansion/room relationships###
   porch.setNorth(livingRoom)
   porch.setEast(graveyard)
@@ -653,6 +894,7 @@ def mysteryMansion():
   player = Player(playerName, diner)
   #Print player details
   printNow(player)
+  show(player.create_hud())
   #All the possible actions a user may enter and the corresponding function to call
   actions = {
     ###Print Functions###
@@ -660,7 +902,8 @@ def mysteryMansion():
     'print inventory': 'printNow(player.inventory)',
     'print player': 'printNow(player)',
     ###Pickup Functions###
-    'pickup potion': "player.pickupItem('Potion')",
+    'pickup red potion': "player.pickupItem('Red Potion')",
+    'pickup green potion': "player.pickupItem('Green Potion')",
     'pickup map piece 1': "player.pickupItem('Map Piece 1')",
     'pickup map piece 2': "player.pickupItem('Map Piece 2')",
     'pickup map piece 3': "player.pickupItem('Map Piece 3')",
@@ -674,7 +917,8 @@ def mysteryMansion():
     'pickup lit lantern': "player.pickupItem('Lit Lantern')",
     'pickup walkman': "player.pickupItem('Walkman')",
     ###Drop Functions###
-    'drop potion': "player.pickupItem('Potion')",
+    'drop red potion': "player.dropItem('Red Potion')",
+    'drop green potion': "player.dropItem('Green Potion')",
     'drop map piece 1': "player.dropItem('Map Piece 1')",
     'drop map piece 2': "player.dropItem('Map Piece 2')",
     'drop map piece 3': "player.dropItem('Map Piece 3')",
@@ -708,6 +952,7 @@ def mysteryMansion():
     'use walkman': 'player.useWalkman()',
     #Drink Function###
     'drink red potion': "player.drinkRedPotion()",
+    'drink green potion': "player.drinkGreenPotion()",
     #Examine Functions###
     'examine bookshelf': "player.examine('bookshelf')",
     'examine nautilus': "player.examine('nautilus')",
@@ -735,7 +980,17 @@ def mysteryMansion():
     action = requestString("Please enter next move").lower()
     #Get help screen
     if action == "help":
-      showInformation("Help goes here....")
+      showInformation("""List of commands:
+Print - prints your name, inventory, or current room.
+Pickup - picks up items you find in rooms.
+Drop - drops items from your inventory.
+Move - moves to the next room. Directions are given in North, South, East, and West.
+Use - most inventory items and some objects and furniture in a room can be used.
+Drink - drinks any delicious beverages you might find.
+Examine - many of the items in a room's description can be examined.
+Talk to - talk to the denizens of Plainsfield.
+Quit/Exit - ends the game
+Objects you are able to interact with can be identified by the \' \' around it.""")
     #End game if user types 'exit' or 'quit'
     elif action == "exit" or action == "quit":
       done = true
@@ -744,9 +999,19 @@ def mysteryMansion():
     else:
       try:
         eval(actions[action])
+        if 'pickup' in actions[action] or 'drop' in actions[action] or 'use' in action:
+            show(player.create_hud(True))
+        else:
+            if not player.currentRoom.isPainted:
+                show(player.create_hud(False))
+                player.currentRoom.isPainted = True
+            else:
+                repaint(player.create_hud(False))
+
       #Handles error from an invalid action
       except:
         printNow("Not a valid move")
+        showInformation("Not a valid move")
 
 
 #################Working on Images################
@@ -764,22 +1029,6 @@ def img_scramble(pic,scramble_level):
         setColor(pix[indices[i]],getColor(original[i]))
     elif random.randint(1,scramble_level) != 1:
       setColor(pix[indices[i]],getColor(original[i]))
-
-def img_preload():
-    #Handles all image scrambling at beginning
-    path = 'C:\\Users\\caleb\\Google Drive\\CSUMB\\final_project\\Map.jpg'
-    ##############Get unaltered image#############
-    pic = makePicture(path)
-    n_images['map'].append(pic)
-
-    for i in range(1,3):
-        pic = makePicture(path)
-        img_scramble(pic,i*4)
-        n_images['map'].append(pic)
-
-    full_scram = makePicture(path)
-    img_scramble(full_scram,0)
-    n_images['map'].append(full_scram)
 
 def pyCopyEx(pic,target, targetX, targetY,exclude = None):
     for x in range (0, getWidth(pic)):
@@ -804,12 +1053,18 @@ def find_last_space(txt):
     except:
         return 0
 
-def txt_to_lines(txt,font_size):
+def txt_to_lines(txt,font_size,isLong = False):
+    """This function takes a blob of txt
+    and tries to format it into lines that
+    will fit on the HUD"""
     ret = []
     isEoF = False
     index = 0
     while not isEoF:
-        max_index = index+int(3.75*font_size)
+        if isLong:
+            max_index = index+int(6.75*font_size)#empirically derived constant
+        else:
+            max_index = index+int(2.75*font_size)#empirically derived constant
         if max_index < len(txt):
             end_index = index + find_last_space(txt[index:max_index])
             ret.append(txt[index:end_index])
@@ -819,21 +1074,121 @@ def txt_to_lines(txt,font_size):
             isEoF = True
 
     return ret
-def make_screen():
-    path = 'C:\\Users\\caleb\\Google Drive\\CSUMB\\final_project\\assets\\images\\hud.jpg'
 
-    desc = 'It looks like nobody has lived here for centuries'
-    font_size = 25
-    canvas = makeEmptyPicture(1200,900)
-    setAllPixelsToAColor(canvas,black)
-    pyCopyEx(makePicture(path),canvas,30,30)
-    sty = makeStyle(sansSerif,bold,font_size)
-    desc_lines = txt_to_lines(desc,font_size)
-    for ln in range(len(desc_lines)):
-        addTextWithStyle(canvas,30,720+(font_size*(1+ln)),desc_lines[ln],sty,red)
-    show(canvas)
+
+##################Functions left over from development#################
+def green_tint(p):#red tinting map function
+    color = getColor(p)
+    setColor(p,makeColor(color.getRed(),min(255,int(color.getGreen()*2)),color.getBlue()))
+def red_tint(p):#green tinting map function
+    color = getColor(p)
+    setColor(p,makeColor(min(255,int(color.getRed()*2)),color.getGreen(),color.getBlue()))
+
+def make_screens():
+
+    """This is the function I used to make the HUDs with their specific images"""
+
+    setMediaFolder('C:\\Users\\callen\\Google Drive\\CSUMB\\final_project\\assets\\images\\')
+
+    rooms = {
+        'Church': 'Church.jpg',
+        'Diner': 'Diner.jpg',
+        'Gas Station': 'GasStation.jpg',
+        'Porch': 'Porch.jpg',
+        'Kitchen': 'Kitchen.jpg',
+        'Porch': 'Porch.jpg',
+        'Shed': 'Shed.jpg',
+        'Study': 'Study.jpg',
+        'Dining Room': 'DiningRoom.jpg',
+        #'Graveyard': 'Graveyard.jpg',
+        #'Graveyard Green': 'greenGraveyard.jpg',
+        #'Graveyard Red': 'redGraveyard.jpg',
+        #'Living Room': 'LivingRoom.jpg',
+        #'Living Room Green': 'greenLivingRoom.jpg',
+        #'Living Room_Red': 'redLivingRoom.jpg',
+        #'Library': 'Library.jpg',
+        #'Library Green': 'greenLibrary.jpg',
+        #'Library Red': 'redLibrary.jpg',
+    }
+
+    for key in rooms:
+        pic_reg = makePicture(rooms[key])
+        pic_grn = makePicture(rooms[key])
+        pic_red = makePicture(rooms[key])
+        pix_grn = getPixels(pic_grn)
+        pix_red = getPixels(pic_red)
+        map(green_tint,pix_grn)
+        map(red_tint,pix_red)
+        hud_reg = makePicture('huds\\hud.jpg')
+        hud_grn = makePicture('huds\\hud.jpg')
+        hud_red = makePicture('huds\\hud.jpg')
+        pyCopyEx(pic_reg,hud_reg,26,100)
+        pyCopyEx(pic_grn,hud_grn,26,100)
+        pyCopyEx(pic_red,hud_red,26,100)
+        writePictureTo(hud_reg,'huds\\%s HUD.jpg'%key)
+        writePictureTo(hud_red,'huds\\%s Red HUD.jpg'%key)
+        writePictureTo(hud_grn,'huds\\%s Green HUD.jpg'%key)
+
+def add_screen_maps():
+    """This is the function I used to add the maps to the
+    HUD images"""
+
+    town_files = ['Church Green HUD.jpg',
+    'Church HUD.jpg',
+    'Church Red HUD.jpg',
+    'Diner Green HUD.jpg',
+    'Diner HUD.jpg',
+    'Diner Red HUD.jpg',
+    'Gas Station Green HUD.jpg',
+    'Gas Station HUD.jpg',
+    'Gas Station Red HUD.jpg',]
+
+    mansion_files = ['Graveyard Green HUD.jpg',
+    'Graveyard HUD.jpg',
+    'Graveyard Red HUD.jpg',
+    'Kitchen Green HUD.jpg',
+    'Kitchen HUD.jpg',
+    'Kitchen Red HUD.jpg',
+    'Library Green HUD.jpg',
+    'Library HUD.jpg',
+    'Library Red HUD.jpg',
+    'Living Room Green HUD.jpg',
+    'Living Room HUD.jpg',
+    'Living Room Red HUD.jpg',
+    'Porch Green HUD.jpg',
+    'Porch HUD.jpg',
+    'Porch Red HUD.jpg',
+    'Shed Green HUD.jpg',
+    'Shed HUD.jpg',
+    'Shed Red HUD.jpg',
+    'Study Green HUD.jpg',
+    'Study HUD.jpg',
+    'Study Red HUD.jpg',
+    'Dining Room Green HUD.jpg',
+    'Dining Room HUD.jpg',
+    'Dining Room Red HUD.jpg',]
+
+    for path in town_files:
+        town_map = makePicture('\\assets\\images\\maps\\Plainsfeild.jpg')
+        pic = makePicture('\\assets\\images\\huds\\%s'%path)
+        pyCopyEx(town_map,pic, 891, 16)
+        writePictureTo(pic,'\\assets\\images\\huds_with_maps\\%s'%path)
+
+    for path in mansion_files:
+        man_map = makePicture('\\assets\\images\\maps\\OverallMap.jpg')
+        pic = makePicture('\\assets\\images\\huds\\%s'%path)
+        pyCopyEx(man_map,pic, 891, 16)
+        writePictureTo(pic,'\\assets\\images\\huds_with_maps\\%s'%path)
 
 def tester():
-    joe = Player('joe',Room("Living Room", "It looks like nobody has lived here for centuries", ["Lantern", "Map Piece 4"],'assets\\images\\LivingRoom.jpg'))
+    #function for testing inventory items.
+    joe = Player('joe',Room("Living Room", "It looks like nobody has lived here for centuries", ['Green Potion', 'Key', 'Shovel', 'Walkman', 'Tape', 'Matches']))
     printNow(str(joe))
-    joe.make_hud()
+    joe.pickupItem('Green Potion')
+    joe.drinkGreenPotion()
+    #joe.pickupItem('Key')
+    #joe.pickupItem('Shovel')
+    #joe.pickupItem('Walkman')
+    #joe.pickupItem('Tape')
+    #joe.pickupItem('Matches')
+    show(joe.create_hud())
