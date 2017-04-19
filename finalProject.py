@@ -151,6 +151,10 @@ class Player:
   secretRoomFound = false
   #Is the safe locked
   safeLocked = true
+  #variables for examined objects. This is to prevent spawning multiple map pieces.
+  floorMatDone = false
+  portraintDone = false
+  couchDone = false 
   #Holds the room that the current player is in
   currentRoom = None
   #is the player under the effects of a potion
@@ -458,17 +462,17 @@ You pull back the grass and notice several numbers printed in small font along t
       printNow("""You examine the tombstone and read the name \"Douglas Adams\".  Underneath it says, \"Digital Killed the Analog Star!\"""")
       showInformation("""You examine the tombstone and read the name \"Douglas Adams\".  Underneath it says, \"Digital Killed the Analog Star!\"""")
     elif item == 'couch' and self.currentRoom.getName() == "Living Room":
-      if couchDone == True:
-        printNow("You already raided the couch cushions!")
-        showInformation("You already raided the couch cushions!")
-      else:
+      if self.couchDone == false:
         printNow("""You find some stale Cheez-Its and spare change in the couch cushions.  You take a look underneath and notice a small piece of parchment.
         It appears to be a piece to a map.""")
         showInformation("""You find some stale Cheez-Its and spare change in the couch cushions.  You take a look underneath and notice a small piece of parchment.
-It appears to be a piece to a map.""")
+        It appears to be a piece to a map.""")
         self.inventory.append("Map Piece 4")
-        couchDone = True
+        self.couchDone = true
         printNow(self.inventory)
+      else:
+        printNow("You already raided the couch!")
+        showInformation("You already raided the couch!")
     elif item == 'television' and self.currentRoom.getName() == "Living Room":
       printNow("An old wood grained RCA.  A classic.  You look closer at the betamax tapes.  Hmm.  It looks like the old Adam West Batman series.")
       showInformation("An old wood grained RCA.  A classic.  You look closer at the betamax tapes.  Hmm.  It looks like the old Adam West Batman series.")
@@ -481,27 +485,27 @@ Sounds fancy.  Wonder how it tastes? You place the potion in your inventory.""")
       self.inventory.append("Red Potion")
       printNow(self.inventory)
     elif item == "floor mat" and self.currentRoom.getName() == "Kitchen":
-      if floorMatDone == True:
-        printNow("You already looked under the floor mat!")
-        showInformation("You already looked under the floor mat!")
-      else:
+      if self.floorMatDone == false:
         printNow("You look under the floor mat and discover another piece to the map!")
         showInformation("You look under the floor mat and discover another piece to the map!")
         self.inventory.append("Map Piece 2")
-        floorMatDone = True
+        self.floorMatDone = true
         printNow(self.inventory)
-    elif item == 'portrait' and self.currentRoom.getName() == "Dining Room":
-      if portraitDone == True:
-        printNow("You already examined the portrait!")
-        showInformation("You already examined the portrait!")
       else:
+        printNow("You already looked under the floor mat!")
+        showInformation("You already looked under the floor mat!")
+    elif item == 'portrait' and self.currentRoom.getName() == "Dining Room":
+      if self.portraitDone == false:
         printNow("""The name underneath reads \"Wilfred Adams\".  You notice a small piece of paper sticking out from behind the back.
         You tug on it and you find yourself holding another piece of the map.""")
         showInformation("""The name underneath reads \"Wilfred Adams\".  You notice a small piece of paper sticking out from behind the back.
 You tug on it and you find yourself holding another piece of the map.""")
         self.inventory.append("Map Piece 3")
-        portraitDone = True
+        self.portraitDone = true
         printNow(self.inventory)
+      else:
+        printNow("You already examined the portrait!")
+        showInformation("You already examined the portrait!")
     elif item == 'mirror' and self.currentRoom.getName() == "Dining Room":
       printNow("This mirror has some odd properties to it.")
       showInformation("This mirror has some odd properties to it.")
@@ -803,10 +807,7 @@ def mysteryMansion():
       isPathSet = True
   #Is game over?
   done = false
-  #variables for examined objects. This is to prevent spawning multiple map pieces.
-  floorMatDone = false
-  portraitDone = false
-  couchDone = false
+   
   #Description of living room
   livingRoomDescription = """The living room is one of the largest rooms in the old mansion.  The interior is dark as most of the curtains and shades are drawn.
   In the middle is a \'couch\' with two end tables on each side.  One end table has a lamp on it, while the other has a lantern.  To the left is a large overstuffed arm chair.
