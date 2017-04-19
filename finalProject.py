@@ -148,6 +148,7 @@ class Room:
 class Player:
   #The items the player is holding
   inventory = []
+  #inventory = ['Comic Book']
   #Has secret room been found?
   secretRoomFound = false
   #Is the safe locked
@@ -291,7 +292,19 @@ class Player:
         #show(self.create_hud())
       else:
         self.currentRoom.setDescription("The basement is completely dark.  You cannot see anything.  It would not be safe to explore here unless you can find some sort of light source.")
-      printNow(self.currentRoom)
+        printNow(self.currentRoom)
+
+        isDone = False
+        while not isDone:
+            ans = requestString("The room is completely dark. Do you explore anyway? (y/n)").lower()
+            if ans == 'y':
+                showInformation('You enter the room, stumbling around in the dark until you hear the sound of disembodied voices singing for you to \'go anywhere.\' Panicked, you run for home!')
+                showInformation('You\'ve run home crying to your momma. You lose!')
+                isDone = True
+                return 'lost'
+            elif ans == 'n':
+                isDone = True
+
     else:
       printNow("There is no room below you!")
       showInformation("There is no room below you!")
@@ -446,8 +459,9 @@ In the wet dirt you feel something small and metal.  You pull it up into the lig
       if self.currentRoom.getName() == "Porch":
         if self.currentRoom.getNorth().isLocked():
           self.currentRoom.getNorth().setLocked(false)
-          printNow("You hear the sweet sound of the front door unlocking.")
-          showInformation("You hear the sweet sound of the front door unlocking.")
+          self.inventory.remove('Key')
+          printNow("You hear the sweet sound of the front door unlocking. The key gets stuck in the lock, though, and you leave it in there.")
+          showInformation("You hear the sweet sound of the front door unlocking. The key gets stuck in the lock, though, and you leave it in there.")
         else:
            self.currentRoom.getNorth().setLocked(true)
            printNow("The lock clicks in place as the door is secured.")
@@ -605,7 +619,10 @@ Sounds fancy.  Wonder how it tastes? You place the potion in your inventory.""")
       if self.floorMatDone == false:
         printNow("You look under the floor mat and discover a torn scrap of paper!")
         showInformation("You look under the floor mat and discover a torn scrap of paper!")
-        self.inventory.append("Page Piece 2")
+        try:
+            self.pickupItem('Page Piece 2')
+        except:
+            pass
         self.floorMatDone = true
         printNow(self.inventory)
       else:
@@ -760,84 +777,86 @@ Hmmm.  Mystery of the Mansion?  There might be something exciting in this town a
   def talkToBruce(self):
     if "Comic Book" in self.inventory:
       printNow("""
-      Hi Bruce!
-      Hi.  Back from your trip to the mansion?  Find anything interesting?
-      A whole lot in fact.  I have something for you.
-      <gives Bruce the comic book>
-      <long pause>
-      I gotta give you credit.  I never thought anyone would ever figure it out.  How\'d you figure it out?
-      It was the message your dad wrote.  He told you could be either Bruce or Batman.
-      And I obviously chose to be Bruce.
-      No!  You chose to be Batman.  You gave up the mansion and wealth so that you could silently help the folks here in Plainsfield.  You fix things in the night and keep things running with hardly any recognition for it.
-      You are Batman.  You took the name Bruce to hide the fact that you are really Douglas Adams.
-      Well, let me congratulate you again.  You really have solved the Mystery of the Adam\'s Mansion.  Well, I guess the jig\'s up for me.  Time to be Douglas Adams again.
-      No it\'s not.  You should always be yourself, unless you can be Batman, then be Batman.
-      You chose to be Batman, and I\'m the last person who will ever turn Bruce Wayne in as being Batman.  Your secret\'s safe with me.
-      You\'re all right.  Hey, I never did catch your name.
-      <grins>
-      Just call me Robin.""")
+          Hi Bruce!
+          Hi.  Back from your trip to the mansion?  Find anything interesting?
+          A whole lot in fact.  I have something for you.
+          <gives Bruce the comic book>
+          <long pause>
+          I gotta give you credit.  I never thought anyone would ever figure it out.  How\'d you figure it out?
+          It was the message your dad wrote.  He told you could be either Bruce or Batman.
+          And I obviously chose to be Bruce.
+          No!  You chose to be Batman.  You gave up the mansion and wealth so that you could silently help the folks here in Plainsfield.  You fix things in the night and keep things running with hardly any recognition for it.
+          You are Batman.  You took the name Bruce to hide the fact that you are really Douglas Adams.
+          Well, let me congratulate you again.  You really have solved the Mystery of the Adam\'s Mansion.  Well, I guess the jig\'s up for me.  Time to be Douglas Adams again.
+          No it\'s not.  You should always be yourself, unless you can be Batman, then be Batman.
+          You chose to be Batman, and I\'m the last person who will ever turn Bruce Wayne in as being Batman.  Your secret\'s safe with me.
+          You\'re all right.  Hey, I never did catch your name.
+          <grins>
+          Just call me Robin.""")
       showInformation("""
-Hi Bruce!
-Hi.  Back from your trip to the mansion?  Find anything interesting?
-A whole lot in fact.  I have something for you.
-<gives Bruce the comic book>
-<long pause>
-I gotta give you credit.  I never thought anyone would ever figure it out.  How\'d you figure it out?
-It was the message your dad wrote.  He told you could be either Bruce or Batman.
-And I obviously chose to be Bruce.
-No!  You chose to be Batman.  You gave up the mansion and wealth so that you could silently help the folks here in Plainsfield.  You fix things in the night and keep things running with hardly any recognition for it.
-You are Batman.  You took the name Bruce to hide the fact that you are really Douglas Adams.
-Well, let me congratulate you again.  You really have solved the Mystery of the Adam\'s Mansion.  Well, I guess the jig\'s up for me.  Time to be Douglas Adams again.
-No it\'s not.  You should always be yourself, unless you can be Batman, then be Batman.
-You chose to be Batman, and I\'m the last person who will ever turn Bruce Wayne in as being Batman.  Your secret\'s safe with me.
-You\'re all right.  Hey, I never did catch your name.
-<grins>
-Just call me Robin.""")
+        Hi Bruce!
+        Hi.  Back from your trip to the mansion?  Find anything interesting?
+        A whole lot in fact.  I have something for you.
+        <gives Bruce the comic book>
+        <long pause>
+        I gotta give you credit.  I never thought anyone would ever figure it out.  How\'d you figure it out?
+        It was the message your dad wrote.  He told you could be either Bruce or Batman.
+        And I obviously chose to be Bruce.
+        No!  You chose to be Batman.  You gave up the mansion and wealth so that you could silently help the folks here in Plainsfield.  You fix things in the night and keep things running with hardly any recognition for it.
+        You are Batman.  You took the name Bruce to hide the fact that you are really Douglas Adams.
+        Well, let me congratulate you again.  You really have solved the Mystery of the Adam\'s Mansion.  Well, I guess the jig\'s up for me.  Time to be Douglas Adams again.
+        No it\'s not.  You should always be yourself, unless you can be Batman, then be Batman.
+        You chose to be Batman, and I\'m the last person who will ever turn Bruce Wayne in as being Batman.  Your secret\'s safe with me.
+        You\'re all right.  Hey, I never did catch your name.
+        <grins>
+        Just call me Robin.""")
+      showInformation('You are Batman. You win!')
+      return 'lost'
     else:
-      printNow("""
-      You walk over closer to the man in the faded overalls.  You notice he appears to be working on an old Atari 2600.  Hmm, interesting.
-      Hi, are you Bruce.
-      Who\'s asking?
-      I am.  I was hoping you could help me out?
-      Maybe.  You\'re not from \'round here.
-      That\'s what I\'m told.  I was interested in the Adams mansion.
-      Adams mansion?  Sounds like you\'ve been talking to Opie.
-      Why\'s that?
-      That boy\'s always spinning tales about that mansion up on the hill.  Thinks it\'s haunted.
-      <chuckles>
-      You don\'t?
-      The mansion was abandoned years ago.  Plain and simple.  Everyone wants to say its haunted or that there is some sort of great mystery to it.
-      But not you?
-      What\'s the mystery?  Doug took off one day and the mansion has been abandoned ever since.
-      But no one saw him leave?  And he left everything behind, including the car.  How does someone leave this town without a car and without anyone seeing them?
-      <grunts>
-      Now you sound like Opie too.  That boy\'s always looking for a mystery to solve.
-      Can you tell me where to find the mansion?
-      Sure, its located over there yonder on that hill.  Be careful snooping around there though.
-      If the guy\'s really gone, what\'s the harm?
-      Just be careful.  Some things are best left alone if you ask me.""")
-      showInformation("""
-You walk over closer to the man in the faded overalls.  You notice he appears to be working on an old Atari 2600.  Hmm, interesting.
-Hi, are you Bruce.
-Who\'s asking?
-I am.  I was hoping you could help me out?
-Maybe.  You\'re not from \'round here.
-That\'s what I\'m told.  I was interested in the Adams mansion.
-Adams mansion?  Sounds like you\'ve been talking to Opie.
-Why\'s that?
-That boy\'s always spinning tales about that mansion up on the hill.  Thinks it\'s haunted.
-<chuckles>
-You don\'t?
-The mansion was abandoned years ago.  Plain and simple.  Everyone wants to say its haunted or that there is some sort of great mystery to it.
-But not you?
-What\'s the mystery?  Doug took off one day and the mansion has been abandoned ever since.
-But no one saw him leave?  And he left everything behind, including the car.  How does someone leave this town without a car and without anyone seeing them?
-<grunts>
-Now you sound like Opie too.  That boy\'s always looking for a mystery to solve.
-Can you tell me where to find the mansion?
-Sure, its located over there yonder on that hill.  Be careful snooping around there though.
-If the guy\'s really gone, what\'s the harm?
-Just be careful.  Some things are best left alone if you ask me.""")
+        printNow("""
+        You walk over closer to the man in the faded overalls.  You notice he appears to be working on an old Atari 2600.  Hmm, interesting.
+        Hi, are you Bruce.
+        Who\'s asking?
+        I am.  I was hoping you could help me out?
+        Maybe.  You\'re not from \'round here.
+        That\'s what I\'m told.  I was interested in the Adams mansion.
+        Adams mansion?  Sounds like you\'ve been talking to Opie.
+        Why\'s that?
+        That boy\'s always spinning tales about that mansion up on the hill.  Thinks it\'s haunted.
+        <chuckles>
+        You don\'t?
+        The mansion was abandoned years ago.  Plain and simple.  Everyone wants to say its haunted or that there is some sort of great mystery to it.
+        But not you?
+        What\'s the mystery?  Doug took off one day and the mansion has been abandoned ever since.
+        But no one saw him leave?  And he left everything behind, including the car.  How does someone leave this town without a car and without anyone seeing them?
+        <grunts>
+        Now you sound like Opie too.  That boy\'s always looking for a mystery to solve.
+        Can you tell me where to find the mansion?
+        Sure, its located over there yonder on that hill.  Be careful snooping around there though.
+        If the guy\'s really gone, what\'s the harm?
+        Just be careful.  Some things are best left alone if you ask me.""")
+        showInformation("""
+        You walk over closer to the man in the faded overalls.  You notice he appears to be working on an old Atari 2600.  Hmm, interesting.
+        Hi, are you Bruce.
+        Who\'s asking?
+        I am.  I was hoping you could help me out?
+        Maybe.  You\'re not from \'round here.
+        That\'s what I\'m told.  I was interested in the Adams mansion.
+        Adams mansion?  Sounds like you\'ve been talking to Opie.
+        Why\'s that?
+        That boy\'s always spinning tales about that mansion up on the hill.  Thinks it\'s haunted.
+        <chuckles>
+        You don\'t?
+        The mansion was abandoned years ago.  Plain and simple.  Everyone wants to say its haunted or that there is some sort of great mystery to it.
+        But not you?
+        What\'s the mystery?  Doug took off one day and the mansion has been abandoned ever since.
+        But no one saw him leave?  And he left everything behind, including the car.  How does someone leave this town without a car and without anyone seeing them?
+        <grunts>
+        Now you sound like Opie too.  That boy\'s always looking for a mystery to solve.
+        Can you tell me where to find the mansion?
+        Sure, its located over there yonder on that hill.  Be careful snooping around there though.
+        If the guy\'s really gone, what\'s the harm?
+        Just be careful.  Some things are best left alone if you ask me.""")
 
   #Returns current room of player
   def getCurrentRoom(self):
@@ -1033,9 +1052,9 @@ def mysteryMansion():
   ###Lock front door of living room###
   livingRoom.setLocked(true)
   diningRoom = Room("Dining Room", diningRoomDescription, [],(1224,295))
-  church = Room("Church", churchDescription, [],(1041,152))
-  gasStation = Room("Gas Station", gasStationDescription, [],(932,228))
-  diner = Room("Diner", dinerDescription, [],(1157,242))
+  church = Room("Church", churchDescription, [],(0,0))
+  gasStation = Room("Gas Station", gasStationDescription, [],(0,0))
+  diner = Room("Diner", dinerDescription, [],(0,0))
 
 
   ###Build the mansion/room relationships###
@@ -1148,16 +1167,16 @@ def mysteryMansion():
     #Get help screen
     if action == "help":
       showInformation("""List of commands:
-Print - prints your name, inventory, or current room.
-Pickup - picks up items you find in rooms.
-Drop - drops items from your inventory.
-Move - moves to the next room. Directions are given in North, South, East, and West.
-Use - most inventory items and some objects and furniture in a room can be used.
-Drink - drinks any delicious beverages you might find.
-Examine - many of the items in a room's description can be examined.
-Talk to - talk to the denizens of Plainsfield.
-Quit/Exit - ends the game
-Objects you are able to interact with can be identified by the \' \' around it.""")
+        Print - prints your name, inventory, or current room.
+        Pickup - picks up items you find in rooms.
+        Drop - drops items from your inventory.
+        Move - moves to the next room. Directions are given in North, South, East, and West.
+        Use - most inventory items and some objects and furniture in a room can be used.
+        Drink - drinks any delicious beverages you might find.
+        Examine - many of the items in a room's description can be examined.
+        Talk to - talk to the denizens of Plainsfield.
+        Quit/Exit - ends the game
+        Objects you are able to interact with can be identified by the \' \' around it.""")
     #End game if user types 'exit' or 'quit'
     elif action == "exit" or action == "quit":
       done = true
@@ -1165,8 +1184,10 @@ Objects you are able to interact with can be identified by the \' \' around it."
     #Attempt to evaluate the action entered by user.
     else:
       try:
-        eval(actions[action])
-        if 'pickup' in actions[action] or 'drop' in actions[action] or 'use' in action or 'drink' in action:
+        result = eval(actions[action])
+        if result == 'lost':
+            done = True
+        elif 'pickup' in actions[action] or 'drop' in actions[action] or 'use' in action or 'drink' in action:
             show(player.create_hud(True))
         else:
             if not player.currentRoom.isPainted:
@@ -1350,14 +1371,10 @@ def add_screen_maps():
 def tester():
     #function for testing inventory items.
 
-    library = Room("Library", 'teh library', ["Walkman",'Lit Lantern'],(1042,166))
-    joe = Player('joe', library)
-    joe.examine('nautilus')
-    joe.pickupItem('Lit Lantern')
-    joe.movePlayerDown()
-    joe.examine('poster')
-    joe.useSafe()
-    joe.examine('safe')
+    gasStation = Room("Gas Station", "gasStationDescription", ['Comic Book'],(932,228))
+    joe = Player('joe', gasStation)
+    joe.pickupItem('Comic Book')
+    joe.talkToBruce()
     #joe.pickupItem('Key')
     #joe.pickupItem('Shovel')
     #joe.pickupItem('Walkman')
