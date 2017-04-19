@@ -296,112 +296,13 @@ class Player:
       printNow("There is no room below you!")
       showInformation("There is no room below you!")
 
-  #Function that simulates one die being rolled
-  #Uses random int generator from python library
-  def rollDie():
-    dieRoll = random.randint(0,6)
-    return dieRoll
-
-  #Function that simulates two die being rolled
-  #Uses random int generator from python library
-  def rollDice():
-    diceRoll = rollDie() + rollDie()
-    return diceRoll
-
-  #Main function for craps game
-  def craps():
-    showInformation('Ready to Play Craps?')
-    firstDiceRoll = rollDice()
-    showInformation('You rolled a ' + str(firstDiceRoll) + '.')
-    if firstDiceRoll == 7 or firstDiceRoll == 11:  #Compares initial dice roll to 7 or 11 for initial win condition
-      showInformation('You Win!')
-    elif firstDiceRoll == 2 or firstDiceRoll == 3 or firstDiceRoll == 12:  #Compares initial dice roll to 2, 3 or 12 for initial lose condition
-      showInformation('You Lose!')
-    else:
-      showInformation('Roll Again?')
-      point = firstDiceRoll  #Establishes point for secondary win condition
-      showInformation('The point is ' + str(point) + '.')
-      continueRoll = True
-      while continueRoll == True:  #Keeps game going until player wins or loses
-        diceRoll = rollDice()
-        showInformation('You rolled a ' + str(diceRoll) + '.')
-        if diceRoll == point:  #Compares all subsequent dice rolls to point value for secondary win condition
-          showInformation('You Win!')
-          continueRoll = False
-        elif diceRoll == 7:  #Compares all subsequent dice rolls to 7 for secondary lose condition
-          showInformation('You Lose!')
-          continueRoll = False
-        else:
-          showInformation('Roll Again!')
-
-  #Opens a message dialogue to the user.  Welcomes the user to the hangman game and gives the user some basic instructions for playing.
-  def welcome():
-    showInformation("\n H A N G M A N \n \n Welcome to Hangman! You need to guess the word. \n Enter a letter.  You have 6 chances to get it correct. \n If you fill in all the letter spaces before that point, then you win! \n Good luck! \n")
-
-  #Game to play hangman.
-  def hangman():
-    welcome()
-    #Secret word or phrase is hard-coded.
-    secretWord = "Examine Nautilus"
-    secretWord = secretWord.lower()
-    #Game only allows for letters to be entered.
-    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-    guesses = " "
-    #User has 6 turns to complete the game.  Guessing letters already guessed does not count against the number of turns left.
-    turns = 6
-    while turns > 0:
-      missingLetters = 0
-      output = ""
-      for char in secretWord:
-        if char == str(" "):
-          output = str(output) + str("   ")
-        elif char in guesses:  #Outputs correctly guessed letter.
-          output = str(output) + str(char) + str(" ")
-        else:  #Outputs '_' for letters not yet guessed.
-          output = str(output) + str("_ ")
-          missingLetters += 1
-      showInformation(output)
-      showInformation("Your Guesses: " + str(guesses))  #Prints all letters that have been guessed so far.
-      if missingLetters == 0:
-        showInformation("You Won!")  #Opens dialogue message to tell the user that they won the game.
-        break
-      print
-      guess = (requestString("Enter a letter:"))  #Reguests user to enter a letter as a guess.
-      guess = guess.lower()  #Forces guessed letter to lowercase.
-      if guess in guesses:  #Handles if user guesses a letter previously guessed.
-        showWarning("You already guessed '" + str(guess) + "' . Please guess again.")
-      elif guess not in alphabet:  #Handles is user guesses character that is not a letter.
-        showError("You must enter a letter!")
-      elif len(guess) > 1:  #Handles if user tries to guess more than 2 characters at a time.
-        showError("You can only enter one letter at a time!")
-      elif guess not in secretWord:  #Handles when a wrong guess is made.
-        turns -= 1
-        showInformation("Wrong!")  #Opens dialogue message to tell the user that their guess is wrong.
-        showInformation("You have " + str(turns) + " turns left.")   #Opens dialogue message to tell the user how many turns they have remaining.
-        guesses += guess
-        if turns == 0:
-          showInformation("You Lose!")  #Opens dialogue message to tell the user that they have lost the game.
-      else:
-        guesses += guess
-
-  def appleII():
-    showInformation("Welcome to Apple II Games!")
-    choice = requestInteger("1: Craps\n2: Hangman\nPick a game (1 or 2): ")
-    if choice == 1:
-      craps()
-    elif choice == 2:
-      hangman()
-    else:
-      pass
-
   ###Use Item Functions###
   def useComputer(self):
     if self.currentRoom.getName() == "Study":
       printNow("""You attempt to turn on the Macintosh computer, but unfortunately it will not turn on.  You look over at the Apple II and chuckle.
       You walk over and hit the power button.  To your surprise it boots up.""")
       play(makeSound('assets\\audio\\MacBoot.wav'))
-      showInformation("This is where you play hangman and craps")
-      appleII()
+      showInformation("This is where you play hangman and madlibs")
     else:
       showInformation("There is no computer in this room. Try visiting the Study")
 
@@ -569,11 +470,14 @@ In the wet dirt you feel something small and metal.  You pull it up into the lig
       self.currentRoom.setDown(basement)
       printNow(self.currentRoom)
       basement.setUp(self.currentRoom)
-    elif item == 'tombstone' and self.currentRoom.getName() == "Graveyard":# and not self.secretRoomFound:
-      printNow("""You examine the tombstone and read the name \"Douglas Adams\".  Underneath it says, \"Digital Killed the Analog Star!\" You notice that some crabgrass has grown up and blocked the bottom part of the tombstone.
+    elif item == 'tombstone' and self.currentRoom.getName() == "Graveyard" and self.secretRoomFound:
+      printNow("""You examine the tombstone again, but this time you lean closer.  You notice that some crabgrass has grown up and blocked the bottom part of the tombstone.
+      You pull back the grass and notice several numbers in printed small font along the base.  It reads, \"100001000101111111101101\".""")
+      showInformation("""You examine the tombstone again, but this time you lean closer.  You notice that some crabgrass has grown up and blocked the bottom part of the tombstone.
 You pull back the grass and notice several numbers printed in small font along the base.  It reads, \"100001000101111111101101\".""")
-      showInformation("""You examine the tombstone and read the name \"Douglas Adams\".  Underneath it says, \"Digital Killed the Analog Star!\" You notice that some crabgrass has grown up and blocked the bottom part of the tombstone.
-You pull back the grass and notice several numbers printed in small font along the base.  It reads, \"100001000101111111101101\".""")
+    elif item == 'tombstone' and self.currentRoom.getName() == "Graveyard" and not self.secretRoomFound:
+      printNow("""You examine the tombstone and read the name \"Douglas Adams\".  Underneath it says, \"Digital Killed the Analog Star!\"""")
+      showInformation("""You examine the tombstone and read the name \"Douglas Adams\".  Underneath it says, \"Digital Killed the Analog Star!\"""")
     elif item == 'couch' and self.currentRoom.getName() == "Living Room":
       if self.couchDone == false:
         printNow("""You find some stale Cheez-Its and spare change in the couch cushions.  You take a look underneath and notice a small piece of parchment.
@@ -921,51 +825,6 @@ Just be careful.  Some things are best left alone if you ask me.""")
       origins = [(903,602),(1062,602),(1220,602),(903,740),(1062,740),(1220,740)]
       pyCopyEx(makePicture(i_path[item]),hud,origins[index][0],origins[index][1],getColor(getPixel(makePicture(i_path[item]),0,0)))
 
-#Mystery Mansion prologue
-def story_prologue():
-  prologue = """
-  SEA BEACH, CA
-
-  'CORN!'
-  'All there is for miles is corn!'
-
-  'Don't be ridiculous,' replied your mother.  'I am sure there is more than corn where you are headed.'
-
-  'I did a Google street view and do you know what it showed?'
-
-  'Corn?' your father tentatively chimed in.
-
-  'No!  It showed nothing, because even Google won't visit there.
-  But if they had, it would have been just miles and miles of corn.'
-
-  'There won't be many more opportunities to visit your grandparents in Indiana.
-  You're going and that's that,' retorted your mother.
-
-  'Fine!  I'll be in the car.'
-
-  'Bring me back a souvenir!' shouted your father as you walked out.
-
-  'I hope you like corn!'
-  """
-  showInformation(prologue)
-
-#Mystery Mansion intro
-def story_intro():
-  intro = """
-  PLAINSFIELD, IN
-
-  Plainsfield, Indiana was about as boring of a place as you could imagine.
-
-  The town has a population of 480.  There was one gas station
-  and surprise, surprise, miles and miles of corn.  A month was gonna be a long time
-  to kill in a town without wifi.  Your grandparents had told you to get out and explore,
-  but explore where?  Oh well, being outside was better than being stuck inside all day.
-
-  There weren't many places to explore in Plainsfield.  You spotted a local diner,
-  on your way in.  Guess you could figure out what there is to eat around here.
-  """
-  showInformation(intro)
-
 def mysteryMansion():
   global isPathSet
   if not isPathSet:
@@ -975,10 +834,6 @@ def mysteryMansion():
       isPathSet = True
   #Is game over?
   done = false
-
-  #Flavor to set up the backdrop for the game
-  story_prologue()
-  story_intro()
 
   #Description of living room
   livingRoomDescription = """The living room is one of the largest rooms in the old mansion.  The interior is dark as most of the curtains and shades are drawn.
@@ -1031,7 +886,7 @@ def mysteryMansion():
   study = Room("Study", studyDescription, ["Matches", "Tape"],(1034,283))
   livingRoom = Room("Living Room", livingRoomDescription, ["Lantern"],(1132,294))
   ###Lock front door of living room###
-  livingRoom.setLocked(true)
+  #livingRoom.setLocked(true)
   diningRoom = Room("Dining Room", diningRoomDescription, [],(1224,295))
   church = Room("Church", churchDescription, [],(1041,152))
   gasStation = Room("Gas Station", gasStationDescription, [],(932,228))
