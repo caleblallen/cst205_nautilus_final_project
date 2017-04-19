@@ -14,6 +14,7 @@ class Room:
   up = None
   down = None
   locked = false
+
   isPainted = False
   def __init__(self, name, description, items,coords = (0,0)):
     self.name = name
@@ -151,10 +152,11 @@ class Player:
   secretRoomFound = false
   #Is the safe locked
   safeLocked = true
-  #variables for examined objects. This is to prevent spawning multiple map pieces.
+  #variables for examined objects. This is to prevent spawning multiple Page Pieces.
   floorMatDone = false
   portraintDone = false
-  couchDone = false 
+  couchDone = false
+  portraitDone = false
   #Holds the room that the current player is in
   currentRoom = None
   #is the player under the effects of a potion
@@ -175,15 +177,30 @@ class Player:
   #step 3: Print "Item not found" if item not in current room
   def pickupItem(self, item):
     #Check if player is already holding that item
-    if item in self.inventory:
+    if 'Page Piece' in item:
+        #Quotes from _Twenty Thousand Leagues Under the Sea_, by Jules Verne
+        #http://www.gutenberg.org/files/2488/2488-h/2488-h.htm
+      nautilus_text = {
+        'Page Piece 1': '"Fine," I replied, "but the Nautilus lives in a separate world, and the secrets of its scientists don\'t make their way ashore."',
+        'Page Piece 2': 'Just remember one thing: I owe everything to the ocean; it generates electricity, and electricity gives the Nautilus heat, light, motion, and, in a word, life itself.',
+        'Page Piece 3': 'It was a squid of colossal dimensions, fully eight meters long. It was traveling backward with tremendous speed in the same direction as the Nautilus.',
+        'Page Piece 4': ' The Nautilus wasn\'t going to strike the double–decker where it was clad in impenetrable iron armor, but below its waterline, where the metal carapace no longer protected its planking.'
+      }
+      showInformation('You pickup the fragile page and read \'%s\' before it crumbles into dust.'%nautilus_text[item])
+      try:
+          self.currentRoom.removeItem(item)
+      except:
+          pass
+    elif item in self.inventory:
       printNow("You are already carrying that item")
       showInformation("You are already carrying that item")
     else:
       #Check if item is in the current room
       if item in self.currentRoom.getItems():
-        if item == "Tape" or item == "Matches" or item == "CD":
+        if item == "Tape" or item == "Matches":
           printNow("This might come in handy later")
           showInformation("This might come in handy later")
+
 
         if item == "Lantern":
           printNow("This will come in very handy.  Now if only I can find some matches to actually light it with.")
@@ -191,9 +208,9 @@ class Player:
         self.inventory.append(item)
         self.currentRoom.removeItem(item)
         printNow("You are now holding: %s"%self.inventory)
-        showInformation("You are now holding: %s"%self.inventory)
+        #showInformation("You are now holding: %s"%self.inventory)
         printNow("The room now contains: %s"%self.currentRoom.getItems())
-        showInformation("The room now contains: %s"%self.currentRoom.getItems())
+        #showInformation("The room now contains: %s"%self.currentRoom.getItems())
       #If item is not in current room, print item not found
       else:
         printNow("Item not found")
@@ -291,8 +308,8 @@ class Player:
 
   #step 1: make sure user has shovel
   #step 2: make sure user is in graveyard
-  #step 3: if user has shovel and is in graveyard allow them to dig to retrieve key and map piece
-  #step 4: break the shovel so the user cannot continue digging for more keys/map pieces
+  #step 3: if user has shovel and is in graveyard allow them to dig to retrieve key and Page Piece
+  #step 4: break the shovel so the user cannot continue digging for more keys/Page Pieces
   def useShovel(self):
     if "Shovel" not in self.inventory:
       printNow("You do not have a shovel to use!")
@@ -304,7 +321,7 @@ class Player:
       printNow("""The old shovel creaks under your weight as you plunge it deep into the cold earth.  You try one spot and then another.
       Finally on your third attempt you feel the shovel make contact with something hard.  Unfortunately, the handle cracks in half at
       the same time.  So much for that.  You get down on your knees and dig around with your hands where you felt the shovel strike something hard.
-      In the wet dirt you feel something small and metal.  You pull it up into the light and discover it is a key.  You found a key and a piece of the map!""")
+      In the wet dirt you feel something small and metal.  You pull it up into the light and discover it is a key.  You found a key and a torn scrap of paper!""")
       play(makeSound('assets\\audio\\shovel.wav'))
       sleep(3.5)
       play(makeSound('assets\\audio\\shovel.wav'))
@@ -313,11 +330,11 @@ class Player:
       showInformation("""The old shovel creaks under your weight as you plunge it deep into the cold earth.  You try one spot and then another.
 Finally on your third attempt you feel the shovel make contact with something hard.  Unfortunately, the handle cracks in half at
 the same time.  So much for that.  You get down on your knees and dig around with your hands where you felt the shovel strike something hard.
-In the wet dirt you feel something small and metal.  You pull it up into the light and discover it is a key.  You found a key and a piece of the map!""")
+In the wet dirt you feel something small and metal.  You pull it up into the light and discover it is a key.  You found a torn scrap of paper!""")
       self.inventory.remove('Shovel')
       self.inventory.append('Broken Shovel')
       self.currentRoom.addItem('Key')
-      self.currentRoom.addItem('Map Piece 1')
+      self.currentRoom.addItem('Page Piece 1')
       printNow(self.currentRoom)
   #step 1: make sure user has the key in inventory
   #step 2: make sure user is on porch trying to get into mansion
@@ -444,8 +461,8 @@ In the wet dirt you feel something small and metal.  You pull it up into the lig
       As you attempt to pull the novel off the shelf the novel suddenly stops halfway out and one of the bookshelves pops open a few inches.
       A hidden door.  Brilliant!""")
       showInformation("""You realize that Doug has several Jules Verne novels.  You reach for \"20,000 Leagues Under the Sea\" from the shelf.
-As you attempt to pull the novel off the shelf the novel suddenly stops halfway out and one of the bookshelves pops open a few inches.
-A hidden door.  Brilliant!""")
+        As you attempt to pull the novel off the shelf the novel suddenly stops halfway out and one of the bookshelves pops open a few inches.
+        A hidden door.  Brilliant!""")
       #Basement initially set to "It is too dark to see anything
       #User must first find matches and lantern then use matches to light lantern
       #With lit lantern equipped, description changes to reveal contents of basement
@@ -464,10 +481,14 @@ You pull back the grass and notice several numbers printed in small font along t
     elif item == 'couch' and self.currentRoom.getName() == "Living Room":
       if self.couchDone == false:
         printNow("""You find some stale Cheez-Its and spare change in the couch cushions.  You take a look underneath and notice a small piece of parchment.
-        It appears to be a piece to a map.""")
+        It appears to be a torn scrap of paper.""")
         showInformation("""You find some stale Cheez-Its and spare change in the couch cushions.  You take a look underneath and notice a small piece of parchment.
-        It appears to be a piece to a map.""")
-        self.inventory.append("Map Piece 4")
+        It appears to be a torn scrap of paper.""")
+        #self.inventory.append("Page Piece 4")
+        try:
+            self.pickupItem('Page Piece 4')
+        except:
+            pass
         self.couchDone = true
         printNow(self.inventory)
       else:
@@ -486,9 +507,9 @@ Sounds fancy.  Wonder how it tastes? You place the potion in your inventory.""")
       printNow(self.inventory)
     elif item == "floor mat" and self.currentRoom.getName() == "Kitchen":
       if self.floorMatDone == false:
-        printNow("You look under the floor mat and discover another piece to the map!")
-        showInformation("You look under the floor mat and discover another piece to the map!")
-        self.inventory.append("Map Piece 2")
+        printNow("You look under the floor mat and discover a torn scrap of paper!")
+        showInformation("You look under the floor mat and discover a torn scrap of paper!")
+        self.inventory.append("Page Piece 2")
         self.floorMatDone = true
         printNow(self.inventory)
       else:
@@ -497,20 +518,19 @@ Sounds fancy.  Wonder how it tastes? You place the potion in your inventory.""")
     elif item == 'portrait' and self.currentRoom.getName() == "Dining Room":
       if self.portraitDone == false:
         printNow("""The name underneath reads \"Wilfred Adams\".  You notice a small piece of paper sticking out from behind the back.
-        You tug on it and you find yourself holding another piece of the map.""")
+        You tug on it and you find yourself holding a torn scrap of paper.""")
         showInformation("""The name underneath reads \"Wilfred Adams\".  You notice a small piece of paper sticking out from behind the back.
-You tug on it and you find yourself holding another piece of the map.""")
-        self.inventory.append("Map Piece 3")
+        You tug on it and you find yourself holding a torn scrap of paper.""")
+        #self.inventory.append("Page Piece 3")
+        self.pickupItem('Page Piece 3')
         self.portraitDone = true
         printNow(self.inventory)
       else:
         printNow("You already examined the portrait!")
         showInformation("You already examined the portrait!")
     elif item == 'mirror' and self.currentRoom.getName() == "Dining Room":
-      printNow("This mirror has some odd properties to it.")
-      showInformation("This mirror has some odd properties to it.")
-      #showInformation("Here we must implement mirrored image functionality")
-      #TODO: Add the mirror functionality if we have time.
+      printNow("The mirror distorts your reflection. It looks almost like you're in the depths of the sea.")
+      showInformation("The mirror distorts your reflection. It looks almost like you're in the depths of the sea.")
     elif item == 'furnace' and self.currentRoom.getName() == "Hidden Basement":
       printNow("This has not been lit in years.  Better not chance it.")
       showInformation("This has not been lit in years.  Better not chance it.")
@@ -519,13 +539,14 @@ You tug on it and you find yourself holding another piece of the map.""")
       You give a gentle tug and notice there is something behind the poster.  You pull a little harder, careful not to damage the poster.
       You pull the poster completely off the wall to reveal a safe hidden behind it.  You are close.  You can feel it.""")
       showInformation("You look closely at the poster.  It looks genuine.  You notice one corner is not completely held down. You give a gentle tug and notice there is something behind the poster.  You pull a little harder, careful not to damage the poster.  You pull the poster completely off the wall to reveal a safe hidden behind it.  You are close.  You can feel it.")
+      self.currentRoom.addItem('safe')
     elif item == 'safe' and self.currentRoom.getName() == "Hidden Basement" and self.safeLocked:
       printNow("The safe is locked.")
       showInformation("The safe is locked.")
     elif item == 'safe' and self.currentRoom.getName() == "Hidden Basement" and not self.safeLocked:
-      printNow("""You open the safe to reveal its contents.  You pull out a 1978 comic book, ?Batman versus Muhammad Ali?.  It appears the comic book has been autographed.
+      printNow("""You open the safe to reveal its contents.  You pull out a 1978 comic book, "Batman versus Muhammad Ali".  It appears the comic book has been autographed.
       You place the comic book in your backpack.""")
-      showInformation("You open the safe to reveal its contents.  You pull out a 1978 comic book, ?Batman versus Muhammad Ali?.  It appears the comic book has been autographed. You place the comic book in your backpack.")
+      showInformation("You open the safe to reveal its contents.  You pull out a 1978 comic book, \"Batman versus Muhammad Ali\".  It appears the comic book has been autographed. You place the comic book in your backpack.")
       self.inventory.append("Comic Book")
       printNow(self.inventory)
     elif item == 'comic book' and "Comic Book" in self.inventory:
@@ -639,7 +660,7 @@ Mystery of the Mansion?
 Just a bunch of nonsense if you ask me.
 \'Okay thanks.\'
 Hmmm.  Mystery of the Mansion?  There might be something exciting in this town after all. I wonder where this Bruce guy is? Oh well, I guess I\'ll go check out this church in the meantime.""")
-  
+
   def talkToBruce(self):
     if "Comic Book" in self.inventory:
       printNow("""
@@ -721,7 +742,7 @@ Can you tell me where to find the mansion?
 Sure, its located over there yonder on that hill.  Be careful snooping around there though.
 If the guy\'s really gone, what\'s the harm?
 Just be careful.  Some things are best left alone if you ask me.""")
-  
+
   #Returns current room of player
   def getCurrentRoom(self):
     return self.currentRoom
@@ -742,23 +763,30 @@ Just be careful.  Some things are best left alone if you ask me.""")
     ########################################
     if mustRemake:
       self.currentRoom.make_huds() #Reload HUDS from folder
-    if len(self.inventory) > 0:#Print the items in player inventory
-        for i in range(len(self.inventory)):
-            self.add_hud_item(self.currentRoom.get_hud('normal'),i,self.inventory[i])
+
     if self.hasDrunkRed: #Handle red potion
         self.currentRoom.add_hud_description(str(self.currentRoom),'red')
         if not (self.currentRoom.coords[0] == 0 and self.currentRoom.coords[0] == 0):
             addOvalFilled(self.currentRoom.get_hud('red'),self.currentRoom.coords[0],self.currentRoom.coords[1],25,25,green)
+        if len(self.inventory) > 0:#Print the items in player inventory
+            for i in range(len(self.inventory)):
+                self.add_hud_item(self.currentRoom.get_hud('red'),i,self.inventory[i])
         return self.currentRoom.get_hud('red')
     elif self.hasDrunkGreen: #Handle green potion
         self.currentRoom.add_hud_description(str(self.currentRoom),'green')
         if not (self.currentRoom.coords[0] == 0 and self.currentRoom.coords[0] == 0):
             addOvalFilled(self.currentRoom.get_hud('green'),self.currentRoom.coords[0],self.currentRoom.coords[1],25,25,green)
+        if len(self.inventory) > 0:#Print the items in player inventory
+            for i in range(len(self.inventory)):
+                self.add_hud_item(self.currentRoom.get_hud('green'),i,self.inventory[i])
         return self.currentRoom.get_hud('green')
     else: #Add room description and then put player map pin
         self.currentRoom.add_hud_description(str(self.currentRoom),'normal')
         if not (self.currentRoom.coords[0] == 0 and self.currentRoom.coords[0] == 0):
             addOvalFilled(self.currentRoom.get_hud('normal'),self.currentRoom.coords[0],self.currentRoom.coords[1],25,25,green)
+        if len(self.inventory) > 0:#Print the items in player inventory
+            for i in range(len(self.inventory)):
+                self.add_hud_item(self.currentRoom.get_hud('normal'),i,self.inventory[i])
         return self.currentRoom.get_hud('normal')
 
   def add_hud_item(self,hud,index,item):
@@ -778,21 +806,20 @@ Just be careful.  Some things are best left alone if you ask me.""")
       """
       i_path = {
         'Red Potion': 'assets\\images\\item_icons\\potion_red.jpg',
-        'Green Potion': 'assets\\images\\item_icons\\green_potion.jpg',
-        'Map Piece 1': 'assets\\images\\item_icons\\map_piece_1.jpg',
-        'Map Piece 2': 'assets\\images\\item_icons\\map_piece_2.jpg',
-        'Map Piece 3': 'assets\\images\\item_icons\\map_piece_3.jpg',
-        'Map Piece 4': 'assets\\images\\item_icons\\map_piece_4.jpg',
+        'Green Potion': 'assets\\images\\item_icons\\Green-Potion.jpg',
+        'Page Piece 1': 'assets\\images\\item_icons\\map_piece_1.jpg',
+        'Page Piece 2': 'assets\\images\\item_icons\\map_piece_2.jpg',
+        'Page Piece 3': 'assets\\images\\item_icons\\map_piece_3.jpg',
+        'Page Piece 4': 'assets\\images\\item_icons\\map_piece_4.jpg',
         'Key': 'assets\\images\\item_icons\\key.jpg',
         'Small Key': 'assets\\images\\item_icons\\small_key.jpg',
         'Shovel': 'assets\\images\\item_icons\\shovel.jpg',
         'Broken Shovel': 'assets\\images\\item_icons\\broken_shovel.jpg',
-        'CD': 'assets\\images\\item_icons\\CD.jpg',
-        'Tape': 'assets\\images\\item_icons\\tape.jpg',
-        'Lantern': 'assets\\images\\item_icons\\lantern.jpg',
-        'Matches': 'assets\\images\\item_icons\\matches.jpg',
+        'Tape': 'assets\\images\\item_icons\\Tape.jpg',
+        'Lantern': 'assets\\images\\item_icons\\Lantern.jpg',
+        'Matches': 'assets\\images\\item_icons\\Matches.jpg',
         'Lit Lantern': 'assets\\images\\item_icons\\lit_lantern.jpg',
-        'Walkman': 'assets\\images\\item_icons\\walkman.jpg',
+        'Walkman': 'assets\\images\\item_icons\\Walkman.jpg',
         'Comic Book': 'assets\\images\\item_icons\\ComicBook.jpg',
           }
       origins = [(903,602),(1062,602),(1220,602),(903,740),(1062,740),(1220,740)]
@@ -807,7 +834,7 @@ def mysteryMansion():
       isPathSet = True
   #Is game over?
   done = false
-   
+
   #Description of living room
   livingRoomDescription = """The living room is one of the largest rooms in the old mansion.  The interior is dark as most of the curtains and shades are drawn.
   In the middle is a \'couch\' with two end tables on each side.  One end table has a lamp on it, while the other has a lantern.  To the left is a large overstuffed arm chair.
@@ -856,7 +883,7 @@ def mysteryMansion():
   graveyard = Room("Graveyard", graveyardDescription, [],(1324,256))
   shed = Room("Shed", shedDescription, ["Shovel"],(1321,191))
   library = Room("Library", libraryDescription, ["Walkman"],(1042,166))
-  study = Room("Study", studyDescription, ["CD", "Matches", "Tape"],(1034,283))
+  study = Room("Study", studyDescription, ["Matches", "Tape"],(1034,283))
   livingRoom = Room("Living Room", livingRoomDescription, ["Lantern"],(1132,294))
   ###Lock front door of living room###
   #livingRoom.setLocked(true)
@@ -905,13 +932,12 @@ def mysteryMansion():
     ###Pickup Functions###
     'pickup red potion': "player.pickupItem('Red Potion')",
     'pickup green potion': "player.pickupItem('Green Potion')",
-    'pickup map piece 1': "player.pickupItem('Map Piece 1')",
-    'pickup map piece 2': "player.pickupItem('Map Piece 2')",
-    'pickup map piece 3': "player.pickupItem('Map Piece 3')",
-    'pickup map piece 4': "player.pickupItem('Map Piece 4')",
+    'pickup page piece 1': "player.pickupItem('Page Piece 1')",
+    'pickup page piece 2': "player.pickupItem('Page Piece 2')",
+    'pickup page piece 3': "player.pickupItem('Page Piece 3')",
+    'pickup page piece 4': "player.pickupItem('Page Piece 4')",
     'pickup key': "player.pickupItem('Key')",
     'pickup shovel': "player.pickupItem('Shovel')",
-    'pickup cd': "player.pickupItem('CD')",
     'pickup tape': "player.pickupItem('Tape')",
     'pickup lantern': "player.pickupItem('Lantern')",
     'pickup matches': "player.pickupItem('Matches')",
@@ -920,13 +946,8 @@ def mysteryMansion():
     ###Drop Functions###
     'drop red potion': "player.dropItem('Red Potion')",
     'drop green potion': "player.dropItem('Green Potion')",
-    'drop map piece 1': "player.dropItem('Map Piece 1')",
-    'drop map piece 2': "player.dropItem('Map Piece 2')",
-    'drop map piece 3': "player.dropItem('Map Piece 3')",
-    'drop map piece 4': "player.dropItem('Map Piece 4')",
     'drop key': "player.dropItem('Key')",
     'drop shovel': "player.dropItem('Shovel')",
-    'drop cd': "player.dropItem('CD')",
     'drop tape': "player.dropItem('Tape')",
     'drop lantern': "player.dropItem('Lantern')",
     'drop matches': "player.dropItem('Matches')",
@@ -1000,7 +1021,7 @@ Objects you are able to interact with can be identified by the \' \' around it."
     else:
       try:
         eval(actions[action])
-        if 'pickup' in actions[action] or 'drop' in actions[action] or 'use' in action:
+        if 'pickup' in actions[action] or 'drop' in actions[action] or 'use' in action or 'drink' in action:
             show(player.create_hud(True))
         else:
             if not player.currentRoom.isPainted:
@@ -1183,10 +1204,15 @@ def add_screen_maps():
 
 def tester():
     #function for testing inventory items.
-    joe = Player('joe',Room("Living Room", "It looks like nobody has lived here for centuries", ['Green Potion', 'Key', 'Shovel', 'Walkman', 'Tape', 'Matches']))
-    printNow(str(joe))
-    joe.pickupItem('Green Potion')
-    joe.drinkGreenPotion()
+
+    library = Room("Library", 'teh library', ["Walkman",'Lit Lantern'],(1042,166))
+    joe = Player('joe', library)
+    joe.examine('nautilus')
+    joe.pickupItem('Lit Lantern')
+    joe.movePlayerDown()
+    joe.examine('poster')
+    joe.useSafe()
+    joe.examine('safe')
     #joe.pickupItem('Key')
     #joe.pickupItem('Shovel')
     #joe.pickupItem('Walkman')
