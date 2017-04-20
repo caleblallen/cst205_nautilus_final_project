@@ -1,3 +1,12 @@
+#############################
+"""
+    The Nautilus Group: Mystery Mansion Adventure
+by, Caleb Allen, Daisy Mayorga, David Harrison,
+Dustin Whittington, and Michael Cline.
+
+    Function to run is mysteryMansion()
+"""
+#############################
 from random import shuffle
 from random import randint
 from time import sleep
@@ -25,6 +34,7 @@ class Room:
     self.coords = coords
 
   def make_huds(self):
+      #Makes the Heads Up Displays used throughout the game.
       global isPathSet
       if not isPathSet:
           setMediaFolder()
@@ -36,6 +46,7 @@ class Room:
 
       title_font_size = 77-16
       sty = makeStyle(sansSerif,bold,title_font_size)
+      #Adds name of room to huds.
       addTextWithStyle(hud_normal,32+title_font_size,70,self.name,sty,black)
       addTextWithStyle(hud_red,32+title_font_size,70,self.name,sty,black)
       addTextWithStyle(hud_green,32+title_font_size,70,self.name,sty,black)
@@ -44,8 +55,11 @@ class Room:
       self.huds['green']=hud_green
 
   def get_hud(self,index):
+      #Get the correct hud
       return self.huds[index]
   def add_hud_description(self, desc,type):
+      #Attempts to add the room descriptions to the HUDS.
+      #These change as new information comes available
       font_size = 25
       isLong = False
       if len(desc) > 450:
@@ -505,14 +519,18 @@ In the wet dirt you feel something small and metal.  You pull it up into the lig
 
   def useSafe(self):
     if self.currentRoom.getName() == "Hidden Basement":
-      code = requestString("Please enter the 7 digit code:")
-      if code == "8675309":
-        printNow("Success!  As you enter the last digit, you hear a click as the safe door pops open.")
-        showInformation("Success!  As you enter the last digit, you hear a click as the safe door pops open.")
-        self.safeLocked = false
+      #Making sure safe is not unlocked
+      if not self.safeLocked:
+            showInformation("You already unlocked the safe. Examine it to see what is inside!")
       else:
-        printNow("Nothing!  You must have the wrong code.")
-        showInformation("Nothing!  You must have the wrong code.")
+          code = requestString("Please enter the 7 digit code:")
+          if code == "8675309":
+            printNow("Success!  As you enter the last digit, you hear a click as the safe door pops open.")
+            showInformation("Success!  As you enter the last digit, you hear a click as the safe door pops open.")
+            self.safeLocked = false
+          else:
+            printNow("Nothing!  You must have the wrong code.")
+            showInformation("Nothing!  You must have the wrong code.")
     else:
       printNow("There is no safe in here.")
       showInformation("There is no safe in here.")
@@ -540,7 +558,7 @@ In the wet dirt you feel something small and metal.  You pull it up into the lig
     else:
       printNow("You do not have a walkman in your inventory!")
       showInformation("You do not have a walkman in your inventory!")
-
+  #Makes the player see red.
   def drinkRedPotion(self):
     if "Red Potion" in self.inventory:
       self.hasDrunkRed = True
@@ -564,7 +582,7 @@ In the wet dirt you feel something small and metal.  You pull it up into the lig
     else:
       printNow("You are not carrying this item")
       showInformation("You are not carrying this item")
-
+  #This function does the bulk of the 'examine' work
   def examine(self, item):
     if item == "bookshelf" and self.currentRoom.getName() == "Library":
       printNow("You look closely at the bookshelf.  It is filled with many great novels.  You notice several of your favorites.  Doug had good taste in literature.")
@@ -922,15 +940,9 @@ Hmmm.  Mystery of the Mansion?  There might be something exciting in this town a
       i_path = {
         'Red Potion': 'assets\\images\\item_icons\\potion_red.jpg',
         'Green Potion': 'assets\\images\\item_icons\\Green-Potion.jpg',
-        'Page Piece 1': 'assets\\images\\item_icons\\map_piece_1.jpg',
-        'Page Piece 2': 'assets\\images\\item_icons\\map_piece_2.jpg',
-        'Page Piece 3': 'assets\\images\\item_icons\\map_piece_3.jpg',
-        'Page Piece 4': 'assets\\images\\item_icons\\map_piece_4.jpg',
         'Key': 'assets\\images\\item_icons\\key.jpg',
-        'Small Key': 'assets\\images\\item_icons\\small_key.jpg',
         'Shovel': 'assets\\images\\item_icons\\shovel.jpg',
         'Broken Shovel': 'assets\\images\\item_icons\\broken_shovel.jpg',
-        'Tape': 'assets\\images\\item_icons\\Tape.jpg',
         'Lantern': 'assets\\images\\item_icons\\Lantern.jpg',
         'Matches': 'assets\\images\\item_icons\\Matches.jpg',
         'Lit Lantern': 'assets\\images\\item_icons\\lit_lantern.jpg',
@@ -985,6 +997,7 @@ def story_intro():
   """
   showInformation(intro)
 
+#Main game function
 def mysteryMansion():
   global isPathSet
   if not isPathSet:
@@ -1047,7 +1060,7 @@ def mysteryMansion():
   graveyard = Room("Graveyard", graveyardDescription, [],(1324,256))
   shed = Room("Shed", shedDescription, ["Shovel"],(1321,191))
   library = Room("Library", libraryDescription, ["Walkman"],(1042,166))
-  study = Room("Study", studyDescription, ["Matches", "Tape"],(1034,283))
+  study = Room("Study", studyDescription, ["Matches"],(1034,283))
   livingRoom = Room("Living Room", livingRoomDescription, ["Lantern"],(1132,294))
   ###Lock front door of living room###
   livingRoom.setLocked(true)
@@ -1081,7 +1094,7 @@ def mysteryMansion():
   porch.setWest(gasStation)
 
   ##get character name##
-  playerName = requestString("Please enter your character's name:")
+  playerName = 'Bruce'
   #create player object
   player = Player(playerName, diner)
   #Print player details
@@ -1190,7 +1203,7 @@ def mysteryMansion():
             done = True
         else:
             show(player.create_hud(True))
-             
+
       #Handles error from an invalid action
       except:
         printNow("Not a valid move")
@@ -1198,20 +1211,6 @@ def mysteryMansion():
 
 
 #################Working on Images################
-
-def img_scramble(pic,scramble_level):
-  pix = getPixels(pic)
-  scramble_level = int(scramble_level)
-  original = pix[:]
-  indices = range(len(pix))
-  random.shuffle(indices)
-  if scramble_level == 1:
-      return 0
-  for i in range(len(indices)):
-    if scramble_level == 0: #full scramble
-        setColor(pix[indices[i]],getColor(original[i]))
-    elif random.randint(1,scramble_level) != 1:
-      setColor(pix[indices[i]],getColor(original[i]))
 
 def pyCopyEx(pic,target, targetX, targetY,exclude = None):
     for x in range (0, getWidth(pic)):
