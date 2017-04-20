@@ -186,7 +186,7 @@ class Player:
         'Page Piece 3': 'It was a squid of colossal dimensions, fully eight meters long. It was traveling backward with tremendous speed in the same direction as the Nautilus.',
         'Page Piece 4': ' The Nautilus wasn\'t going to strike the double-decker where it was clad in impenetrable iron armor, but below its waterline, where the metal carapace no longer protected its planking.'
       }
-      showInformation('You pickup the fragile page and read \'%s\' before it crumbles into dust.'%nautilus_text[item])
+      showInformation('You pickup the fragile page and read \'%s --EXAMINE NAUTILUS\' before it crumbles into dust.'%nautilus_text[item])
       try:
           self.currentRoom.removeItem(item)
       except:
@@ -286,8 +286,8 @@ class Player:
       self.currentRoom = self.currentRoom.getDown()
       if "Lit Lantern" in self.inventory:
         self.secretRoomFound = true
-        self.currentRoom.setDescription("""The basement is littered with old AV equipment.  Broken projectors, cassette recorders, televisions, and more.  In the corner is a furnace.
-        As your eyes adjust, you notice a poster for E.T. hanging on the wall.  That seems a little odd.""")
+        self.currentRoom.setDescription("""The basement is littered with old AV equipment.  Broken projectors, cassette recorders, televisions, and more.  In the corner is a \'furnace\'.
+        As your eyes adjust, you notice a \'poster\' for E.T. hanging on the wall.  That seems a little odd.""")
         #show(self.create_hud())
       else:
         self.currentRoom.setDescription("The basement is completely dark.  You cannot see anything.  It would not be safe to explore here unless you can find some sort of light source.")
@@ -412,8 +412,7 @@ class Player:
       printNow("""You attempt to turn on the Macintosh computer, but unfortunately it will not turn on.  You look over at the Apple II and chuckle.
       You walk over and hit the power button.  To your surprise it boots up.""")
       play(makeSound('assets\\audio\\MacBoot.wav'))
-      showInformation("This is where you play hangman and craps")
-      appleII()
+      showInformation("You don't have time to wait for this thing to boot up!")
     else:
       showInformation("There is no computer in this room. Try visiting the Study")
 
