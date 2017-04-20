@@ -1135,6 +1135,7 @@ def mysteryMansion():
     'use television': 'player.useTelevision()',
     'use couch': 'player.useCouch()',
     'use safe': 'player.useSafe()',
+    'use comic book': "player.examine('comic book')",
     'use chair': 'player.useChair()',
     'use walkman': 'player.useWalkman()',
     #Drink Function###
@@ -1188,15 +1189,9 @@ def mysteryMansion():
         result = eval(actions[action])
         if result == 'lost':
             done = True
-        elif 'pickup' in actions[action] or 'drop' in actions[action] or 'use' in action or 'drink' in action:
-            show(player.create_hud(True))
         else:
-            if not player.currentRoom.isPainted:
-                show(player.create_hud(False))
-                player.currentRoom.isPainted = True
-            else:
-                repaint(player.create_hud(False))
-
+            show(player.create_hud(True))
+             
       #Handles error from an invalid action
       except:
         printNow("Not a valid move")
